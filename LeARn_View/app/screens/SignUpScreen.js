@@ -59,6 +59,7 @@ const SignUpScreen = ({ navigation }) => {
 
     // Proceed with sign-up logic
     Alert.alert('Success', 'Account created successfully!');
+    navigation.navigate('Home Screen')
   };
 
   return (
@@ -120,7 +121,7 @@ const SignUpScreen = ({ navigation }) => {
 
         <Text style={styles.orText}>OR</Text>
 
-        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Login Screen')}>
           <Text style={styles.logInText}>Log In</Text>
         </TouchableOpacity>
       </ScrollView>

@@ -1,22 +1,59 @@
-import  React from 'react';
+import React, { useState } from 'react';
+import { SafeAreaView, StatusBar, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import SplashScreen from './app/screens/SplashScreen';
-import SignIn from './app/screens/SignIn';
+import Splash from './app/screens/SplashScreen'; 
+import OnboardingScreen from './app/screens/OnboardingScreen';
+import LogIn from './app/screens/LogInScreen';
 import SignUpScreen from './app/screens/SignUpScreen';
+import HomeScreen from './app/screens/HomeScreen';
 
 const Stack = createStackNavigator();
 
-function App() {
+const App = () => {
+  const [showSplashScreen, setShowSplashScreen] = useState(true);
+
+  const handleSplashFinish = () => {
+    setShowSplashScreen(false); 
+  };
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Splash">
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name='Sign Up' component={SignUpScreen}/>
+      <Stack.Navigator
+        initialRouteName= 'Splash'
+        
+      >
+        {showSplashScreen ? (
+          <Stack.Screen
+            name="Splash" options={{headerShown: false}}
+          >
+            {(props) => (
+              <View style={styles.splashContainer}>
+                <Splash {...props} onFinish={handleSplashFinish} />
+              </View>
+            )}
+          </Stack.Screen>
+        ) : (
+          <>
+            <Stack.Screen
+              name="Onboarding Screen"
+              component={OnboardingScreen}
+              options={{headerShown: false}}/>
+            <Stack.Screen name="Login Screen" component={LogIn} />
+            <Stack.Screen name="Sign Up" component={SignUpScreen} />
+            <Stack.Screen name="Home Screen" component={HomeScreen} />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  splashContainer: {
+    flex: 1,
+    backgroundColor: '#4CAF50', 
+  },
+});
 
 export default App;

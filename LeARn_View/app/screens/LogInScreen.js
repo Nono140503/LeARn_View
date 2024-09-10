@@ -1,7 +1,6 @@
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Pressable, Button, ScrollView, SafeAreaView, Alert } from 'react-native'
-import React, { useEffect, useState, createContext, useContext } from 'react'
-// import LinearGradient from 'react-native-linear-gradient'
-import  Icon  from 'react-native-vector-icons/Ionicons'
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Pressable, ScrollView, SafeAreaView, Alert, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import Icon from 'react-native-vector-icons/Ionicons'
 
 export default function SignIn() {
 
@@ -20,7 +19,6 @@ export default function SignIn() {
     const validateForm = () => {
         const errors = {}
         
-
         if (!username) { errors.username = "Username Empty" }
         else if (username !== userName) { errors.username = "Incorrect Username" }
         
@@ -63,62 +61,64 @@ export default function SignIn() {
         )
     }
 
-
-
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView style={styles.container}>
 
-        <ScrollView>
+            <ScrollView>
 
-            <View style={styles.welcomeContainer}>
-                <Text style={styles.welcome}>Welcome Back!</Text>
-            </View>
-
-
-
-            <View style={styles.signInCard}>
-
-                <View style={styles.emailContainer}>
-                    <TextInput style={styles.input} placeholder='Email...' value={username} onChangeText={setUsername}></TextInput>
+                <View style={styles.welcomeContainer}>
+                    <Text style={styles.welcome}>Welcome Back!</Text>
                 </View>
 
-                <View style={styles.userPasswordContainer}>
-                    <TextInput style={styles.input} placeholder='Password...' value={password} onChangeText={setPassword} secureTextEntry></TextInput>
+                <View style={styles.signInCard}>
+
+                    <View style={styles.emailContainer}>
+                        <TextInput style={styles.input} placeholder='Email' value={username} onChangeText={setUsername}></TextInput>
+                    </View>
+
+                    <View style={styles.userPasswordContainer}>
+                        <TextInput style={styles.input} placeholder='Password' value={password} onChangeText={setPassword} textContentType='password' secureTextEntry={true}></TextInput>
+                    </View>
+
+                    <View style={styles.forgotPasswordContainer}>
+                        <Text style={styles.forgotPassword}>Forgot Password?</Text>
+                    </View>
+
+                    {/* Log In Button Below This */}
+                    <GradientBackGround/>
+
+                    <View style={styles.ORContainer}>
+                        <Text style={styles.OR}>
+                            OR
+                        </Text>
+                    </View>
+
+                    <View style={styles.signUpLink}>
+                        <Pressable>
+                            <Text style={styles.signUpLinkText}>Sign Up</Text>
+                        </Pressable>
+
+                        <Text style={styles.signUpLinkTextRest}>to join LeARn_View</Text>
+                    </View>
+
+                    <View style={styles.socialMediaContainer}>
+                        <Icon name='logo-facebook' size={20} style={styles.facebook}/>
+                        <Icon name='logo-instagram' size={20} style={styles.instagram}/>
+                        <Icon name='logo-twitter' size={20} style={styles.twitter}/>
+
+                    </View>
                 </View>
 
-                <View style={styles.forgotPasswordContainer}>
-                    <Text style={styles.forgotPassword}>Forgot Password?</Text>
-                </View>
+            </ScrollView>
 
-                {/* Log In Button Below This */}
-                <GradientBackGround/>
-
-                <View style={styles.ORContainer}>
-                    <Text style={styles.OR}>
-                        OR
-                    </Text>
-                </View>
-
-                <View style={styles.signUpLink}>
-                    <Pressable>
-                        <Text style={styles.signUpLinkText}>Sign Up</Text>
-                    </Pressable>
-
-                    <Text style={styles.signUpLinkTextRest}>to join LeARn_View</Text>
-                </View>
-
-                
-
-                <View style={styles.socialMediaContainer}>
-                    <Icon name='logo-facebook' size={20} style={styles.facebook}/>
-                    <Icon name='logo-instagram' size={20} style={styles.instagram}/>
-                    <Icon name='logo-twitter' size={20} style={styles.twitter}/>
-
-                </View>
-
-            </View>
-        </ScrollView>
-    </SafeAreaView>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -137,7 +137,6 @@ const styles = StyleSheet.create({
 
     userPasswordContainer:{
         flex: 1,
-        marginTop: -10,
         marginLeft: 5,
         alignItems: "flex-start"
     },
@@ -147,8 +146,6 @@ const styles = StyleSheet.create({
     },
 
     signInCard:{
-        // borderWidth: 1,
-        // borderRadius: 20,
         width: 300,
         height: 350,
         marginLeft: "auto",
@@ -157,35 +154,7 @@ const styles = StyleSheet.create({
         marginBottom: 50,
     },
 
-    signUpText:{
-        color: "white",
-        fontSize: 32,
-        fontWeight: "bold",
-        textAlign: "left",
-        marginLeft: 15,
-        textDecorationLine: "underline",
-    },
-
-    signInText:{
-        color: "white",
-        fontSize: 32,
-        fontWeight: "bold",
-        textAlign: "right",
-        marginRight: 15,
-        textDecorationLine: "underline",
-        marginTop: -80,
-    },
-
-    userText:{
-        textAlign: "left",
-        color: "white",
-        fontSize: 16,
-        marginLeft: 20,
-        marginTop: 5,
-    },
-
     input:{
-        textAlign: "center",
         borderWidth: 1,
         borderColor: "#1D7801",
         borderRadius: 10,
@@ -196,7 +165,7 @@ const styles = StyleSheet.create({
         color: "black",
         backgroundColor: "#FFFF",
         textAlign: "left",
-        paddingLeft: 10,
+        padding: 20,
     },
 
     forgotPassword:{
