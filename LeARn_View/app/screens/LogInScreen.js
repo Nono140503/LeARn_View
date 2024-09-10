@@ -71,20 +71,24 @@ export default function SignIn() {
 
             <ScrollView>
 
+                {/* Welcome Message */}
                 <View style={styles.welcomeContainer}>
                     <Text style={styles.welcome}>Welcome Back!</Text>
                 </View>
 
                 <View style={styles.signInCard}>
 
+                    {/* Email Input */}
                     <View style={styles.emailContainer}>
                         <TextInput style={styles.input} placeholder='Email' value={username} onChangeText={setUsername}></TextInput>
                     </View>
 
+                    {/* Password Input */}
                     <View style={styles.userPasswordContainer}>
                         <TextInput style={styles.input} placeholder='Password' value={password} onChangeText={setPassword} textContentType='password' secureTextEntry={true}></TextInput>
                     </View>
 
+                    {/* Forgot Password Link */}
                     <View style={styles.forgotPasswordContainer}>
                         <Text style={styles.forgotPassword}>Forgot Password?</Text>
                     </View>
@@ -98,6 +102,8 @@ export default function SignIn() {
                         </Text>
                     </View>
 
+
+                    {/* Sign Up Link */}
                     <View style={styles.signUpLink}>
                         <Pressable>
                             <Text style={styles.signUpLinkText}>Sign Up</Text>
@@ -165,7 +171,7 @@ const styles = StyleSheet.create({
         color: "black",
         backgroundColor: "#FFFF",
         textAlign: "left",
-        padding: 20,
+        padding: 10,
     },
 
     forgotPassword:{
