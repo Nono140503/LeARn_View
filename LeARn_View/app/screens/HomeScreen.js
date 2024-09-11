@@ -16,6 +16,7 @@ function HomeScreen({navigation}){
         <>
         <View style={styles.container}>
             <HomeHeader/>
+            <Text style={styles.heading}>Systems Software</Text>
             <HomeBody navigation={navigation}/>
             <BottomTabBar 
              navigation={navigation} 
@@ -31,6 +32,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white',
+    },
+    heading:{
+        marginTop: 10,
+        marginLeft: 10,
+        color: '#1D7801',
+        fontWeight: 'bold',
+        fontSize: 18,
     },
     
 })

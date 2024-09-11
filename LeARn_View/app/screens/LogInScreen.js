@@ -112,7 +112,7 @@ export default function SignIn({navigation}) {
 
                     </View>
                 </View>
-
+                </View>
             </ScrollView>
 
         </SafeAreaView>
@@ -133,8 +133,6 @@ const styles = StyleSheet.create({
     },
 
     signInCard:{
-        width: 300,
-        height: 350,
        alignItems: 'center',
     },
 
@@ -144,7 +142,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         width: 280,
 
-        marginLeft: 70,
+        // marginLeft: 70,
         marginTop: 10,
         color: "black",
 
@@ -173,13 +171,13 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         borderColor: 'transparent',
-        width: "75%",
+        width: 200,
         height: 50,
         alignItems: "center",
         padding: 10,
         backgroundColor: "#1D7801",
         justifyContent: "center",
-        marginLeft: 70,
+        marginLeft: 50,
         marginTop: 10,
     },
 
@@ -193,7 +191,7 @@ const styles = StyleSheet.create({
         marginTop: 60,
         display: 'flex',
         flexDirection: 'row',
-        marginLeft: 70,
+        margin: 'auto',
     },
 
     facebook:{
@@ -234,7 +232,7 @@ const styles = StyleSheet.create({
     signUpLink:{
         display: 'flex',
         flexDirection: 'row',
-        marginLeft: 50,
+        marginLeft: 20,
         marginTop: 15,
     },
 
