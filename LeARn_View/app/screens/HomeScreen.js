@@ -34,11 +34,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     heading:{
-        marginTop: 10,
-        marginLeft: 10,
+        marginTop: 15,
+        marginRight: 150,
         color: '#1D7801',
         fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: 20,
     },
     
 })

@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: '8%',
         color: '#227d39',
-        marginRight: '38%'
+        marginRight: '42%'
     },
     icon_cont:{
         padding: '5%'

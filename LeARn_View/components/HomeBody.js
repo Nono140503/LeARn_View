@@ -34,9 +34,9 @@ function HomeBody({navigation}) {
                     <TouchableOpacity
                         style={{
                             flexDirection: "row",
-                            margin: 10,
+                            margin: 8,
                             padding: 5,
-                            gap: 15,
+                            gap: 10,
                             alignItems: "center",
                         }}
                     >
@@ -52,7 +52,7 @@ function HomeBody({navigation}) {
                         </ImageBackground>
                     </TouchableOpacity>
                 )}
-                contentContainerStyle={{ paddingBottom: 10 }} 
+                contentContainerStyle={{ paddingBottom: 15 }} 
             />
             <View style={styles.space}>
                 <Text></Text>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         textShadowRadius: 2,  
     },
     list_cont:{
-        marginTop: 10,
+        marginTop: 5,
     },
     overlay: {
         flex: 1,
