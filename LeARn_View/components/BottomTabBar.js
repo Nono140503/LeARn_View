@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Profile from '../app/screens/ProfileScreen';
+import LeaderBoard from '../app/screens/LeaderBoardScreen';
 
 function BottomTabBar({ navigation, currentScreen }) {
     const defaultColor = 'grey';
