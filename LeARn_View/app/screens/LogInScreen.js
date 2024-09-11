@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Pressable, ScrollView, SafeAreaView, Alert, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
+import { LinearGradient } from 'expo-linear-gradient'
 
 export default function SignIn({navigation}) {
 
@@ -85,9 +86,25 @@ export default function SignIn({navigation}) {
                         <Text style={styles.forgotPassword}>Forgot Password?</Text>
                     </View>
 
-                    <TouchableOpacity style={styles.signInBtn} activeOpacity={0.7} onPress={handleSignIn}>
+
+                    {/* Log In Button */}
+                    <Pressable>
+
+                        <LinearGradient
+                            colors={["#1D7801", "#36DE02"]}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                            style={[styles.gradient, styles.signInBtn]}
+                        >
+
+                            <TouchableOpacity style={styles.signInBtn} activeOpacity={0.7} onPress={handleSignIn}>
                                 <Text style={styles.signInBtnText}>Log In</Text>
-                        </TouchableOpacity>
+                            </TouchableOpacity>
+
+                        </LinearGradient>
+
+                    </Pressable>
+                    
 
                     <View >
                         <Text style={styles.OR}>
@@ -173,12 +190,15 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         borderColor: 'transparent',
+
         width: 200,
         height: 50,
+
         alignItems: "center",
         padding: 10,
-        backgroundColor: "#1D7801",
+        backgroundColor: "transparent",
         justifyContent: "center",
+
         marginLeft: 35,
         marginTop: 10,
     },
@@ -187,6 +207,9 @@ const styles = StyleSheet.create({
         color: "#FFFFFF",
         fontSize: 18,
         fontWeight: "bold",
+        marginRight: 30,
+        marginBottom: 10,
+        height: 25,
     },
 
     socialMediaContainer:{
@@ -249,5 +272,13 @@ const styles = StyleSheet.create({
         width: 150,
         color: "grey",
         fontSize: 16,
+    },
+
+    gradient: {
+        borderRadius: 7,
+        padding: 5,
+        marginLeft: 35,
+        marginTop: 10,
+        justifyContent: 'center',
     },
 })
