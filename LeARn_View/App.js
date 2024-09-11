@@ -39,9 +39,9 @@ const App = () => {
               name="Onboarding Screen"
               component={OnboardingScreen}
               options={{headerShown: false}}/>
-            <Stack.Screen name="Login Screen" component={LogIn} />
-            <Stack.Screen name="Sign Up" component={SignUpScreen} />
-            <Stack.Screen name="Home Screen" component={HomeScreen} />
+            <Stack.Screen name="Login Screen" component={LogIn} options={{headerShown: false}}/>
+            <Stack.Screen name="Sign Up" component={SignUpScreen} options={{headerShown: false}}/>
+            <Stack.Screen name="Home Screen" component={HomeScreen} options={{headerShown: false}}/>
           </>
         )}
       </Stack.Navigator>

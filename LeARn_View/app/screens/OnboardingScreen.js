@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   },
   getStartedButton: {
     backgroundColor: '#4CAF50',
-    borderRadius: 20,
+    borderRadius: 25,
     padding: 15,
   },
   getStartedText: {

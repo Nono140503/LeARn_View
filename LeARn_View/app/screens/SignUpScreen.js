@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, KeyboardAvoidingView, Platform, ScrollView,
 } from 'react-native';
-// import { RadioButton } from 'react-native-paper'; 
+
 
 const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -16,9 +16,9 @@ const SignUpScreen = ({ navigation }) => {
     return emailchecker.test(email);
   };
 
-  // Validate password. At least 8 characters, one uppercase and one number
+  // Validate password: At least 8 characters, one uppercase, one lowercase, one number, and one special character
   const validatePassword = (password) => {
-    const passwordchecker = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const passwordchecker = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordchecker.test(password);
   };
 
@@ -47,7 +47,7 @@ const SignUpScreen = ({ navigation }) => {
     if (!validatePassword(password)) {
       Alert.alert(
         'Invalid Password',
-        'Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, and one number.'
+        'Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, one number, and one special character.'
       );
       return;
     }
@@ -59,7 +59,6 @@ const SignUpScreen = ({ navigation }) => {
 
     // Proceed with sign-up logic
     Alert.alert('Success', 'Account created successfully!');
-    navigation.navigate('Home Screen')
   };
 
   return (
@@ -70,7 +69,7 @@ const SignUpScreen = ({ navigation }) => {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.logoContainer}>
           <Image
-            source={require('../../assets/logo.jpg')}
+            source={require('../../assets/LV_logo.png')}
             style={styles.logo}
             resizeMode="contain"
           />
@@ -133,17 +132,17 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: '#fff',
-    justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
   logoContainer: {
     marginBottom: 20,
+    marginTop: 70,
     alignItems: 'center',
   },
   logo: {
-    width: 100, 
-    height: 100, 
+    width: 150, 
+    height: 150, 
   },
   createAccountText: {
     fontSize: 30,
@@ -152,7 +151,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    width: '100%',
+    width: '90%',
     height: 50,
     backgroundColor: '#fff',
     borderRadius: 5,
@@ -166,7 +165,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     justifyContent: 'space-between',
-    width: '100%',
+    width: '90%',
   },
   radioButton: {
     flexDirection: 'row',
@@ -196,25 +195,27 @@ const styles = StyleSheet.create({
     color: 'grey',
   },
   signUpButton: {
-    width: '100%',
+    width: '75%',
     height: 50,
     backgroundColor: '#1D7801',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
+    borderRadius: 10,
     marginBottom: 10,
   },
   signUpButtonText: {
     color: '#fff',
     fontSize: 18,
+    fontWeight: 'bold',
   },
   orText: {
     color: 'lightgrey',
     marginBottom: 10,
   },
   logInText: {
-    color: '#27A301',
+    color: '#1D7801',
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

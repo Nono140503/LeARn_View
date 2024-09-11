@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Pressable, 
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-export default function SignIn() {
+export default function SignIn({navigation}) {
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
@@ -35,30 +35,15 @@ export default function SignIn() {
         {
             setUsername(username)
             setPassword(password)
-            Alert.alert(`Welcome ${username}, ${password}`)
+            Alert.alert(`Welcome ${username}`);
+            navigation.navigate('Home Screen');
         }
         else{
             Alert.alert(`Invalid`)
         }
     }
-
-    const GradientBackGround = () => {
-        return(
-
-            <Pressable style={styles.pressable}>
-
-                    {/* <LinearGradient
-                    colors={['#4c669f', '#3b5998', '#192f6a']}
-                    style = {styles.gradientBackground}
-                    > */}
-                    
-                        <TouchableOpacity style={styles.signInBtn} activeOpacity={0.7} onPress={handleSignIn}>
-                                <Text style={styles.signInBtnText}>Log In</Text>
-                        </TouchableOpacity>
-                    {/* </LinearGradient> */}
-                    
-            </Pressable>
-        )
+    const handleSignUp = () =>{
+        navigation.navigate('Sign Up');
     }
 
   return (
@@ -70,8 +55,11 @@ export default function SignIn() {
         <SafeAreaView style={styles.container}>
 
             <ScrollView>
-
+                <View style={styles.logo_cont}>
+                    <Image source={require('../../assets/LV_logo.png')} style={styles.logo}/>
+                </View>
                 <View style={styles.welcomeContainer}>
+                    
                     <Text style={styles.welcome}>Welcome Back!</Text>
                 </View>
 
@@ -85,21 +73,22 @@ export default function SignIn() {
                         <TextInput style={styles.input} placeholder='Password' value={password} onChangeText={setPassword} textContentType='password' secureTextEntry={true}></TextInput>
                     </View>
 
-                    <View style={styles.forgotPasswordContainer}>
+                    <View>
                         <Text style={styles.forgotPassword}>Forgot Password?</Text>
                     </View>
 
-                    {/* Log In Button Below This */}
-                    <GradientBackGround/>
+                    <TouchableOpacity style={styles.signInBtn} activeOpacity={0.7} onPress={handleSignIn}>
+                                <Text style={styles.signInBtnText}>Log In</Text>
+                        </TouchableOpacity>
 
-                    <View style={styles.ORContainer}>
+                    <View >
                         <Text style={styles.OR}>
                             OR
                         </Text>
                     </View>
 
                     <View style={styles.signUpLink}>
-                        <Pressable>
+                        <Pressable onPress={handleSignUp}>
                             <Text style={styles.signUpLinkText}>Sign Up</Text>
                         </Pressable>
 
@@ -107,9 +96,9 @@ export default function SignIn() {
                     </View>
 
                     <View style={styles.socialMediaContainer}>
-                        <Icon name='logo-facebook' size={20} style={styles.facebook}/>
-                        <Icon name='logo-instagram' size={20} style={styles.instagram}/>
-                        <Icon name='logo-twitter' size={20} style={styles.twitter}/>
+                        <Icon name='logo-facebook' size={25} style={styles.facebook}/>
+                        <Icon name='logo-instagram' size={25} style={styles.instagram}/>
+                        <Icon name='logo-twitter' size={25} style={styles.twitter}/>
 
                     </View>
                 </View>
@@ -128,52 +117,37 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFFFFF",
     },
 
-    emailContainer:{
-        flex: 1,
-        marginLeft: 5,
-        marginTop: -90,
-        alignItems: "flex-start"
-    },
-
-    userPasswordContainer:{
-        flex: 1,
-        marginLeft: 5,
-        alignItems: "flex-start"
-    },
-
-    forgotPasswordContainer:{
-        flex: 1,
+    logo:{
+        width: 150,
+        height: 150,
     },
 
     signInCard:{
         width: 300,
         height: 350,
-        marginLeft: "auto",
-        marginRight: "auto",
-        marginTop: -90,
-        marginBottom: 50,
+       alignItems: 'center',
     },
 
     input:{
         borderWidth: 1,
         borderColor: "#1D7801",
         borderRadius: 10,
-        width: 250,
-        height: 40,
-        marginLeft: 20,
-        marginTop: 50,
+        width: 280,
+
+        marginLeft: 70,
+        marginTop: 10,
         color: "black",
-        backgroundColor: "#FFFF",
-        textAlign: "left",
-        padding: 20,
+        fontSize: 15,
+        padding: 10,
     },
 
     forgotPassword:{
-        marginLeft: 165,
-        marginVertical: 30,
+        marginLeft: 210,
+        marginTop: 10,
         color: "blue",
         textDecorationLine: "underline",
         height: 20,
+        width: '80%'
     },
 
     pressable:{
@@ -183,87 +157,84 @@ const styles = StyleSheet.create({
 
     signInBtn:{
         borderWidth: 1,
-        borderColor: "transparent",
         borderRadius: 10,
-        width: 200,
-        height: 45,
+        borderColor: 'transparent',
+        width: "75%",
+        height: 50,
         alignItems: "center",
         padding: 10,
-        marginHorizontal: 50,
-        marginTop: -15,
         backgroundColor: "#1D7801",
         justifyContent: "center",
+        marginLeft: 70,
+        marginTop: 10,
     },
 
     signInBtnText:{
         color: "#FFFFFF",
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: "bold",
     },
 
     socialMediaContainer:{
-        flex: 1,
+        marginTop: 60,
+        display: 'flex',
+        flexDirection: 'row',
+        marginLeft: 70,
     },
 
     facebook:{
-        marginTop: 40,
-        marginBottom: 0,
-        marginLeft: -10,
+        marginRight: 15,
+        
     },
 
     instagram:{
-        marginTop: -20,
-        marginBottom: 0,
-        marginLeft: 40,
+        marginRight: 15,
     },
 
     twitter:{
-        marginTop: -20,
-        marginBottom: 0,
-        marginLeft: 90,
+        
     },
 
-    welcomeContainer:{
-        flex: 1,
-    },
-
+   
     welcome:{
         textAlign: "center",
-        marginVertical: 150,
         color: "#1D7801",
         fontSize: 30,
         fontWeight: "bold",
-        marginTop: 150,
+        marginTop: 20,
+    },
+    logo_cont:{
+        alignItems: 'center',
+        marginTop: 60,
     },
 
-    ORContainer:{
-        flex: 1,
-    },
 
     OR:{
         color: "grey",
-        marginHorizontal: 140,
-        marginTop: -10,
+        marginTop: 10,
+        marginLeft: 140,
         fontSize: 20,
         width: 100,
     },
 
     signUpLink:{
-        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+        marginLeft: 50,
+        marginTop: 15,
     },
 
     signUpLinkText:{
-        marginTop: -10,
-        marginHorizontal: 70,
         width: 100,
         color: "#1D7801",
         fontWeight: "bold",
+        left: 30,
+        fontSize: 16
     },
 
     signUpLinkTextRest:{
-        marginTop: -20,
-        marginHorizontal: 130,
         width: 150,
         color: "grey",
+        fontSize: 16,
     },
 })

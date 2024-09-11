@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import {View, StyleSheet, Text} from 'react-native'
 import BottomTabBar from '../../components/BottomTabBar';
 import HomeBody from '../../components/HomeBody';
-// import TouristAttractionHeader from '../../components/TouristAttractionHeader';
-
+import HomeHeader from '../../components/HomeHeader';
 
 function HomeScreen({navigation}){
 
@@ -16,7 +15,7 @@ function HomeScreen({navigation}){
     return (
         <>
         <View style={styles.container}>
-        {/* <TouristAttractionHeader navigation={navigation}/> */}
+            <HomeHeader/>
             <HomeBody navigation={navigation}/>
             <BottomTabBar 
              navigation={navigation} 
