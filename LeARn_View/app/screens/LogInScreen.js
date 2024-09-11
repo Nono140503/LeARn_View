@@ -152,9 +152,11 @@ const styles = StyleSheet.create({
         textAlign: "left",
         padding: 10,
     },
-
+    forgotPasswordContainer: {
+        width: "90%"
+    },    
     forgotPassword:{
-        marginLeft: 210,
+        marginLeft: 155,
         marginTop: 10,
         color: "blue",
         textDecorationLine: "underline",
@@ -177,7 +179,7 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: "#1D7801",
         justifyContent: "center",
-        marginLeft: 50,
+        marginLeft: 35,
         marginTop: 10,
     },
 
@@ -224,7 +226,7 @@ const styles = StyleSheet.create({
     OR:{
         color: "grey",
         marginTop: 10,
-        marginLeft: 140,
+        marginLeft: 120,
         fontSize: 20,
         width: 100,
     },
@@ -232,7 +234,6 @@ const styles = StyleSheet.create({
     signUpLink:{
         display: 'flex',
         flexDirection: 'row',
-        marginLeft: 20,
         marginTop: 15,
     },
 

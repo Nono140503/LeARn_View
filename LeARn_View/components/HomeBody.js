@@ -25,8 +25,8 @@ function HomeBody({navigation}) {
 
 
     return (
-        <ScrollView style={styles.container}>
-            <FlatList
+            <>
+                <FlatList
                 style={styles.list_cont}
                 data={list}
                 keyExtractor={(item) => item.destination}
@@ -57,7 +57,9 @@ function HomeBody({navigation}) {
             <View style={styles.space}>
                 <Text></Text>
             </View>
-        </ScrollView>
+            </>
+            
+       
     );
 }
 
