@@ -55,9 +55,11 @@ export default function SignIn({navigation}) {
         <SafeAreaView style={styles.container}>
 
             <ScrollView>
+
                 <View style={styles.logo_cont}>
                     <Image source={require('../../assets/LV_logo.png')} style={styles.logo}/>
                 </View>
+
                 <View style={styles.welcomeContainer}>
                     
                     <Text style={styles.welcome}>Welcome Back!</Text>
@@ -65,15 +67,21 @@ export default function SignIn({navigation}) {
 
                 <View style={styles.signInCard}>
 
+                    {/* Email Input */}
                     <View style={styles.emailContainer}>
                         <TextInput style={styles.input} placeholder='Email' value={username} onChangeText={setUsername}></TextInput>
                     </View>
 
+                    {/* Password Input */}
                     <View style={styles.userPasswordContainer}>
                         <TextInput style={styles.input} placeholder='Password' value={password} onChangeText={setPassword} textContentType='password' secureTextEntry={true}></TextInput>
                     </View>
 
+
                     <View>
+
+                    <View style={styles.forgotPasswordContainer}>
+
                         <Text style={styles.forgotPassword}>Forgot Password?</Text>
                     </View>
 
@@ -87,6 +95,8 @@ export default function SignIn({navigation}) {
                         </Text>
                     </View>
 
+
+                    {/* Sign Up Link */}
                     <View style={styles.signUpLink}>
                         <Pressable onPress={handleSignUp}>
                             <Text style={styles.signUpLinkText}>Sign Up</Text>
@@ -137,7 +147,11 @@ const styles = StyleSheet.create({
         marginLeft: 70,
         marginTop: 10,
         color: "black",
+
         fontSize: 15,
+
+        backgroundColor: "#FFFF",
+        textAlign: "left",
         padding: 10,
     },
 
