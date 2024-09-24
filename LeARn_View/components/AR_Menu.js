@@ -1,24 +1,32 @@
 import React, { useState } from "react";
 import { View, Text, ImageBackground, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import  Icon from "react-native-vector-icons/Ionicons";
 
-function HomeBody({ navigation }) {
+function ARMenu({ navigation }) {
     const [list, setList] = useState([
         {
-            title: 'AR Environment',
-            description: 'Engage in interactive AR lessons and explore virtual scenarios for hands-on learning.',
-            image: require('../assets/AR_image.jpeg'),
+            title: 'Module 1',
+            description: 'Taking A Computer Apart and Putting It Back Together',
+            image: require('../assets/Computer.jpeg'),
+            progress: 'Progress: 0%',
+            icon: '', 
+            navigation: 'AR Environment Screen', 
+            
+        },
+        {
+            title: 'Module 2',
+            description: 'All About Motherboards\n',
+            image: require('../assets/Motherboard.jpeg'),
+            progress: 'Locked',
+            icon: 'lock-closed-outline',
             navigation: 'AR Environment Screen',  
         },
         {
-            title: 'Practice Quizzes in the AR Environment',
-            description: 'Test your knowledge with interactive AR quizzes and reinforce your learning.',
-            image: require('../assets/bulb.jpg'),
-            navigation: 'Lecturer Dashboard',  
-        },
-        {
-            title: 'Tests',
-            description: 'Check and take your tests set as a quiz or in the AR environment.',
-            image: require('../assets/online-test-checklist-pencil-computer-monitor-online-form-survey-online-questionnaire-choos_153097-2893.jpg'),
+            title: 'Module 3',
+            description: 'Supporting Processors and Upgrading Memory',
+            image: require('../assets/CPU.jpeg'),
+            progress: 'Locked',
+            icon: 'lock-closed-outline',
             navigation: 'AR Environment Screen', 
         },
     ]);
@@ -34,7 +42,7 @@ function HomeBody({ navigation }) {
                         style={styles.card}
                         onPress={() => {
                             if (item?.navigation) {
-                                navigation.navigate(item.navigation);  // Navigate to the correct route
+                                navigation.navigate(item.navigation);  
                             } else {
                                 console.warn('Invalid navigation route');
                             }
@@ -48,6 +56,11 @@ function HomeBody({ navigation }) {
                             <View style={styles.overlay}>
                                 <Text style={styles.title}>{item.title}</Text>
                                 <Text style={styles.description}>{item.description}</Text>
+                                <View style={styles.progress_cont}>
+                                <Text style={styles.progress}>{item.progress}</Text>
+                                <Icon name={item.icon} size={25} style={styles.icon}/>
+                                </View>
+                               
                             </View>
                         </ImageBackground>
                     </TouchableOpacity>
@@ -77,18 +90,22 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 2,
     },
+    icon:{
+        color: 'white',
+        marginLeft: 10,
+    },
     listCont: {
         marginTop: 5,
     },
     overlay: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.15)',
+        backgroundColor: 'rgba(0, 0, 0, 0.25)',
         borderRadius: 10,
         padding: 15,
     },
     img: {
         width: '100%',
-        height: 175,
+        height: 180,
         borderRadius: 10,
         shadowColor: 'rgba(0, 0, 0, 0.5)',
         shadowOffset: { width: 0, height: 2 },
@@ -107,6 +124,19 @@ const styles = StyleSheet.create({
     space: {
         height: 50,
     },
+    progress_cont:{
+        display: 'flex',
+        flexDirection: 'row',
+
+        marginTop: 35,
+    },
+    progress:{
+        color:'white',
+        marginTop: 5,
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginLeft: 210,
+    },
 });
 
-export default HomeBody;
+export default ARMenu;

@@ -3,10 +3,21 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
-const SettingsScreen = ({}) => {
+const SettingsScreen = ({navigation}) => {
+  const handleBack = () =>{
+    navigation.goBack();
+  }
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>Settings</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={handleBack}>
+          <Ionicons name='arrow-back-outline' size={30} style={styles.back_arrow}/>
+        </TouchableOpacity>
+          
+          <Text style={styles.headerText}>Settings</Text>
+  
+      </View>
+     
 
       <TouchableOpacity style={styles.card}>
         <FontAwesome name="user-circle-o" size={24} color="#006400" />
@@ -54,30 +65,39 @@ const SettingsScreen = ({}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 50,
-    backgroundColor: '',
-    padding: 20,
+    backgroundColor: 'white',
+    padding: 15,
+  },
+  back_arrow:{
+    color: '#1D7801'
   },
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
+    marginBottom: 25,
+    marginLeft: 100,
     color: '#1D7801',
+  },
+  header:{
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: 35,
+    
   },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#EFFAF3',
-  
     borderRadius: 10,
     padding: 25,
     marginBottom: 15,
     borderWidth: 1,
     elevation: 5,
-
-
     borderColor: '#EFFAF3',
+    shadowColor: 'rgba(0, 0, 0, 0.5)', 
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3, 
+    shadowRadius: 3.5,
   },
   cardContent: {
     marginLeft: 10,

@@ -1,24 +1,30 @@
 import React, { useState } from "react";
 import { View, Text, ImageBackground, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 
-function HomeBody({ navigation }) {
+function LecturerHome({ navigation }) {
     const [list, setList] = useState([
         {
-            title: 'AR Environment',
-            description: 'Engage in interactive AR lessons and explore virtual scenarios for hands-on learning.',
-            image: require('../assets/AR_image.jpeg'),
-            navigation: 'AR Environment Screen',  
+            title: 'Class Performance',
+            description: 'View and analyze student performance across quizzes, tests, and AR lessons',
+            image: require('../assets/Performance.jpeg'),
+            navigation: 'Class Performance',  
         },
         {
-            title: 'Practice Quizzes in the AR Environment',
-            description: 'Test your knowledge with interactive AR quizzes and reinforce your learning.',
-            image: require('../assets/bulb.jpg'),
+            title: 'Create a quiz',
+            description: 'Test your knowledge with interactive AR quizzes and reinforce your learning.Create, schedule, and manage quizzes with customized settings.',
+            image: require('../assets/images (1).png'),
             navigation: 'Lecturer Dashboard',  
         },
         {
-            title: 'Tests',
-            description: 'Check and take your tests set as a quiz or in the AR environment.',
-            image: require('../assets/online-test-checklist-pencil-computer-monitor-online-form-survey-online-questionnaire-choos_153097-2893.jpg'),
+            title: 'Create a Test',
+            description: 'Set up tests with random questions and monitor progress in real-time.',
+            image: require('../assets/test.jpg'),
+            navigation: 'AR Environment Screen', 
+        },
+        {
+            title: 'AR Lesson Management',
+            description: 'Assign and customize AR lessons for individuals or groups.',
+            image: require('../assets/AR_Management.jpg'),
             navigation: 'AR Environment Screen', 
         },
     ]);
@@ -34,7 +40,7 @@ function HomeBody({ navigation }) {
                         style={styles.card}
                         onPress={() => {
                             if (item?.navigation) {
-                                navigation.navigate(item.navigation);  // Navigate to the correct route
+                                navigation.navigate(item.navigation);  
                             } else {
                                 console.warn('Invalid navigation route');
                             }
@@ -109,4 +115,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HomeBody;
+export default LecturerHome;

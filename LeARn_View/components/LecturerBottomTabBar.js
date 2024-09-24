@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 
-function BottomTabBar({ navigation, currentScreen }) {
+function LecturerBottomTabBar({ navigation, currentScreen }) {
     const defaultColor = 'grey';
     const activeColor = '#1D7801';
 
@@ -22,26 +22,26 @@ function BottomTabBar({ navigation, currentScreen }) {
             </TouchableOpacity>
            
             <TouchableOpacity
-                onPress={() => navigation.navigate('Grades')}
+                onPress={() => navigation.navigate('Student Progress')}
                 style={styles.iconContainer}
             >
                 <Icon 
-                    name='school-outline' 
+                    name='people-outline'
                     size={25} 
-                    color={currentScreen === 'Grades' ? activeColor : defaultColor} 
+                    color={currentScreen === 'Student Progress' ? activeColor : defaultColor} 
                 />
-                <Text style={{ color: currentScreen === 'Cart' ? activeColor : defaultColor }}>Grades</Text>
+                <Text style={{ color: currentScreen === 'Student Progress' ? activeColor : defaultColor }}>Students</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => navigation.navigate('Games')}
+                onPress={() => navigation.navigate('Feedback & Communication')}
                 style={styles.iconContainer}
             >
                 <Icon 
-                    name='game-controller-outline' 
+                    name='chatbubbles-outline' 
                     size={25} 
-                    color={currentScreen === 'Games' ? activeColor : defaultColor} 
+                    color={currentScreen === 'Feedback & Communication' ? activeColor : defaultColor} 
                 />
-                <Text style={{ color: currentScreen === 'Games' ? activeColor : defaultColor }}>Games</Text>
+                <Text style={{ color: currentScreen === 'Feedback & Communication' ? activeColor : defaultColor }}>Feedback</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => navigation.navigate('Settings')}
@@ -77,4 +77,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default BottomTabBar;
+export default LecturerBottomTabBar;

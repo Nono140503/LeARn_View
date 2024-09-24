@@ -144,6 +144,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  button:{
+    width: '70%',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginBottom: 10,
+    },
   logoContainer: {
     marginBottom: 20,
     marginTop: 70,
@@ -205,8 +211,7 @@ const styles = StyleSheet.create({
   },
   signUpButton: {
     width: '75%',
-    height: 50,
-    backgroundColor: '#1D7801',
+    height: 45,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
@@ -216,6 +221,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+    marginTop: 10,
   },
   orText: {
     color: 'lightgrey',

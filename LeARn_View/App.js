@@ -6,11 +6,14 @@ import Splash from './app/screens/SplashScreen';
 import OnboardingScreen from './app/screens/OnboardingScreen';
 import LogIn from './app/screens/LogInScreen';
 import SignUpScreen from './app/screens/SignUpScreen';
-import HomeScreen from './app/screens/HomeScreen';
-import Profile from './app/screens/ProfileScreen';
-import LeaderBoard from './app/screens/LeaderBoardScreen';
-import Settings from './app/screens/Settings'
-import Help from './app/screens/Help'
+import HomeScreen from './app/screens/StudentScreens/HomeScreen'
+import Profile from './app/screens/StudentScreens/ProfileScreen';
+import LeaderBoard from './app/screens/StudentScreens/LeaderBoardScreen';
+import Settings from './app/screens/StudentScreens/Settings';
+import Help from './app/screens/StudentScreens/Help';
+import AR_EnvironmentMenuScreen from './app/screens/StudentScreens/AR_EnvironmentMenuScreen';
+import LecturerDashboard from './app/screens/LecturerScreens/LecturerDashboard';
+import ClassPerformance from './app/screens/LecturerScreens/ClassroomPerformanceScreen';
 
 const Stack = createStackNavigator();
 
@@ -50,7 +53,9 @@ const App = () => {
             <Stack.Screen name="LeaderBoardScreen" component={LeaderBoard} options={{headerShown: false}}/>
             <Stack.Screen name="Settings" component={Settings} options={{headerShown: false}}/>
             <Stack.Screen name="Help" component={Help} options={{headerShown: false}}/>
-
+            <Stack.Screen name="AR Environment Screen" component={AR_EnvironmentMenuScreen} options={{headerShown: false}}/>
+            <Stack.Screen name="Lecturer Dashboard" component={LecturerDashboard} options={{headerShown: false}}/>
+            <Stack.Screen name="Class Performance" component={ClassPerformance} options={{headerShown: false}}/>
           </>
         )}
       </Stack.Navigator>
