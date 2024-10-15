@@ -10,7 +10,7 @@ function LecturerBottomTabBar({ navigation, currentScreen }) {
     return (
         <View style={styles.container}>
             <TouchableOpacity
-                onPress={() => navigation.navigate('Home Screen')}
+                onPress={() => navigation.navigate('Lecturer Dashboard')}
                 style={styles.iconContainer}
             >
                 <Icon 

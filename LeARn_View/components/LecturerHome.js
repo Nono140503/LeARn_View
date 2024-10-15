@@ -13,7 +13,7 @@ function LecturerHome({ navigation }) {
             title: 'Create a quiz',
             description: 'Test your knowledge with interactive AR quizzes and reinforce your learning.Create, schedule, and manage quizzes with customized settings.',
             image: require('../assets/images (1).png'),
-            navigation: 'Lecturer Dashboard',  
+            navigation: 'Quiz Creator',  
         },
         {
             title: 'Create a Test',

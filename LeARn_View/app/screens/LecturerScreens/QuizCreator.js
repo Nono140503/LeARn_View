@@ -3,8 +3,10 @@ import { View, Text, TextInput, Button, ScrollView, StyleSheet, Alert, ActivityI
 import { Picker } from '@react-native-picker/picker'; // Import Picker component
 import { db } from '../../../firebase'; // Ensure correct db import
 import { collection, addDoc } from 'firebase/firestore'; // Import necessary Firestore functions
+import Icon from 'react-native-vector-icons/Ionicons'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const QuizCreator = () => {
+const QuizCreator = ({navigation}) => {
   const [quizTitle, setQuizTitle] = useState('');
   const [questions, setQuestions] = useState([{ question: '', options: ['', '', '', ''], correctAnswer: '' }]);
   const [loading, setLoading] = useState(false);
@@ -75,11 +77,18 @@ const QuizCreator = () => {
       setLoading(false); // Set loading state back to false once saving is complete
     }
   };
+  const handleBack = () =>{
+    navigation.goBack();
+  }
 
   return (
     <View style={styles.container}>
+      <View style={styles.header_cont}>
+        <Icon name='arrow-back-outline' size={30} style={styles.icon} onPress={handleBack}/>
+        <Text style={styles.heading}>Create a Quiz</Text>
+      </View>
       <ScrollView contentContainerStyle={styles.scrollView}>
-        <Text style={styles.header}>Create a Quiz</Text>
+        
         <TextInput
           style={styles.input}
           placeholder="Quiz title"
@@ -104,7 +113,7 @@ const QuizCreator = () => {
                 onChangeText={(value) => updateOption(qIndex, oIndex, value)}
               />
             ))}
-            <Text style={styles.inputLabel}>Select Correct Answer</Text>
+            <Text style={styles.inputLabel}>Select Correct Answer:</Text>
             <Picker
               selectedValue={q.correctAnswer}
               style={styles.picker}
@@ -123,11 +132,15 @@ const QuizCreator = () => {
         ))}
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <Button title="+ Add Question" onPress={addQuestion} />
+        <TouchableOpacity style={styles.addQuestion} onPress={addQuestion}>
+            <Text style={styles.buttonText}>Add a Question</Text>
+        </TouchableOpacity>
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
-          <Button title="Save and Upload" onPress={saveQuiz} />
+          <TouchableOpacity style={styles.saveQuiz} onPress={saveQuiz}>
+            <Text style={styles.buttonText}>Save and Upload</Text>
+        </TouchableOpacity>
         )}
       </View>
     </View>
@@ -137,19 +150,57 @@ const QuizCreator = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 50,
+    
   },
   scrollView: {
-    paddingBottom: 100,
+    paddingBottom: 80,
+    width: '100%',
+    paddingTop: 20,
+    padding: 20
+
+  },
+  buttonText:{
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  addQuestion:{
+    backgroundColor: '#3D8DCB',
+    padding: 15,
+    borderRadius: 5,
+  },
+  saveQuiz:{
+    backgroundColor: '#28a745',
+    padding: 15,
+    borderRadius: 5,
+  },
+  heading:{
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'green',
+    marginLeft: 80,
+    
+  },
+  icon:{
+    color: 'green',
+  },
+  header_cont:{
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: 40,
+    padding: 10,
+    borderBottomColor: 'grey',
+    borderBottomWidth: 0.4,
+    alignItems: 'center',
   },
   header: {
-    fontSize: 24,
-    textAlign: 'center',
+    fontSize: 20,
     marginBottom: 20,
+    color: '#3D8DCB',
   },
   input: {
     width: '100%',
-    padding: 8,
+    padding: 12,
     marginBottom: 10,
     borderWidth: 1,
     borderColor: '#ccc',
@@ -161,16 +212,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   inputLabel: {
-    fontSize: 16,
+    fontSize: 18,
     marginTop: 10,
     marginBottom: 5,
+    color: '#3D8DCB',
   },
   questionContainer: {
     marginBottom: 20,
   },
   buttonContainer: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 40,
     left: 20,
     right: 20,
     flexDirection: 'row',

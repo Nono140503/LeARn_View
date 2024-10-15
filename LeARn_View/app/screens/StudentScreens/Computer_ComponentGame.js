@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
 const components = [
-  { name: 'motherboard', image: require('../../../assets/Motherboard') },
+  { name: 'motherboard', image: require('../../../assets/Motherboard.jpeg') },
   { name: 'central processing unit', image: require('../../../assets/CPU.jpeg') },
   { name: 'random access memory', image: require('../../../assets/RAM.jpeg') },
   { name: 'graphics processing unit', image: require('../../../assets/GPU.jpeg') },

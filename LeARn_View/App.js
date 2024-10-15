@@ -16,6 +16,10 @@ import LecturerDashboard from './app/screens/LecturerScreens/LecturerDashboard';
 import ClassPerformance from './app/screens/LecturerScreens/ClassroomPerformanceScreen';
 import GamesScreen from './app/screens/StudentScreens/GamesScreen';
 import Computer_Components from './app/screens/StudentScreens/Computer_ComponentGame';
+import QuizCreator from './app/screens/LecturerScreens/QuizCreator';
+import GamesRules from './app/screens/StudentScreens/GameRules';
+import StudentProgress from './app/screens/LecturerScreens/StudentsProgress';
+import Progress from './app/screens/LecturerScreens/Progress';
 
 const Stack = createStackNavigator();
 
@@ -60,6 +64,10 @@ const App = () => {
             <Stack.Screen name="Class Performance" component={ClassPerformance} options={{headerShown: false}}/>
             <Stack.Screen name="Games Screen" component={GamesScreen} options={{headerShown: false}}/>
             <Stack.Screen name="Computer Components" component={Computer_Components} options={{headerShown: false}}/>
+            <Stack.Screen name="Quiz Creator" component={QuizCreator} options={{headerShown: false}}/>
+            <Stack.Screen name="Game Rules" component={GamesRules} options={{headerShown: false}}/>
+            <Stack.Screen name="Student Progress" component={StudentProgress} options={{headerShown: false}}/>
+            <Stack.Screen name="Progress" component={Progress} options={{headerShown: false}}/>
           </>
         )}
       </Stack.Navigator>

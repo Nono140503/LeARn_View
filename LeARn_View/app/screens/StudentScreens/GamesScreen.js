@@ -1,36 +1,61 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import GamesHeader from '../../../components/GamesHeader';
 
-const GamesScreen = () => {
-  const components = [
+const GamesScreen = ({ navigation }) => {
+  // Define an array with game details
+  const [currentScreen, setCurrentScreen] = useState('Games Screen');
+
+  const handleNavigation = (screen) => {
+      setCurrentScreen(screen);
+      navigation.navigate(screen);
+  };
+  const games = [
     {
       title: 'Computer Components',
-      image: require('../../../assets/SSD.webp'), 
-      onPress: () => console.log('Computer Components pressed'),
+      image: require('../../../assets/computer-assembly-pc-building-hardware-600nw-2229132749.jpg'),
+      rules: 'Rules:\nIdentify and assemble various parts of a computer to complete the build.',
+      gif: require('../../../assets/06Techfix-illo-superJumbo.gif'),
+      nav: 'Computer Components'
     },
     {
       title: 'Laptop Troubleshooting',
-      image: require('../../../assets/HDD.jpg'), 
-      onPress: () => console.log('Laptop Troubleshooting pressed'),
+      image: require('../../../assets/concept-computer-repair-service-vector-illustration_357257-792.jpg'),
+      rules: 'Rules:\nDiagnose and resolve common laptop issues efficiently.',
+      gif: require('../../../assets/laptop_troubleshooting.gif'),
+      nav: ''
     },
     {
-      title: 'Malwares',
-      image: require('../../../assets/RAM.jpeg'), 
-      onPress: () => console.log('Malwares pressed'),
+      title: 'Malware Mayhem',
+      image: require('../../../assets/malware.jpeg'),
+      rules: 'Rules:\nIdentify and eliminate malware threats before they cause damage.',
+      gif: require('../../../assets/The Hacker.gif'),
+      nav: ''
     },
   ];
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Games</Text>
-      </View>
+      <GamesHeader 
+              navigation={navigation} 
+             currentScreen={currentScreen}
+             onNavigate={handleNavigation}/>
       <ScrollView contentContainerStyle={styles.content}>
-        {components.map((component, index) => (
-          <TouchableOpacity key={index} style={styles.componentItem} onPress={component.onPress}>
-            <Image source={component.image} style={styles.componentImage} />
+        {games.map((game, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.componentItem}
+            onPress={() => navigation.navigate('Game Rules', {
+              gameTitle: game.title,
+              gameImage: game.image,
+              rules: game.rules,
+              gif: game.gif,
+              nav: game.nav
+            })}
+          >
+            <Image source={game.image} style={styles.componentImage} />
             <View style={styles.overlay}>
-              <Text style={styles.componentTitle}>{component.title}</Text>
+              <Text style={styles.componentTitle}>{game.title}</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -42,19 +67,7 @@ const GamesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    marginTop:20
-  },
-  header: {
-    padding: 20,
-    backgroundColor: 'white', 
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    color: '#1D7801', 
-    fontSize: 24,
-    fontWeight: 'bold',
+    backgroundColor: '#EFFAF3',
   },
   content: {
     padding: 15,
@@ -63,8 +76,11 @@ const styles = StyleSheet.create({
   componentItem: {
     marginBottom: 15,
     borderRadius: 10,
-    overflow: 'hidden',
     elevation: 3,
+    shadowColor: 'rgba(0, 0, 0, 0.9)',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5.5,
   },
   componentImage: {
     width: '100%',
@@ -78,6 +94,8 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     padding: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
   componentTitle: {
     color: 'white',
