@@ -1,284 +1,138 @@
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Pressable, ScrollView, SafeAreaView, Alert, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import Icon from 'react-native-vector-icons/Ionicons'
-import { LinearGradient } from 'expo-linear-gradient'
+import React, { useState } from 'react';
+import {
+  View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator,
+} from 'react-native';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore'; 
+import { auth, db } from '../../firebase'; // Assuming firebase.js is in the parent folder
 
-export default function SignIn({navigation}) {
+const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
 
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-    const [errors, setErrors] = useState({})
-    const [valid, setValid] = useState(false)
-
-    const userName = "Moodles"
-    const pswd = "Pas$word1"
-
-    useEffect(() => {
-        validateForm()
-    }, [username, password])
-
-    const validateForm = () => {
-        const errors = {}
-        
-        if (!username) { errors.username = "Username Empty" }
-        else if (username !== userName) { errors.username = "Incorrect Username" }
-        
-        if (!password) { errors.password = "Password Empty" }
-        else if (password !== pswd) { errors.password = "Incorrect Password" }
-        else if (password.length < 8) { errors.password = "Password must be a minimum of 8 characters"}
-        
-        setErrors(errors)
-        setValid(Object.keys(errors).length === 0)
+  const handleLogin = async () => {
+    if (!email) {
+      Alert.alert('Missing Email', 'Please enter your email address.');
+      return;
     }
 
-    const handleSignIn = () => {
-        if(valid)
-        {
-            setUsername(username)
-            setPassword(password)
-            Alert.alert(`Welcome ${username}`);
-            navigation.navigate('Home Screen');
+    if (!password) {
+      Alert.alert('Missing Password', 'Please enter your password.');
+      return;
+    }
+
+    setLoading(true); // Start loading
+
+    // Firebase sign-in
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Fetch the user role from Firestore
+      const docRef = doc(db, 'users', user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        const role = userData.role;
+
+        // Navigate based on user role
+        if (role === 'lecturer') {
+          navigation.navigate('Lecturer Dashboard'); // Navigate to Lecturer Dashboard
+        } else if (role === 'student') {
+          navigation.navigate('Home Screen'); // Navigate to Student Dashboard
+        } else {
+          Alert.alert('Role Error', 'No role assigned. Please contact support.');
         }
-        else{
-            Alert.alert(`Invalid`)
-        }
+      } else {
+        Alert.alert('No User Data', 'No user data found in Firestore.');
+      }
+    } catch (error) {
+      const errorMessage = error.message;
+      Alert.alert('Login Error', errorMessage);
+    } finally {
+      setLoading(false); // Stop loading
     }
-    const handleSignUp = () =>{
-        navigation.navigate('Sign Up');
-    }
+  };
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>Login</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
 
-            <ScrollView>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleLogin}
+          disabled={loading} // Disable button while loading
+        >
+          {loading ? (
+            <ActivityIndicator size="small" color="#fff" /> // Show loading spinner
+          ) : (
+            <Text style={styles.buttonText}>Login</Text>
+          )}
+        </TouchableOpacity>
 
-                <View style={styles.logo_cont}>
-                    <Image source={require('../../assets/LV_logo.png')} style={styles.logo}/>
-                </View>
-
-                <View style={styles.welcomeContainer}>
-                    
-                    <Text style={styles.welcome}>Welcome Back!</Text>
-                </View>
-
-                <View style={styles.signInCard}>
-
-                    {/* Email Input */}
-                    <View style={styles.emailContainer}>
-                        <TextInput style={styles.input} placeholder='Email' value={username} onChangeText={setUsername}></TextInput>
-                    </View>
-
-                    {/* Password Input */}
-                    <View style={styles.userPasswordContainer}>
-                        <TextInput style={styles.input} placeholder='Password' value={password} onChangeText={setPassword} textContentType='password' secureTextEntry={true}></TextInput>
-                    </View>
-
-
-                    <View>
-
-                    <View style={styles.forgotPasswordContainer}>
-
-                        <Text style={styles.forgotPassword}>Forgot Password?</Text>
-                    </View>
-
-
-                    {/* Log In Button */}
-                    <Pressable>
-
-                        <LinearGradient
-                            colors={["#1D7801", "#36DE02"]}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            style={[styles.gradient, styles.signInBtn]}
-                        >
-
-                            <TouchableOpacity style={styles.signInBtn} activeOpacity={0.7} onPress={handleSignIn}>
-                                <Text style={styles.signInBtnText}>Log In</Text>
-                            </TouchableOpacity>
-
-                        </LinearGradient>
-
-                    </Pressable>
-                    
-
-                    <View >
-                        <Text style={styles.OR}>
-                            OR
-                        </Text>
-                    </View>
-
-
-                    {/* Sign Up Link */}
-                    <View style={styles.signUpLink}>
-                        <Pressable onPress={handleSignUp}>
-                            <Text style={styles.signUpLinkText}>Sign Up</Text>
-                        </Pressable>
-
-                        <Text style={styles.signUpLinkTextRest}>to join LeARn_View</Text>
-                    </View>
-
-                    <View style={styles.socialMediaContainer}>
-                        <Icon name='logo-facebook' size={25} style={styles.facebook}/>
-                        <Icon name='logo-instagram' size={25} style={styles.instagram}/>
-                        <Icon name='logo-twitter' size={25} style={styles.twitter}/>
-
-                    </View>
-                </View>
-                </View>
-            </ScrollView>
-
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+        <TouchableOpacity onPress={() => navigation.navigate('Sign Up')}>
+          <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </KeyboardAvoidingView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
-    container:{
-        flex: 1,
-        backgroundColor: "#FFFFFF",
-    },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 15,
+  },
+  button: {
+    backgroundColor: '#28a745',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  linkText: {
+    color: '#007bff',
+    textAlign: 'center',
+    marginTop: 10,
+  },
+});
 
-    logo:{
-        width: 150,
-        height: 150,
-    },
-
-    signInCard:{
-       alignItems: 'center',
-    },
-
-    input:{
-        borderWidth: 1,
-        borderColor: "#1D7801",
-        borderRadius: 10,
-        width: 280,
-
-        // marginLeft: 70,
-        marginTop: 10,
-        color: "black",
-
-        fontSize: 15,
-
-        backgroundColor: "#FFFF",
-        textAlign: "left",
-        padding: 10,
-    },
-    forgotPasswordContainer: {
-        width: "90%"
-    },    
-    forgotPassword:{
-        marginLeft: 155,
-        marginTop: 10,
-        color: "blue",
-        textDecorationLine: "underline",
-        height: 20,
-        width: '80%'
-    },
-
-    pressable:{
-        flex: 1,
-        marginTop: 5,
-    },
-
-    signInBtn:{
-        borderWidth: 1,
-        borderRadius: 10,
-        borderColor: 'transparent',
-
-        width: 200,
-        height: 50,
-
-        alignItems: "center",
-        padding: 10,
-        backgroundColor: "transparent",
-        justifyContent: "center",
-
-        marginLeft: 35,
-        marginTop: 10,
-    },
-
-    signInBtnText:{
-        color: "#FFFFFF",
-        fontSize: 18,
-        fontWeight: "bold",
-        marginRight: 30,
-        marginBottom: 10,
-        height: 25,
-    },
-
-    socialMediaContainer:{
-        marginTop: 60,
-        display: 'flex',
-        flexDirection: 'row',
-        margin: 'auto',
-    },
-
-    facebook:{
-        marginRight: 15,
-        
-    },
-
-    instagram:{
-        marginRight: 15,
-    },
-
-    twitter:{
-        
-    },
-
-   
-    welcome:{
-        textAlign: "center",
-        color: "#1D7801",
-        fontSize: 30,
-        fontWeight: "bold",
-        marginTop: 20,
-    },
-    logo_cont:{
-        alignItems: 'center',
-        marginTop: 60,
-    },
-
-
-    OR:{
-        color: "grey",
-        marginTop: 10,
-        marginLeft: 120,
-        fontSize: 20,
-        width: 100,
-    },
-
-    signUpLink:{
-        display: 'flex',
-        flexDirection: 'row',
-        marginTop: 15,
-    },
-
-    signUpLinkText:{
-        width: 100,
-        color: "#1D7801",
-        fontWeight: "bold",
-        left: 30,
-        fontSize: 16
-    },
-
-    signUpLinkTextRest:{
-        width: 150,
-        color: "grey",
-        fontSize: 16,
-    },
-
-    gradient: {
-        borderRadius: 7,
-        padding: 5,
-        marginLeft: 35,
-        marginTop: 10,
-        justifyContent: 'center',
-    },
-})
+export default LoginScreen;

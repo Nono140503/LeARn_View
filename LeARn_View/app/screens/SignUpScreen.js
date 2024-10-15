@@ -1,55 +1,22 @@
 import React, { useState } from 'react';
 import {
-  View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, KeyboardAvoidingView, Platform, ScrollView,
+  View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../../firebase'; // Assuming firebase.js is in the parent folder
 
 const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [role, setRole] = useState('student'); // Default role
+  const [username, setUsername] = useState(''); // State for Username
+  const [isLecturer, setIsLecturer] = useState(false); // Radio button state
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
-  // Validate email using @
-  const validateEmail = (email) => {
-    const emailchecker = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailchecker.test(email);
-  };
-
-  // Validate password: At least 8 characters, one uppercase, one lowercase, one number, and one special character
-  const validatePassword = (password) => {
-    const passwordchecker = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return passwordchecker.test(password);
-  };
-
-  // Checks user input
-  const handleSignUp = () => {
-    if (!email) {
-      Alert.alert('Missing Email', 'Please enter your email address.');
-      return;
-    }
-
-    if (!password) {
-      Alert.alert('Missing Password', 'Please enter your password.');
-      return;
-    }
-
-    if (!confirmPassword) {
-      Alert.alert('Missing Confirm Password', 'Please confirm your password.');
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      Alert.alert('Invalid Email', 'Please enter a valid email address.');
-      return;
-    }
-
-    if (!validatePassword(password)) {
-      Alert.alert(
-        'Invalid Password',
-        'Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, one number, and one special character.'
-      );
+  const handleSignUp = async () => {
+    if (!email || !password || !username) {
+      Alert.alert('Missing Fields', 'Please fill in all fields.');
       return;
     }
 
@@ -58,79 +25,99 @@ const SignUpScreen = ({ navigation }) => {
       return;
     }
 
-    // Proceed with sign-up logic
-    Alert.alert('Success', 'Account created successfully!');
+    try {
+      setIsLoading(true); // Start loading
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Set user role based on the radio button selection
+      const role = isLecturer ? 'lecturer' : 'student';
+
+      // Store user data in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        username, // Save the username in Firestore
+        email,
+        role, // Save the role in Firestore
+      });
+
+      Alert.alert('Sign Up Successful', `Welcome ${username}!`);
+      navigation.navigate('Login Screen'); // Navigate back to login screen
+    } catch (error) {
+      const errorMessage = error.message;
+      Alert.alert('Sign Up Error', errorMessage);
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
   };
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.logoContainer}>
-          <Image
-            source={require('../../assets/LV_logo.png')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-        </View>
+        <Text style={styles.title}>Sign Up</Text>
 
-        <Text style={styles.createAccountText}>Create Account</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username} // Fixed value
+          onChangeText={setUsername} // Fixed setter
+        />
 
         <TextInput
           style={styles.input}
           placeholder="Email"
           value={email}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
         />
+
         <TextInput
           style={styles.input}
-          placeholder="Create Password"
+          placeholder="Password"
           value={password}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={setPassword}
           secureTextEntry
         />
+
         <TextInput
           style={styles.input}
           placeholder="Confirm Password"
           value={confirmPassword}
-          onChangeText={(text) => setConfirmPassword(text)}
+          onChangeText={setConfirmPassword}
           secureTextEntry
         />
 
+        {/* Radio Button for Lecturer Role */}
         <View style={styles.radioContainer}>
-         
-
           <TouchableOpacity
             style={styles.radioButton}
-            onPress={() => setRole('lecturer')}
+            onPress={() => setIsLecturer(!isLecturer)}
           >
-            <View style={[styles.radioOuter, role === 'lecturer' && styles.radioSelected]}>
-              {role === 'lecturer' && <View style={styles.radioInner} />}
+            <View style={[styles.radioOuter, isLecturer && styles.radioSelected]}>
+              {isLecturer && <View style={styles.radioInner} />}
             </View>
             <Text style={styles.radioLabel}>Request Lecturer credentials</Text>
           </TouchableOpacity>
         </View>
 
-        <LinearGradient
-            colors={['#1D7801', '#32CD32']}
+        {/* Button and Loader */}
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#28a745" />
+        ) : (
+          <TouchableOpacity
             style={styles.button}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
+            onPress={handleSignUp}
+            disabled={isLoading} // Disable button while loading
           >
-            <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
-              <Text style={styles.signUpButtonText}>Sign Up</Text>
-            </TouchableOpacity>
-          </LinearGradient>
-
-
-        <Text style={styles.orText}>OR</Text>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
+        )}
 
         <TouchableOpacity onPress={() => navigation.navigate('Login Screen')}>
-          <Text style={styles.logInText}>Log In</Text>
+          <Text style={styles.linkText}>Already have an account? Log in</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -139,48 +126,42 @@ const SignUpScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
     padding: 20,
   },
-  button:{
-    width: '70%',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginBottom: 10,
-    },
-  logoContainer: {
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
     marginBottom: 20,
-    marginTop: 70,
-    alignItems: 'center',
-  },
-  logo: {
-    width: 150, 
-    height: 150, 
-  },
-  createAccountText: {
-    fontSize: 30,
-    fontWeight: 'bold', 
-    color: '#1D7801',
-    marginBottom: 20,
+    textAlign: 'center',
   },
   input: {
-    width: '90%',
-    height: 50,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    paddingHorizontal: 15,
-    marginBottom: 10,
-    borderColor: '#1D7801', 
+    borderColor: '#ccc',
     borderWidth: 1,
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 15,
+  },
+  button: {
+    backgroundColor: '#28a745',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  linkText: {
+    color: '#007bff',
+    textAlign: 'center',
+    marginTop: 10,
   },
   radioContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
-    justifyContent: 'space-between',
-    width: '90%',
   },
   radioButton: {
     flexDirection: 'row',
@@ -191,46 +172,23 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: '#1D7801',
+    borderColor: '#007bff',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
+  },
+  radioSelected: {
+    borderColor: '#28a745',
   },
   radioInner: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#1D7801',
-  },
-  radioSelected: {
-    borderColor: '#1D7801',
+    backgroundColor: '#28a745',
   },
   radioLabel: {
     fontSize: 16,
-    color: 'grey',
-  },
-  signUpButton: {
-    width: '75%',
-    height: 45,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  signUpButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-  orText: {
-    color: 'lightgrey',
-    marginBottom: 10,
-  },
-  logInText: {
-    color: '#1D7801',
-    fontSize: 16,
-    fontWeight: 'bold',
+    color: '#333',
   },
 });
 
