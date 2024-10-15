@@ -1,76 +1,90 @@
-//Settings Screen
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { FontAwesome, Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
 
-const SettingsScreen = ({navigation}) => {
-  const handleBack = () =>{
+const LecturerSettingsScreen = ({ navigation }) => {
+  const handleBack = () => {
     navigation.goBack();
-  }
-  const handleLecturer = ()=>{
+  };
+
+  const handleLecturerDashboard = () => {
     navigation.navigate('Lecturer Dashboard');
-  }
-  const handleProfile =() =>{
-    navigation.navigate('Profile Screen')
-  }
+  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 15 }}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleBack}>
-          <Ionicons name='arrow-back-outline' size={30} style={styles.back_arrow}/>
+          <Ionicons name='arrow-back-outline' size={30} style={styles.backArrow} />
         </TouchableOpacity>
-          
-          <Text style={styles.headerText}>Settings</Text>
-  
+        <Text style={styles.headerText}>Lecturer Settings</Text>
       </View>
-     
 
-      <TouchableOpacity style={styles.card} onPress={handleProfile}>
+      {/* Profile Settings */}
+      <TouchableOpacity style={styles.card}>
         <FontAwesome name="user-circle-o" size={24} color="#006400" />
         <View style={styles.cardContent}>
           <Text style={styles.cardTitle}>Profile</Text>
-          <Text style={styles.cardSubtitle}>Username, profile picture</Text>
+          <Text style={styles.cardSubtitle}>Update personal details and photo</Text>
         </View>
       </TouchableOpacity>
 
+      {/* Notification Settings */}
       <TouchableOpacity style={styles.card}>
         <Ionicons name="notifications-outline" size={24} color="#006400" />
         <View style={styles.cardContent}>
           <Text style={styles.cardTitle}>Notifications</Text>
-          <Text style={styles.cardSubtitle}>Notification tone</Text>
+          <Text style={styles.cardSubtitle}>Manage notification preferences</Text>
         </View>
       </TouchableOpacity>
 
+      {/* Class Management Settings */}
+      <TouchableOpacity style={styles.card}>
+        <MaterialIcons name="class" size={24} color="#006400" />
+        <View style={styles.cardContent}>
+          <Text style={styles.cardTitle}>Class Management</Text>
+          <Text style={styles.cardSubtitle}>Manage class schedules and rosters</Text>
+        </View>
+      </TouchableOpacity>
+
+      {/* Grading Preferences */}
+      <TouchableOpacity style={styles.card}>
+        <Entypo name="graduation-cap" size={24} color="#006400" />
+        <View style={styles.cardContent}>
+          <Text style={styles.cardTitle}>Grading Preferences</Text>
+          <Text style={styles.cardSubtitle}>Set grading scales and policies</Text>
+        </View>
+      </TouchableOpacity>
+
+      {/* AR Features for Classroom */}
       <TouchableOpacity style={styles.card}>
         <MaterialIcons name="settings" size={24} color="#006400" />
         <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>AR Settings</Text>
-          <Text style={styles.cardSubtitle}>Configure AR features</Text>
+          <Text style={styles.cardTitle}>AR Classroom Settings</Text>
+          <Text style={styles.cardSubtitle}>Configure AR features for teaching</Text>
         </View>
       </TouchableOpacity>
 
+      {/* Theme and App Preferences */}
       <TouchableOpacity style={styles.card}>
         <MaterialIcons name="settings-applications" size={24} color="#006400" />
         <View style={styles.cardContent}>
           <Text style={styles.cardTitle}>App Preferences</Text>
-          <Text style={styles.cardSubtitle}>Light, Dark, System default theme</Text>
+          <Text style={styles.cardSubtitle}>Adjust theme, language, and settings</Text>
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.card} onPress={{}}>
+      {/* Logout Option */}
+      <TouchableOpacity style={styles.card}>
         <MaterialIcons name="logout" size={24} color="#006400" />
         <View style={styles.cardContent}>
           <Text style={styles.cardTitle}>Log Out</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.card} onPress={handleLecturer}>
-        <MaterialIcons name="history-edu" size={24} color="#006400" />
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>Lecturer</Text>
-        </View>
-      </TouchableOpacity>
 
-    </View>
+
+
+    </ScrollView>
   );
 };
 
@@ -80,21 +94,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 15,
   },
-  back_arrow:{
-    color: '#1D7801'
+  backArrow: {
+    color: '#1D7801',
   },
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 25,
-    marginLeft: 100,
+    marginLeft: 50, // Adjusted for better centering
     color: '#1D7801',
   },
-  header:{
-    display: 'flex',
+  header: {
     flexDirection: 'row',
     marginTop: 35,
-    
   },
   card: {
     flexDirection: 'row',
@@ -123,13 +135,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'gray',
   },
-
-
 });
 
-export default SettingsScreen;
-
-
-
-
-
+export default LecturerSettingsScreen;

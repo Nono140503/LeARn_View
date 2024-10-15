@@ -33,26 +33,26 @@ function LecturerBottomTabBar({ navigation, currentScreen }) {
                 <Text style={{ color: currentScreen === 'Student Progress' ? activeColor : defaultColor }}>Students</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => navigation.navigate('Feedback & Communication')}
+                onPress={() => navigation.navigate('Feedback Screen')}
                 style={styles.iconContainer}
             >
                 <Icon 
                     name='chatbubbles-outline' 
                     size={25} 
-                    color={currentScreen === 'Feedback & Communication' ? activeColor : defaultColor} 
+                    color={currentScreen === 'Feedback Screen' ? activeColor : defaultColor} 
                 />
-                <Text style={{ color: currentScreen === 'Feedback & Communication' ? activeColor : defaultColor }}>Feedback</Text>
+                <Text style={{ color: currentScreen === 'Feedback Screen' ? activeColor : defaultColor }}>Feedback</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => navigation.navigate('Settings')}
+                onPress={() => navigation.navigate('Lecturer Settings')}
                 style={styles.iconContainer}
             >
                 <Icon 
                     name='cog-outline' 
                     size={27} 
-                    color={currentScreen === 'Settings' ? activeColor : defaultColor} 
+                    color={currentScreen === 'Lecturer Settings' ? activeColor : defaultColor} 
                 />
-                <Text style={{ color: currentScreen === 'Settings' ? activeColor : defaultColor }}>Settings</Text>
+                <Text style={{ color: currentScreen === 'Lecturer Settings' ? activeColor : defaultColor }}>Settings</Text>
             </TouchableOpacity>
         </View>
     );

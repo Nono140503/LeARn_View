@@ -20,6 +20,12 @@ import QuizCreator from './app/screens/LecturerScreens/QuizCreator';
 import GamesRules from './app/screens/StudentScreens/GameRules';
 import StudentProgress from './app/screens/LecturerScreens/StudentsProgress';
 import Progress from './app/screens/LecturerScreens/Progress';
+import FeedBackScreen from './app/screens/LecturerScreens/FeedbackScreen';
+import AddAnnouncementScreen from './app/screens/LecturerScreens/AddCommunication';
+import LecturerSettingsScreen from './app/screens/LecturerScreens/Lecturer Settings';
+import QuizList from './app/screens/StudentScreens/QuizList';
+import QuizDetails from './app/screens/StudentScreens/QuizDetails'
+
 
 const Stack = createStackNavigator();
 
@@ -55,7 +61,7 @@ const App = () => {
             <Stack.Screen name="Login Screen" component={LogIn} options={{headerShown: false}}/>
             <Stack.Screen name="Sign Up" component={SignUpScreen} options={{headerShown: false}}/>
             <Stack.Screen name="Home Screen" component={HomeScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="ProfileScreen" component={Profile} options={{ headerShown: false}}/>
+            <Stack.Screen name="Profile Screen" component={Profile} options={{ headerShown: false}}/>
             <Stack.Screen name="LeaderBoardScreen" component={LeaderBoard} options={{headerShown: false}}/>
             <Stack.Screen name="Settings" component={Settings} options={{headerShown: false}}/>
             <Stack.Screen name="Help" component={Help} options={{headerShown: false}}/>
@@ -68,6 +74,12 @@ const App = () => {
             <Stack.Screen name="Game Rules" component={GamesRules} options={{headerShown: false}}/>
             <Stack.Screen name="Student Progress" component={StudentProgress} options={{headerShown: false}}/>
             <Stack.Screen name="Progress" component={Progress} options={{headerShown: false}}/>
+            <Stack.Screen name="Feedback Screen" component={FeedBackScreen} options={{headerShown: false}}/>
+            <Stack.Screen name="Add Announcement" component={AddAnnouncementScreen} options={{headerShown: false}}/>
+            <Stack.Screen name="Lecturer Settings" component={LecturerSettingsScreen} options={{headerShown: false}}/>
+            <Stack.Screen name="Quiz Details" component={QuizDetails} options={{headerShown: false}}/>
+            <Stack.Screen name="Quiz List" component={QuizList} options={{headerShown: false}}/>
+
           </>
         )}
       </Stack.Navigator>

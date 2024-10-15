@@ -13,7 +13,7 @@ function HomeBody({ navigation }) {
             title: 'Practice Quizzes in the AR Environment',
             description: 'Test your knowledge with interactive AR quizzes and reinforce your learning.',
             image: require('../assets/bulb.jpg'),
-            navigation: '',  
+            navigation: 'Quiz List',  
         },
         {
             title: 'Tests',
