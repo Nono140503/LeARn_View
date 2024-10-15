@@ -33,7 +33,7 @@ function BottomTabBar({ navigation, currentScreen }) {
                 <Text style={{ color: currentScreen === 'Cart' ? activeColor : defaultColor }}>Grades</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => navigation.navigate('Games')}
+                onPress={() => navigation.navigate('Games Screen')}
                 style={styles.iconContainer}
             >
                 <Icon 

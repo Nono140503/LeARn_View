@@ -14,6 +14,8 @@ import Help from './app/screens/StudentScreens/Help';
 import AR_EnvironmentMenuScreen from './app/screens/StudentScreens/AR_EnvironmentMenuScreen';
 import LecturerDashboard from './app/screens/LecturerScreens/LecturerDashboard';
 import ClassPerformance from './app/screens/LecturerScreens/ClassroomPerformanceScreen';
+import GamesScreen from './app/screens/StudentScreens/GamesScreen';
+import Computer_Components from './app/screens/StudentScreens/Computer_ComponentGame';
 
 const Stack = createStackNavigator();
 
@@ -56,6 +58,8 @@ const App = () => {
             <Stack.Screen name="AR Environment Screen" component={AR_EnvironmentMenuScreen} options={{headerShown: false}}/>
             <Stack.Screen name="Lecturer Dashboard" component={LecturerDashboard} options={{headerShown: false}}/>
             <Stack.Screen name="Class Performance" component={ClassPerformance} options={{headerShown: false}}/>
+            <Stack.Screen name="Games Screen" component={GamesScreen} options={{headerShown: false}}/>
+            <Stack.Screen name="Computer Components" component={Computer_Components} options={{headerShown: false}}/>
           </>
         )}
       </Stack.Navigator>
