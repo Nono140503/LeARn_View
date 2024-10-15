@@ -6,7 +6,7 @@ import Splash from './app/screens/SplashScreen';
 import OnboardingScreen from './app/screens/OnboardingScreen';
 import LogIn from './app/screens/LogInScreen';
 import SignUpScreen from './app/screens/SignUpScreen';
-import HomeScreen from './app/screens/StudentScreens/HomeScreen'
+import HomeScreen from './app/screens/StudentScreens/HomeScreen';
 import Profile from './app/screens/StudentScreens/ProfileScreen';
 import LeaderBoard from './app/screens/StudentScreens/LeaderBoardScreen';
 import Settings from './app/screens/StudentScreens/Settings';
@@ -24,13 +24,15 @@ import FeedBackScreen from './app/screens/LecturerScreens/FeedbackScreen';
 import AddAnnouncementScreen from './app/screens/LecturerScreens/AddCommunication';
 import LecturerSettingsScreen from './app/screens/LecturerScreens/Lecturer Settings';
 import QuizList from './app/screens/StudentScreens/QuizList';
-import QuizDetails from './app/screens/StudentScreens/QuizDetails'
-
+import QuizDetails from './app/screens/StudentScreens/QuizDetails';
+import LaptopTroubleShooting from './app/screens/StudentScreens/LaptopTroubleshooting';
+import ScoreScreen from './app/screens/StudentScreens/ScoreScreen';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
+  const [score, setScore] = useState(0); // State for managing score
 
   const handleSplashFinish = () => {
     setShowSplashScreen(false); 
@@ -38,13 +40,11 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName= 'Splash'
-        
-      >
+      <Stack.Navigator initialRouteName="Splash">
         {showSplashScreen ? (
           <Stack.Screen
-            name="Splash" options={{headerShown: false}}
+            name="Splash" 
+            options={{ headerShown: false }}
           >
             {(props) => (
               <View style={styles.splashContainer}>
@@ -54,32 +54,35 @@ const App = () => {
           </Stack.Screen>
         ) : (
           <>
-            <Stack.Screen
-              name="Onboarding Screen"
-              component={OnboardingScreen}
-              options={{headerShown: false}}/>
-            <Stack.Screen name="Login Screen" component={LogIn} options={{headerShown: false}}/>
-            <Stack.Screen name="Sign Up" component={SignUpScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="Home Screen" component={HomeScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="Profile Screen" component={Profile} options={{ headerShown: false}}/>
-            <Stack.Screen name="LeaderBoardScreen" component={LeaderBoard} options={{headerShown: false}}/>
-            <Stack.Screen name="Settings" component={Settings} options={{headerShown: false}}/>
-            <Stack.Screen name="Help" component={Help} options={{headerShown: false}}/>
-            <Stack.Screen name="AR Environment Screen" component={AR_EnvironmentMenuScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="Lecturer Dashboard" component={LecturerDashboard} options={{headerShown: false}}/>
-            <Stack.Screen name="Class Performance" component={ClassPerformance} options={{headerShown: false}}/>
-            <Stack.Screen name="Games Screen" component={GamesScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="Computer Components" component={Computer_Components} options={{headerShown: false}}/>
-            <Stack.Screen name="Quiz Creator" component={QuizCreator} options={{headerShown: false}}/>
-            <Stack.Screen name="Game Rules" component={GamesRules} options={{headerShown: false}}/>
-            <Stack.Screen name="Student Progress" component={StudentProgress} options={{headerShown: false}}/>
-            <Stack.Screen name="Progress" component={Progress} options={{headerShown: false}}/>
-            <Stack.Screen name="Feedback Screen" component={FeedBackScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="Add Announcement" component={AddAnnouncementScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="Lecturer Settings" component={LecturerSettingsScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="Quiz Details" component={QuizDetails} options={{headerShown: false}}/>
-            <Stack.Screen name="Quiz List" component={QuizList} options={{headerShown: false}}/>
-
+            <Stack.Screen name="Onboarding Screen" component={OnboardingScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Login Screen" component={LogIn} options={{ headerShown: false }} />
+            <Stack.Screen name="Sign Up" component={SignUpScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Home Screen" component={HomeScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Profile Screen" component={Profile} options={{ headerShown: false }} />
+            <Stack.Screen name="LeaderBoardScreen" component={LeaderBoard} options={{ headerShown: false }} />
+            <Stack.Screen name="Settings" component={Settings} options={{ headerShown: false }} />
+            <Stack.Screen name="Help" component={Help} options={{ headerShown: false }} />
+            <Stack.Screen name="AR Environment Screen" component={AR_EnvironmentMenuScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Lecturer Dashboard" component={LecturerDashboard} options={{ headerShown: false }} />
+            <Stack.Screen name="Class Performance" component={ClassPerformance} options={{ headerShown: false }} />
+            <Stack.Screen name="Games Screen" component={GamesScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Computer Components" component={Computer_Components} options={{ headerShown: false }} />
+            <Stack.Screen name="Quiz Creator" component={QuizCreator} options={{ headerShown: false }} />
+            <Stack.Screen name="Game Rules" component={GamesRules} options={{ headerShown: false }} />
+            <Stack.Screen name="Student Progress" component={StudentProgress} options={{ headerShown: false }} />
+            <Stack.Screen name="Progress" component={Progress} options={{ headerShown: false }} />
+            <Stack.Screen name="Feedback Screen" component={FeedBackScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Add Announcement" component={AddAnnouncementScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Lecturer Settings" component={LecturerSettingsScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Quiz Details" component={QuizDetails} options={{ headerShown: false }} />
+            <Stack.Screen name="Quiz List" component={QuizList} options={{ headerShown: false }} />
+            {/* Passing score and setScore to LaptopTroubleShooting and ScoreScreen */}
+            <Stack.Screen name="Laptop Troubleshooting">
+              {(props) => <LaptopTroubleShooting {...props} score={score} setScore={setScore} />}
+            </Stack.Screen>
+            <Stack.Screen name="Score Screen">
+              {(props) => <ScoreScreen {...props} score={score} setScore={setScore} />}
+            </Stack.Screen>
           </>
         )}
       </Stack.Navigator>

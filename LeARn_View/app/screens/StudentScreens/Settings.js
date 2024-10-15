@@ -7,9 +7,6 @@ const SettingsScreen = ({navigation}) => {
   const handleBack = () =>{
     navigation.goBack();
   }
-  const handleLecturer = ()=>{
-    navigation.navigate('Lecturer Dashboard');
-  }
   const handleProfile =() =>{
     navigation.navigate('Profile Screen')
   }
@@ -63,12 +60,7 @@ const SettingsScreen = ({navigation}) => {
           <Text style={styles.cardTitle}>Log Out</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.card} onPress={handleLecturer}>
-        <MaterialIcons name="history-edu" size={24} color="#006400" />
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>Lecturer</Text>
-        </View>
-      </TouchableOpacity>
+      
 
     </View>
   );

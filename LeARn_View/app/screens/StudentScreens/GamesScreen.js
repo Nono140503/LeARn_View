@@ -19,11 +19,11 @@ const GamesScreen = ({ navigation }) => {
       nav: 'Computer Components'
     },
     {
-      title: 'Laptop Troubleshooting',
+      title: 'Check Your Knowledge',
       image: require('../../../assets/concept-computer-repair-service-vector-illustration_357257-792.jpg'),
-      rules: 'Rules:\nDiagnose and resolve common laptop issues efficiently.',
-      gif: require('../../../assets/laptop_troubleshooting.gif'),
-      nav: ''
+      rules: 'Rules:\nChallenge your knowledge of computer fundamentals, terminology, and concepts',
+      gif: require('../../../assets/I Have An Idea!.gif'),
+      nav: 'Laptop Troubleshooting',
     },
     {
       title: 'Malware Mayhem',
@@ -45,13 +45,17 @@ const GamesScreen = ({ navigation }) => {
           <TouchableOpacity
             key={index}
             style={styles.componentItem}
-            onPress={() => navigation.navigate('Game Rules', {
-              gameTitle: game.title,
-              gameImage: game.image,
-              rules: game.rules,
-              gif: game.gif,
-              nav: game.nav
-            })}
+            onPress={() => {
+              
+                navigation.navigate('Game Rules', {
+                  gameTitle: game.title,
+                  gameImage: game.image,
+                  rules: game.rules,
+                  gif: game.gif,
+                  nav: game.nav
+                });
+             
+            }}
           >
             <Image source={game.image} style={styles.componentImage} />
             <View style={styles.overlay}>

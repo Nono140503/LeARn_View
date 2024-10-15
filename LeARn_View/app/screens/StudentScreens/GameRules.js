@@ -7,9 +7,10 @@ const GamesRules = ({ route, navigation }) => {
     const handleBack = () => {
         navigation.goBack();
     }
-    const handleGame = ()=>{
+    const handleGame = () => {
         navigation.navigate(nav);
-    }
+      
+    };
   return (
     <View style={styles.container}>
         <Image source={gif} style={styles.gif}/>
