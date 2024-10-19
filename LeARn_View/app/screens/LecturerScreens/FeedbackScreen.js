@@ -1,60 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '../../../firebase'; // Make sure your Firebase config is correctly imported
 import LecturerBottomTab from '../../../components/LecturerBottomTabBar';
 
 const FeedbackScreen = ({ navigation }) => {
-  const [announcements, setAnnouncements] = useState([
-    'Test 1 has been uploaded and will be due on the 16th of September',
-    'Additional material for Module 1 has been uploaded. It will assist you as practice for Test 1.'
-  ]);
-
+  const [announcements, setAnnouncements] = useState([]);
   const [currentScreen, setCurrentScreen] = useState('Feedback Screen');
+
+  // Fetch announcements from Firestore on mount
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'announcements'), (snapshot) => {
+      const fetchedAnnouncements = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setAnnouncements(fetchedAnnouncements);
+    });
+
+    return unsubscribe; // Cleanup listener on unmount
+  }, []);
 
   const handleNavigation = (screen) => {
     setCurrentScreen(screen);
     navigation.navigate(screen);
   };
 
-  const addAnnouncement = (newAnnouncement) => {
-    setAnnouncements([...announcements, newAnnouncement]); // Update announcements list
-  };
-
   return (
     <>
       <View style={styles.container}>
-      <Text style={styles.headerText}>Feedback & Communication</Text>
-      <Text style={styles.subHeaderText}>Announcements</Text>
+        <Text style={styles.headerText}>Feedback & Communication</Text>
+        <Text style={styles.subHeaderText}>Announcements</Text>
 
-      <ScrollView style={styles.announcementContainer}>
-        {announcements.map((announcement, index) => (
-          <View style={styles.announcementBox} key={index}>
-            <Ionicons name="chatbubbles-outline" size={30} color="green" style={styles.icon} />
-            <View style={styles.announcementTextContainer}>
-              <Text style={styles.announcementText}>
-                {announcement}
-              </Text>
+        <ScrollView style={styles.announcementContainer}>
+          {announcements.map((announcement) => (
+            <View style={styles.announcementBox} key={announcement.id}>
+              <Ionicons name="chatbubbles-outline" size={30} color="green" style={styles.icon} />
+              <View style={styles.announcementTextContainer}>
+                <Text style={styles.announcementText}>
+                  {announcement.announcement}
+                </Text>
+              </View>
             </View>
-          </View>
-        ))}
-      </ScrollView>
+          ))}
+        </ScrollView>
 
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => navigation.navigate('Add Announcement', { addAnnouncement })}
-      >
-        <Ionicons name="add" size={40} color="white" />
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => navigation.navigate('Add Announcement')}
+        >
+          <Ionicons name="add" size={40} color="white" />
+        </TouchableOpacity>
+      </View>
 
-     
-    </View>
-    <LecturerBottomTab 
+      <LecturerBottomTab 
         navigation={navigation} 
         currentScreen={currentScreen}
         onNavigate={handleNavigation}
       />
     </>
-    
   );
 };
 
@@ -109,6 +114,7 @@ const styles = StyleSheet.create({
     right: 30,
     backgroundColor: 'green',
     borderRadius: 5,
+    padding: 10,
   },
 });
 

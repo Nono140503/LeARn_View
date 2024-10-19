@@ -1,14 +1,36 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { collection, addDoc } from 'firebase/firestore'; // Import Firestore functions
+import { db } from '../../../firebase'; // Ensure correct db import
 
-const AddAnnouncementScreen = ({ navigation, route }) => {
+const AddAnnouncementScreen = ({ navigation }) => {
   const [announcement, setAnnouncement] = useState('');
 
-  const handleAddAnnouncement = () => {
+  // Optional: To handle navigation focus or reset on screen load
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // Reset or refresh state on screen focus
+      setAnnouncement('');
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  const handleAddAnnouncement = async () => {
     if (announcement.trim()) {
-      route.params.addAnnouncement(announcement); 
-      navigation.goBack(); 
+      try {
+        await addDoc(collection(db, 'announcements'), {
+          announcement: announcement,
+          timestamp: new Date().toISOString(), // Store the current timestamp
+          readBy: [], // Store users who marked this as read
+        });
+        Alert.alert('Success', 'Announcement added successfully.');
+        navigation.goBack(); // Go back after adding announcement
+      } catch (error) {
+        Alert.alert('Error', 'Failed to add announcement.');
+      }
+    } else {
+      Alert.alert('Validation Error', 'Announcement text cannot be empty.');
     }
   };
 
@@ -22,7 +44,7 @@ const AddAnnouncementScreen = ({ navigation, route }) => {
         onChangeText={setAnnouncement}
       />
       <TouchableOpacity style={styles.addButton} onPress={handleAddAnnouncement}>
-         <Text style={styles.addText}>Add Announcement</Text>
+        <Text style={styles.addText}>Add Announcement</Text>
       </TouchableOpacity>
     </View>
   );
@@ -33,10 +55,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
-    
   },
-  addText:{
-    color:'white',
+  addText: {
+    color: 'white',
     fontSize: 15,
     fontWeight: 'bold',
   },
