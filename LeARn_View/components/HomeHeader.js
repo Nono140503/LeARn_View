@@ -1,40 +1,23 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import  Icon from 'react-native-vector-icons/Ionicons';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; 
+import Icon from 'react-native-vector-icons/Ionicons';
 
-function HomeHeader({navigation}){
-    const handleBack = ()=>{
-        navigation.navigate('Home');
-    }
+const HomeScreen = () => {
+    const navigation = useNavigation(); 
+
     return (
-        <>
         <View style={styles.header}>
-                <TouchableOpacity onPress={handleBack} style={styles.icon_cont}>
-            
-            <Icon name='menu-outline' size={30} style={styles.icon}  onPress={handleBack}/>
-                </TouchableOpacity>
-                <Text style={styles.title}>Home</Text>
-            </View>
-        </>
-    )
-}
+            <TouchableOpacity onPress={() => navigation.navigate('Announcements')} style={styles.icon_cont}>
+                <Icon name='notifications' size={30} style={styles.icon} />
+            </TouchableOpacity>
+            <Text style={styles.title}>Home</Text>
+        </View>
+    );
+};
+
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginTop: '8%',
-        color: '#227d39',
-        marginRight: '42%'
-    },
-    icon_cont:{
-        padding: '5%'
-    },
-    icon:{
-        top:"30%",
-        color:"#227d39",
-    },
     header: {
-        
         borderBottomColor: 'grey',
         borderBottomWidth: 0.4,
         alignItems: 'center',
@@ -45,10 +28,19 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '100%',
     },
-    logo:{
-        width: 70,
-        height: 70,
-        borderRadius: '50%',
+    title: {
+        fontWeight: 'bold',
+        marginTop: '8%',
+        color: '#227d39',
+        marginRight: '45%'
     },
-})
-export default HomeHeader
+    icon_cont: {
+        padding: '5%', 
+    },
+    icon: {
+        color: "#227d39",
+        top:"50%",
+    },
+});
+
+export default HomeScreen;
