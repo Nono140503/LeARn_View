@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Splash from './app/screens/SplashScreen'; 
 import OnboardingScreen from './app/screens/OnboardingScreen';
 import LogIn from './app/screens/LogInScreen';
+import ForgotPassword from './app/screens/ForgotPasswordScreen';
 import SignUpScreen from './app/screens/SignUpScreen';
 import HomeScreen from './app/screens/StudentScreens/HomeScreen';
 import Profile from './app/screens/StudentScreens/ProfileScreen';
@@ -27,6 +28,9 @@ import QuizList from './app/screens/StudentScreens/QuizList';
 import QuizDetails from './app/screens/StudentScreens/QuizDetails';
 import LaptopTroubleShooting from './app/screens/StudentScreens/LaptopTroubleshooting';
 import ScoreScreen from './app/screens/StudentScreens/ScoreScreen';
+import TestList from './app/screens/StudentScreens/TestList';
+import TestDetail from './app/screens/StudentScreens/TestDetails';
+import AnnouncementPage from './app/screens/StudentScreens/Announcements';
 
 const Stack = createStackNavigator();
 
@@ -76,6 +80,10 @@ const App = () => {
             <Stack.Screen name="Lecturer Settings" component={LecturerSettingsScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Quiz Details" component={QuizDetails} options={{ headerShown: false }} />
             <Stack.Screen name="Quiz List" component={QuizList} options={{ headerShown: false }} />
+            <Stack.Screen name="Test List" component={TestList} options={{headerShown: false}}/>
+            <Stack.Screen name="Test Details" component={TestDetail} options={{headerShown: false}}/>
+            <Stack.Screen name="Announcements" component={AnnouncementPage} options={{headerShown: false}}/>
+            <Stack.Screen name="Forgot Password" component={ForgotPassword} options={{headerShown: false}}/>
             {/* Passing score and setScore to LaptopTroubleShooting and ScoreScreen */}
             <Stack.Screen name="Laptop Troubleshooting">
               {(props) => <LaptopTroubleShooting {...props} score={score} setScore={setScore} />}
