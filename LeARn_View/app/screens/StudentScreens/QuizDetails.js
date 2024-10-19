@@ -12,6 +12,16 @@ const QuizDetail = ({ route, navigation }) => {
   const [loading, setLoading] = useState(false);
   const studentId = auth.currentUser.uid;
 
+  useEffect(() => {
+    // Check if the quiz is still available based on due date
+    const currentDate = new Date();
+    const dueDate = new Date(quiz.dueDate); // Assuming dueDate is in ISO string format
+    if (currentDate > dueDate) {
+      Alert.alert('Quiz Expired', 'This quiz is no longer available.');
+      navigation.goBack(); // Navigate back or take any action you prefer
+    }
+  }, []);
+
   // Handle option selection
   const handleAnswerSelect = (questionIndex, optionIndex) => {
     const updatedAnswers = [...answers];
@@ -58,6 +68,9 @@ const QuizDetail = ({ route, navigation }) => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.header}>{quiz.title}</Text>
+        <Text style={styles.details}>Duration: {quiz.duration} minutes</Text>
+        <Text style={styles.details}>Due Date: {new Date(quiz.dueDate).toLocaleDateString()}</Text>
+
         {quiz.questions.map((q, index) => (
           <View key={index} style={styles.questionContainer}>
             <Text style={styles.question}>{`Q${index + 1}: ${q.question}`}</Text>
@@ -120,6 +133,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
     marginBottom: 20,
+  },
+  details: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 10,
+    color: '#555', // Optional: Style for the details
   },
   questionContainer: {
     marginBottom: 20,

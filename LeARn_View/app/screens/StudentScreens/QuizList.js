@@ -38,7 +38,14 @@ const QuizList = ({ navigation }) => {
     if (attempts.length >= 3) {
       Alert.alert('Attempts exhausted', 'You have used all your attempts for this quiz.');
     } else {
-      navigation.navigate('Quiz Details', { quiz, attempts });
+      // Check if the quiz is expired
+      const currentDate = new Date();
+      const dueDate = new Date(quiz.dueDate); // Assuming dueDate is in ISO string format
+      if (currentDate > dueDate) {
+        Alert.alert('Quiz Expired', 'This quiz is no longer available.');
+      } else {
+        navigation.navigate('Quiz Details', { quiz, attempts });
+      }
     }
   };
 
@@ -49,11 +56,14 @@ const QuizList = ({ navigation }) => {
     return (
       <View style={styles.quizContainer}>
         <Text style={styles.quizTitle}>{item.title}</Text>
-        <Text>Attempts left: {attemptsLeft}</Text>
+        <Text style={styles.infoText}>Attempts left: {attemptsLeft}</Text>
+        <Text style={styles.infoText}>Duration: {item.duration} minutes</Text>
+        <Text style={styles.infoText}>Due Date: {new Date(item.dueDate).toLocaleDateString()}</Text>
         <Button
           title={attemptsLeft > 0 ? "Take Quiz" : "No Attempts Left"}
           onPress={() => handleQuizPress(item)}
           disabled={attemptsLeft === 0}
+          color={attemptsLeft > 0 ? '#227d39' : '#ccc'} // Change button color based on attempts
         />
       </View>
     );
@@ -74,23 +84,30 @@ const QuizList = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 50,
+    padding: 20,
   },
   header: {
     fontSize: 24,
     textAlign: 'center',
     marginBottom: 20,
+    color: '#227d39', 
   },
   quizContainer: {
-    marginBottom: 15,
-    padding: 10,
-    borderWidth: 1,
+    padding: 15,
+    borderBottomWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 5,
+    backgroundColor: '#f9f9f9', 
+    borderRadius: 8,
+    marginBottom: 10,
   },
   quizTitle: {
     fontSize: 18,
+    fontWeight: 'bold',
     marginBottom: 10,
+  },
+  infoText: {
+    fontSize: 14,
+    color: '#333',
   },
 });
 
