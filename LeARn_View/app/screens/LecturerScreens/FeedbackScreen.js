@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
-import { collection, onSnapshot } from 'firebase/firestore';
-import { db } from '../../../firebase'; // Make sure your Firebase config is correctly imported
+import { collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
+import { db } from '../../../firebase'; // Ensure correct Firebase config
 import LecturerBottomTab from '../../../components/LecturerBottomTabBar';
 
 const FeedbackScreen = ({ navigation }) => {
@@ -21,6 +21,16 @@ const FeedbackScreen = ({ navigation }) => {
 
     return unsubscribe; // Cleanup listener on unmount
   }, []);
+
+  // Function to delete an announcement
+  const handleDeleteAnnouncement = async (id) => {
+    try {
+      await deleteDoc(doc(db, 'announcements', id)); // Deletes the announcement from Firestore
+      Alert.alert('Success', 'Announcement deleted successfully!');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to delete the announcement.');
+    }
+  };
 
   const handleNavigation = (screen) => {
     setCurrentScreen(screen);
@@ -42,6 +52,13 @@ const FeedbackScreen = ({ navigation }) => {
                   {announcement.announcement}
                 </Text>
               </View>
+              {/* Delete button */}
+              <TouchableOpacity
+                onPress={() => handleDeleteAnnouncement(announcement.id)}
+                style={styles.deleteButton}
+              >
+                <Ionicons name="trash-outline" size={24} color="red" />
+              </TouchableOpacity>
             </View>
           ))}
         </ScrollView>
@@ -74,7 +91,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'green',
     textAlign: 'center',
-    marginTop: 20
+    marginTop: 20,
   },
   subHeaderText: {
     fontSize: 18,
@@ -115,6 +132,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     borderRadius: 5,
     padding: 10,
+  },
+  deleteButton: {
+    marginLeft: 10,
   },
 });
 
