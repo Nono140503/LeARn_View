@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator,
 } from 'react-native';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth'; // Add `sendPasswordResetEmail`
 import { doc, getDoc } from 'firebase/firestore'; 
-import { auth, db } from '../../firebase'; // Assuming firebase.js is in the parent folder
+import { auth, db } from '../../firebase'; // Ensure correct imports
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -93,6 +93,11 @@ const LoginScreen = ({ navigation }) => {
 
         <TouchableOpacity onPress={() => navigation.navigate('Sign Up')}>
           <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
+        </TouchableOpacity>
+
+        {/* Forgot Password */}
+        <TouchableOpacity onPress={() => navigation.navigate('Forgot Password')}>
+          <Text style={styles.linkText}>Forgot Password?</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
