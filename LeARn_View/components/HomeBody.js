@@ -19,7 +19,7 @@ function HomeBody({ navigation }) {
             title: 'Tests',
             description: 'Check and take your tests set as a quiz or in the AR environment.',
             image: require('../assets/online-test-checklist-pencil-computer-monitor-online-form-survey-online-questionnaire-choos_153097-2893.jpg'),
-            navigation: 'AR Environment Screen', 
+            navigation: 'Test List', 
         },
     ]);
 

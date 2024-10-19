@@ -19,7 +19,7 @@ function LecturerHome({ navigation }) {
             title: 'Create a Test',
             description: 'Set up tests with random questions and monitor progress in real-time.',
             image: require('../assets/test.jpg'),
-            navigation: 'AR Environment Screen', 
+            navigation: 'Test Creator', 
         },
         {
             title: 'AR Lesson Management',
