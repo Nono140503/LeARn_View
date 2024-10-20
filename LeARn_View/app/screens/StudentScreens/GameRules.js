@@ -20,6 +20,7 @@ const GamesRules = ({ route, navigation }) => {
        
       <Text style={styles.title}>{gameTitle}</Text>
       <View style={styles.rule_cont}>
+        <Text style={styles.rulesHead}>Rules:</Text>
         <Text style={styles.rules}>{rules}</Text>
       </View>
       <TouchableOpacity style={styles.startButton} onPress={handleGame}>
@@ -35,6 +36,11 @@ const styles = StyleSheet.create({
     flex: 1,
     
     backgroundColor: '#EFFAF3',
+  },
+  rulesHead:{
+    fontSize: 18,
+    color: '#3D8DCB',
+    fontWeight: 'bold',
   },
   startButton:{
     backgroundColor: '#28a745',
@@ -60,19 +66,19 @@ const styles = StyleSheet.create({
     width: 400,
   },
   rule_cont:{
-    padding: 20,
+    padding: 25,
     bottom: 30,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
     color: '#3D8DCB',
     textAlign: 'center',
     bottom: 20,
   },
   rules: {
-    fontSize: 18,
+    fontSize: 17,
     lineHeight: 24,
     color: '#333',
     
