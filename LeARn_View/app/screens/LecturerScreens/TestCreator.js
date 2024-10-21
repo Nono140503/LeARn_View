@@ -17,8 +17,9 @@ import { db } from '../../../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const QuizCreator = () => {
-  const [quizTitle, setQuizTitle] = useState('');
+const TestCreator = () => {
+  const [testTitle, setTestTitle] = useState('');
+  const [duration, setDuration] = useState('01:00:00');
   const [questions, setQuestions] = useState([{ type: 'mcq', question: '', options: ['', '', '', ''], correctAnswer: '' }]);
   const [loading, setLoading] = useState(false);
   const [unlockDate, setUnlockDate] = useState(new Date());
@@ -59,8 +60,13 @@ const QuizCreator = () => {
   };
 
   const validateForm = () => {
-    if (!quizTitle.trim()) {
-      Alert.alert('Validation Error', 'Please enter a quiz title.');
+    if (!testTitle.trim()) {
+      Alert.alert('Validation Error', 'Please enter a test title.');
+      return false;
+    }
+
+    if (!duration) {
+      Alert.alert('Validation Error', 'Please select a duration for the test.');
       return false;
     }
 
@@ -91,52 +97,41 @@ const QuizCreator = () => {
     return true;
   };
 
-  const saveQuiz = async () => {
+  const saveTest = async () => {
     if (!validateForm()) {
       return;
     }
-  
+
     setLoading(true);
     try {
       const unlockDateTime = new Date(unlockDate);
       unlockDateTime.setHours(unlockTime.hours);
       unlockDateTime.setMinutes(unlockTime.minutes);
-  
+
       const dueDateTime = new Date(dueDate);
       dueDateTime.setHours(dueTime.hours);
       dueDateTime.setMinutes(dueTime.minutes);
-  
-      // Prepare the quiz data
-      const quizData = {
-        title: quizTitle.trim(),
-        questions: questions.map(q => ({
-          ...q,
-          options: q.options.map(option => option || ''),
-          correctAnswer: q.correctAnswer || '',
-          suggestedAnswer: q.suggestedAnswer || ''
-        })),
+
+      const testData = {
+        title: testTitle,
+        duration,
+        questions,
         unlockDate: unlockDateTime.toISOString(),
         dueDate: dueDateTime.toISOString(),
       };
-  
-      // Only add the document if it contains all required fields
-      if (quizData.title && quizData.questions.length > 0) {
-        await addDoc(collection(db, 'quizzes'), quizData);
-        Alert.alert('Quiz Saved', `Title: ${quizTitle}`, [{ text: 'OK' }]);
-  
-        // Reset form fields
-        setQuizTitle('');
-        setQuestions([{ type: 'mcq', question: '', options: ['', '', '', ''], correctAnswer: '' }]);
-        setUnlockDate(new Date());
-        setUnlockTime({ hours: '12', minutes: '00' });
-        setDueDate(new Date());
-        setDueTime({ hours: '12', minutes: '00' });
-      } else {
-        Alert.alert('Error', 'Quiz data is incomplete. Please fill in all required fields.');
-      }
+      await addDoc(collection(db, 'tests'), testData);
+      Alert.alert('Test Saved', `Title: ${testTitle}`, [{ text: 'OK' }]);
+
+      setTestTitle('');
+      setDuration('01:00:00');
+      setQuestions([{ type: 'mcq', question: '', options: ['', '', '', ''], correctAnswer: '' }]);
+      setUnlockDate(new Date());
+      setUnlockTime({ hours: '12', minutes: '00' });
+      setDueDate(new Date());
+      setDueTime({ hours: '12', minutes: '00' });
     } catch (error) {
-      console.error('Error saving quiz:', error);
-      Alert.alert('Error', 'Could not save quiz. Please try again.', [{ text: 'OK' }]);
+      console.error('Error saving test:', error);
+      Alert.alert('Error', 'Could not save test. Please try again.', [{ text: 'OK' }]);
     } finally {
       setLoading(false);
     }
@@ -148,13 +143,24 @@ const QuizCreator = () => {
       style={styles.container}
     >
       <ScrollView contentContainerStyle={styles.scrollView}>
-        <Text style={styles.header}>Create a Quiz</Text>
+        <Text style={styles.header}>Create a Test</Text>
         <TextInput
           style={styles.input}
-          placeholder="Quiz title"
-          value={quizTitle}
-          onChangeText={setQuizTitle}
+          placeholder="Test title"
+          value={testTitle}
+          onChangeText={setTestTitle}
         />
+        <Text style={styles.inputLabel}>Select Duration:</Text>
+        <Picker
+          selectedValue={duration}
+          style={styles.picker}
+          onValueChange={(itemValue) => setDuration(itemValue)}
+        >
+          <Picker.Item label="30 minutes" value="00:30:00" />
+          <Picker.Item label="1 hour" value="01:00:00" />
+          <Picker.Item label="1 hour 30 minutes" value="01:30:00" />
+          <Picker.Item label="2 hours" value="02:00:00" />
+        </Picker>
 
         <Text style={styles.inputLabel}>Unlock Date:</Text>
         <TouchableOpacity onPress={() => setShowUnlockDatePicker(true)}>
@@ -179,7 +185,8 @@ const QuizCreator = () => {
           <Picker
             selectedValue={unlockTime.hours}
             style={styles.picker}
-            onValueChange={(itemValue) => setUnlockTime((prev) => ({ ...prev, hours: itemValue }))}>
+            onValueChange={(itemValue) => setUnlockTime((prev) => ({ ...prev, hours: itemValue }))}
+          >
             {Array.from({ length: 24 }, (_, i) => (
               <Picker.Item label={`${i.toString().padStart(2, '0')}`} value={i.toString().padStart(2, '0')} key={i} />
             ))}
@@ -187,7 +194,8 @@ const QuizCreator = () => {
           <Picker
             selectedValue={unlockTime.minutes}
             style={styles.picker}
-            onValueChange={(itemValue) => setUnlockTime((prev) => ({ ...prev, minutes: itemValue }))}>
+            onValueChange={(itemValue) => setUnlockTime((prev) => ({ ...prev, minutes: itemValue }))}
+          >
             {Array.from({ length: 60 }, (_, i) => (
               <Picker.Item label={`${i.toString().padStart(2, '0')}`} value={i.toString().padStart(2, '0')} key={i} />
             ))}
@@ -217,7 +225,8 @@ const QuizCreator = () => {
           <Picker
             selectedValue={dueTime.hours}
             style={styles.picker}
-            onValueChange={(itemValue) => setDueTime((prev) => ({ ...prev, hours: itemValue }))}>
+            onValueChange={(itemValue) => setDueTime((prev) => ({ ...prev, hours: itemValue }))}
+          >
             {Array.from({ length: 24 }, (_, i) => (
               <Picker.Item label={`${i.toString().padStart(2, '0')}`} value={i.toString().padStart(2, '0')} key={i} />
             ))}
@@ -225,60 +234,80 @@ const QuizCreator = () => {
           <Picker
             selectedValue={dueTime.minutes}
             style={styles.picker}
-            onValueChange={(itemValue) => setDueTime((prev) => ({ ...prev, minutes: itemValue }))}>
+            onValueChange={(itemValue) => setDueTime((prev) => ({ ...prev, minutes: itemValue }))}
+          >
             {Array.from({ length: 60 }, (_, i) => (
               <Picker.Item label={`${i.toString().padStart(2, '0')}`} value={i.toString().padStart(2, '0')} key={i} />
             ))}
           </Picker>
         </View>
 
-        <Text style={{ fontSize: 28, fontWeight: 'bold', marginTop: 20 }}>Questions</Text>
-        {questions.map((q, index) => (
-          <View key={index} style={styles.questionContainer}>
+        {questions.map((q, qIndex) => (
+          <View key={qIndex} style={styles.questionContainer}>
             <TextInput
-              style={styles.questionInput}
+              style={styles.input}
               placeholder="Question"
               value={q.question}
-              onChangeText={(value) => updateQuestion(index, 'question', value)}
+              onChangeText={(value) => updateQuestion(qIndex, 'question', value)}
             />
             {q.type === 'mcq' && (
               <>
-                {q.options.map((option, optionIndex) => (
+                {q.options.map((option, oIndex) => (
                   <TextInput
-                    key={optionIndex}
-                    style={styles.optionInput}
-                    placeholder={`Option ${String.fromCharCode(65 + optionIndex)}`}
+                    key={oIndex}
+                    style={styles.input}
+                    placeholder={`Option ${String.fromCharCode(65 + oIndex)}`}
                     value={option}
-                    onChangeText={(value) => updateOption(index, optionIndex, value)}
+                    onChangeText={(value) => updateOption(qIndex, oIndex, value)}
                   />
                 ))}
-                <TextInput
-                  style={styles.correctAnswerInput}
-                  placeholder="Correct Answer (e.g., A, B, C, D)"
-                  value={q.correctAnswer}
-                  onChangeText={(value) => updateQuestion(index, 'correctAnswer', value)}
-                />
+                <Text style={styles.inputLabel}>Select Correct Answer</Text>
+                <Picker
+                  selectedValue={q.correctAnswer}
+                  style={styles.picker}
+                  onValueChange={(itemValue) => updateQuestion(qIndex, 'correctAnswer', itemValue)}
+                >
+                  <Picker.Item label="Select correct answer" value="" />
+                  {q.options.map((option, oIndex) => (
+                    <Picker.Item
+                      key={oIndex}
+                      label={`${String.fromCharCode(65 + oIndex)}: ${option}`}
+                      value={oIndex.toString()}
+                    />
+                  ))}
+                </Picker>
               </>
             )}
-            <TouchableOpacity onPress={() => removeQuestion(index)}>
-              <Text style={styles.removeQuestionText}>Remove Question</Text>
-            </TouchableOpacity>
+            {q.type === 'truefalse' && (
+              <Picker
+                selectedValue={q.correctAnswer}
+                style={styles.picker}
+                onValueChange={(itemValue) => updateQuestion(qIndex, 'correctAnswer', itemValue)}
+              >
+                <Picker.Item label="Select correct answer" value="" />
+                <Picker.Item label="True" value="true" />
+                <Picker.Item label="False" value="false" />
+              </Picker>
+            )}
+            {q.type === 'input' && (
+              <TextInput
+                style={styles.input}
+                placeholder="Suggested Answer"
+                value={q.suggestedAnswer}
+                onChangeText={(value) => updateQuestion(qIndex, 'suggestedAnswer', value)}
+              />
+            )}
+            <Button title="Remove Question" color="red" onPress={() => removeQuestion(qIndex)} />
           </View>
         ))}
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => addQuestion('mcq')}>
-            <Text style={styles.buttonText}>+ Add MCQ Question</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => addQuestion('input')}>
-            <Text style={styles.buttonText}>+ Add Input Question</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={saveQuiz} disabled={loading}>
-            <Text style={styles.buttonText}>{loading ? 'Saving...' : 'Save and Upload'}</Text>
-          </TouchableOpacity>
-          {loading && <ActivityIndicator size="large" color="#0000ff" />}
-        </View>
       </ScrollView>
+      <View style={styles.buttonContainer}>
+        <Button title="+ Add MCQ Question" onPress={() => addQuestion('mcq')} />
+        <Button title="+ Add True/False Question" onPress={() => addQuestion('truefalse')} />
+        <Button title="+ Add Input Question" onPress={() => addQuestion('input')} />
+        <Button title="Save and Upload" onPress={saveTest} disabled={loading} />
+        {loading && <ActivityIndicator size="large" color="#0000ff" />}
+      </View>
     </KeyboardAvoidingView>
   );
 };
@@ -286,95 +315,57 @@ const QuizCreator = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
+    padding: 10,
+    marginTop: 30,
   },
   scrollView: {
-    flexGrow: 1,
+    paddingBottom: 20,
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    textAlign: 'center',
     marginBottom: 20,
   },
   input: {
+    width: '100%',
+    padding: 8,
+    marginBottom: 10,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 20,
+    borderRadius: 4,
   },
   inputLabel: {
     fontSize: 16,
+    marginTop: 10,
     marginBottom: 5,
   },
   dateText: {
+    padding: 8,
+    marginBottom: 10,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 20,
-    textAlign: 'center',
+    borderRadius: 4,
+    backgroundColor: '#f0f0f0',
+  },
+  picker: {
+    height: 50,
+    width: '100%',
+    marginBottom: 10,
   },
   timePickerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  picker: {
-    flex: 1,
-    marginHorizontal: 5,
+    width: '32%',
   },
   questionContainer: {
     marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-  },
-  questionInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-  optionInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-  correctAnswerInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-  removeQuestionText: {
-    color: 'red',
-    textAlign: 'right',
-    marginTop: 10,
   },
   buttonContainer: {
     marginTop: 20,
     marginBottom: 20,
     flexDirection: 'column',
-    alignItems: 'stretch',
-  },
-  button: {
-    backgroundColor: '#007BFF',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
+    justifyContent: 'center',
   },
 });
 
-export default QuizCreator;
+export default TestCreator;
