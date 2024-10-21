@@ -14,7 +14,7 @@ const GamesScreen = ({ navigation }) => {
     {
       title: 'Computer Components',
       image: require('../../../assets/computer-assembly-pc-building-hardware-600nw-2229132749.jpg'),
-      rules: '1. Enter the name of the component displayed in the image\n2. Make sure that you enter the full name of the component!\n3 You have 30 seconds to answer each question.\n4. Good luck and enjoy!',
+      rules: '1. Enter the name of the component displayed in the image\n2. Make sure that you enter the full name of the component!\n3 You have 30 seconds to answer each question.\n4. If your time finishes, the game will move to the next question.\n5 You cannot go to the previous question if the time finishes.\n6. Good luck and Enjoy!',
       gif: require('../../../assets/06Techfix-illo-superJumbo.gif'),
       nav: 'Computer Components',
     },
