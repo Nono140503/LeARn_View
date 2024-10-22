@@ -87,10 +87,10 @@ const App = () => {
             <Stack.Screen name="Announcements" component={AnnouncementPage} options={{headerShown: false}}/>
             <Stack.Screen name="Forgot Password" component={ForgotPassword} options={{headerShown: false}}/>
             {/* Passing score and setScore to LaptopTroubleShooting and ScoreScreen */}
-            <Stack.Screen name="Laptop Troubleshooting">
+            <Stack.Screen name="Laptop Troubleshooting" options={{headerShown: false}}>
               {(props) => <LaptopTroubleShooting {...props} score={score} setScore={setScore} />}
             </Stack.Screen>
-            <Stack.Screen name="Score Screen">
+            <Stack.Screen name="Score Screen" options={{headerShown: false}}>
               {(props) => <ScoreScreen {...props} score={score} setScore={setScore} />}
             </Stack.Screen>
           </>

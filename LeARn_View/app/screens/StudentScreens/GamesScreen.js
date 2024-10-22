@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import GamesHeader from '../../../components/GamesHeader';
 
 const GamesScreen = ({ navigation }) => {
@@ -37,28 +37,32 @@ const GamesScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <GamesHeader navigation={navigation} currentScreen={currentScreen} onNavigate={handleNavigation} />
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.gamesGrid}>
-          {games.map((game, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.componentItem}
-              onPress={() => {
-                navigation.navigate('Game Rules', {
-                  gameTitle: game.title,
-                  gameImage: game.image,
-                  rules: game.rules,
-                  gif: game.gif,
-                  nav: game.nav,
-                });
-              }}
-            >
-              <Image source={game.image} style={styles.componentImage} />
-              <Text style={styles.componentTitle}>{game.title}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+      <ImageBackground source={require('../../../assets/gradient-background-green-tones_23-2148388109.jpg')} style={styles.background}>
+        {/* Dark Overlay */}
+        <View style={styles.overlay} />
+        <ScrollView contentContainerStyle={styles.content}>
+          <View style={styles.gamesGrid}>
+            {games.map((game, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.componentItem}
+                onPress={() => {
+                  navigation.navigate('Game Rules', {
+                    gameTitle: game.title,
+                    gameImage: game.image,
+                    rules: game.rules,
+                    gif: game.gif,
+                    nav: game.nav,
+                  });
+                }}
+              >
+                <Image source={game.image} style={styles.componentImage} />
+                <Text style={styles.componentTitle}>{game.title}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
+      </ImageBackground>
     </View>
   );
 };
@@ -66,11 +70,16 @@ const GamesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EFFAF3',
   },
+  background: {
+    flex: 1,
+  },
+  // overlay: {
+  //   ...StyleSheet.absoluteFillObject, // Ensures the overlay covers the entire background
+  //   backgroundColor: 'rgba(0, 0, 0, 0.2)', // Semi-transparent black color
+  // },
   content: {
     padding: 15,
-    paddingBottom: 20,
   },
   gamesGrid: {
     flexDirection: 'row',
@@ -78,7 +87,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between', 
   },
   componentItem: {
-    width: '48%', 
+    width: '45%', 
     marginBottom: 15,
     borderRadius: 10,
     elevation: 3,
@@ -93,7 +102,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   componentTitle: {
-    color: '#3D8DCB',
+    color: 'white',
     fontSize: 15,
     fontWeight: 'bold',
     textAlign: 'center',

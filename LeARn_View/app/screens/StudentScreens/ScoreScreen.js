@@ -12,6 +12,7 @@ const ScoreScreen = ({ navigation, score, setScore }) => {
     feedback = "Average, better luck next time!";
   } else {
     feedback = "Poor try, better luck next time!";
+    
   }
 
   // Restart button functionality

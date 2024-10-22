@@ -13,9 +13,12 @@ const GamesRules = ({ route, navigation }) => {
     };
   return (
     <View style={styles.container}>
-        <Image source={gif} style={styles.gif}/>
-        <TouchableOpacity onPress={handleBack}>
-            <Icon name='arrow-back-outline' size={35} style={styles.icon}/>
+      <View style={styles.gif_cont}>
+          <Image source={gif} style={styles.gif}/>
+      </View>
+        
+        <TouchableOpacity onPress={handleBack} style={styles.icon_cont}>
+            <Icon name='arrow-back-outline' size={30} style={styles.icon}/>
         </TouchableOpacity>
        
       <Text style={styles.title}>{gameTitle}</Text>
@@ -42,6 +45,9 @@ const styles = StyleSheet.create({
     color: '#3D8DCB',
     fontWeight: 'bold',
   },
+  icon_cont:{
+    padding: 10,
+  },
   startButton:{
     backgroundColor: '#28a745',
     padding: 15,
@@ -51,19 +57,23 @@ const styles = StyleSheet.create({
     marginLeft: 65,
     bottom: 40,
   },
+  gif_cont:{
+    height: 280,
+    width: 400,
+  },
   startText:{
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
   },
   icon:{
-    bottom: 250,
+    bottom: 235,
     color: 'white',
-    marginLeft: 20,
+    marginLeft: 15,
   },
   gif:{
-    height: 280,
-    width: 400,
+    height: '100%',
+    width: '100%',
   },
   rule_cont:{
     padding: 25,
