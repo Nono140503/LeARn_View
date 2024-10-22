@@ -1,31 +1,46 @@
 import React, { useState } from 'react';
 import {
-  View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator,
+  View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator,
 } from 'react-native';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../firebase'; // Assuming firebase.js is in the parent folder
+import GreenOkAlert from '../../components/OkAlert'; // Import the custom alert component
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   const handlePasswordReset = async () => {
     if (!email) {
-      Alert.alert('Missing Email', 'Please enter your email address.');
+      setAlertTitle('Missing Email');
+      setAlertMessage('Please enter your email address.');
+      setShowAlert(true);
       return;
     }
 
-    setLoading(true); // Start loading
+    setLoading(true);
 
     try {
       await sendPasswordResetEmail(auth, email);
-      Alert.alert('Password Reset', 'An email has been sent to reset your password.');
-      navigation.goBack(); // Navigate back to the login screen or wherever appropriate
+      setAlertTitle('Password Reset');
+      setAlertMessage('An email has been sent to reset your password.');
+      setShowAlert(true);
     } catch (error) {
-      const errorMessage = error.message;
-      Alert.alert('Error', errorMessage);
+      setAlertTitle('Error');
+      setAlertMessage(error.message);
+      setShowAlert(true);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
+    }
+  };
+
+  const handleAlertOk = () => {
+    setShowAlert(false);
+    if (alertTitle === 'Password Reset') {
+      navigation.goBack();
     }
   };
 
@@ -41,16 +56,23 @@ const ForgotPasswordScreen = ({ navigation }) => {
         autoCapitalize="none"
       />
       <TouchableOpacity
-        style={[styles.button, loading && styles.buttonDisabled]} // Conditionally apply button disabled style
+        style={[styles.button, loading && styles.buttonDisabled]}
         onPress={handlePasswordReset}
-        disabled={loading} // Disable button while loading
+        disabled={loading}
       >
         {loading ? (
-          <ActivityIndicator size="small" color="#fff" /> // Show loading spinner
+          <ActivityIndicator size="small" color="#fff" />
         ) : (
           <Text style={styles.buttonText}>Reset Password</Text>
         )}
       </TouchableOpacity>
+
+      <GreenOkAlert
+        visible={showAlert}
+        title={alertTitle}
+        message={alertMessage}
+        onOk={handleAlertOk}
+      />
     </View>
   );
 };
@@ -81,7 +103,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonDisabled: {
-    opacity: 0.6, // Dim the button when loading
+    opacity: 0.6,
   },
   buttonText: {
     color: '#fff',
