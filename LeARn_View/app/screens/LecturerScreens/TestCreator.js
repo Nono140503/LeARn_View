@@ -16,8 +16,10 @@ import { Picker } from '@react-native-picker/picker';
 import { db } from '../../../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useFocusEffect } from '@react-navigation/native';
+import OkAlert from '../../../components/OkAlert'; // Ensure this path is correct
 
-const TestCreator = () => {
+const TestCreator = ({ navigation }) => {
   const [testTitle, setTestTitle] = useState('');
   const [duration, setDuration] = useState('01:00:00');
   const [questions, setQuestions] = useState([{ type: 'mcq', question: '', options: ['', '', '', ''], correctAnswer: '' }]);
@@ -27,9 +29,33 @@ const TestCreator = () => {
   const [dueDate, setDueDate] = useState(new Date());
   const [dueTime, setDueTime] = useState({ hours: '12', minutes: '00' });
   
-  // Added visibility states for date pickers
   const [showUnlockDatePicker, setShowUnlockDatePicker] = useState(false);
   const [showDueDatePicker, setShowDueDatePicker] = useState(false);
+  
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+        if (testTitle === '' && questions.every(q => q.question === '')) {
+          // Allow exit without confirmation
+          return;
+        }
+
+        // Prevent default behavior of leaving the screen
+        e.preventDefault();
+
+        // Show alert
+        setAlertTitle('Discard changes?');
+        setAlertMessage('You have unsaved changes. Are you sure you want to discard them and leave the screen?');
+        setShowAlert(true);
+      });
+
+      return unsubscribe;
+    }, [navigation, testTitle, questions])
+  );
 
   const addQuestion = (type) => {
     const newQuestion = {
@@ -37,6 +63,7 @@ const TestCreator = () => {
       question: '',
       options: type === 'mcq' ? ['', '', '', ''] : [],
       correctAnswer: type === 'mcq' ? '' : undefined,
+      correctToF: type === 'ToF' ? '' : undefined,
       suggestedAnswer: type === 'input' ? '' : undefined,
     };
     setQuestions([...questions, newQuestion]);
@@ -61,39 +88,35 @@ const TestCreator = () => {
 
   const validateForm = () => {
     if (!testTitle.trim()) {
-      Alert.alert('Validation Error', 'Please enter a test title.');
+      setAlertTitle('Validation Error');
+      setAlertMessage('Please enter a test title.');
+      setShowAlert(true);
       return false;
     }
 
     if (!duration) {
-      Alert.alert('Validation Error', 'Please select a duration for the test.');
+      setAlertTitle('Validation Error ');
+      setAlertMessage('Please select a duration.');
+      setShowAlert(true);
       return false;
     }
 
-    for (let i = 0; i < questions.length; i++) {
-      const q = questions[i];
-      if (!q.question.trim()) {
-        Alert.alert('Validation Error', `Question ${i + 1} is empty. Please fill in the question.`);
-        return false;
-      }
+    if (questions.every((q) => q.question.trim() === '')) {
+      setAlertTitle('Validation Error');
+      setAlertMessage('Please enter at least one question.');
+      setShowAlert(true);
+      return false;
+    }
 
-      if (q.type === 'mcq') {
-        for (let j = 0; j < q.options.length; j++) {
-          if (!q.options[j].trim()) {
-            Alert.alert('Validation Error', `Option ${String.fromCharCode(65 + j)} for Question ${i + 1} is empty.`);
-            return false;
-          }
-        }
-
-        if (q.correctAnswer === '') {
-          Alert.alert('Validation Error', `Correct answer for Question ${i + 1} is not selected.`);
-          return false;
-        }
-      } else if (q.type === 'input' && !q.suggestedAnswer.trim()) {
-        Alert.alert('Validation Error', `Suggested answer for Question ${i + 1} is empty.`);
+    for (const question of questions) {
+      if (question.type === 'mcq' && !question.correctAnswer) {
+        setAlertTitle('Validation Error');
+        setAlertMessage('Please select a correct answer for each multiple-choice question.');
+        setShowAlert(true);
         return false;
       }
     }
+
     return true;
   };
 
@@ -104,24 +127,22 @@ const TestCreator = () => {
 
     setLoading(true);
     try {
-      const unlockDateTime = new Date(unlockDate);
-      unlockDateTime.setHours(unlockTime.hours);
-      unlockDateTime.setMinutes(unlockTime.minutes);
-
-      const dueDateTime = new Date(dueDate);
-      dueDateTime.setHours(dueTime.hours);
-      dueDateTime.setMinutes(dueTime.minutes);
-
-      const testData = {
+      const testRef = collection(db, 'tests');
+      await addDoc(testRef, {
         title: testTitle,
         duration,
         questions,
-        unlockDate: unlockDateTime.toISOString(),
-        dueDate: dueDateTime.toISOString(),
-      };
-      await addDoc(collection(db, 'tests'), testData);
-      Alert.alert('Test Saved', `Title: ${testTitle}`, [{ text: 'OK' }]);
+        unlockDate,
+        unlockTime,
+        dueDate,
+        dueTime,
+      });
 
+      setAlertTitle('Test Saved');
+      setAlertMessage(`Title: ${testTitle}`);
+      setShowAlert(true);
+
+      // Reset form
       setTestTitle('');
       setDuration('01:00:00');
       setQuestions([{ type: 'mcq', question: '', options: ['', '', '', ''], correctAnswer: '' }]);
@@ -131,9 +152,18 @@ const TestCreator = () => {
       setDueTime({ hours: '12', minutes: '00' });
     } catch (error) {
       console.error('Error saving test:', error);
-      Alert.alert('Error', 'Could not save test. Please try again.', [{ text: 'OK' }]);
+      setAlertTitle('Error');
+      setAlertMessage('Could not save test. Please try again.');
+      setShowAlert(true);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAlertOk = () => {
+    setShowAlert(false);
+    if (alertTitle === 'Discard changes?') {
+      navigation.dispatch(navigation.getState().routes[0].key);
     }
   };
 
@@ -149,6 +179,7 @@ const TestCreator = () => {
           placeholder="Test title"
           value={testTitle}
           onChangeText={setTestTitle}
+          placeholderTextColor="#4a7a5d"
         />
         <Text style={styles.inputLabel}>Select Duration:</Text>
         <Picker
@@ -242,72 +273,87 @@ const TestCreator = () => {
           </Picker>
         </View>
 
-        {questions.map((q, qIndex) => (
-          <View key={qIndex} style={styles.questionContainer}>
+        {questions.map((question, index) => (
+          <View key={index} style={styles.questionContainer}>
             <TextInput
               style={styles.input}
-              placeholder="Question"
-              value={q.question}
-              onChangeText={(value) => updateQuestion(qIndex, 'question', value)}
+              placeholder={`Question ${index + 1}`}
+              value={question.question}
+              onChangeText={(text) => updateQuestion(index, 'question', text)}
+              placeholderTextColor="#4a7a5d"
             />
-            {q.type === 'mcq' && (
+            {question.type === 'mcq' && (
               <>
-                {q.options.map((option, oIndex) => (
+                {question.options.map((option, optIndex) => (
                   <TextInput
-                    key={oIndex}
+                    key={optIndex}
                     style={styles.input}
-                    placeholder={`Option ${String.fromCharCode(65 + oIndex)}`}
+                    placeholder={`Option ${optIndex + 1}`}
                     value={option}
-                    onChangeText={(value) => updateOption(qIndex, oIndex, value)}
+                    onChangeText={(text) => updateOption(index, optIndex, text)}
+                    placeholderTextColor="#4a7a5d"
                   />
                 ))}
-                <Text style={styles.inputLabel}>Select Correct Answer</Text>
-                <Picker
-                  selectedValue={q.correctAnswer}
-                  style={styles.picker}
-                  onValueChange={(itemValue) => updateQuestion(qIndex, 'correctAnswer', itemValue)}
-                >
-                  <Picker.Item label="Select correct answer" value="" />
-                  {q.options.map((option, oIndex) => (
-                    <Picker.Item
-                      key={oIndex}
-                      label={`${String.fromCharCode(65 + oIndex)}: ${option}`}
-                      value={oIndex.toString()}
-                    />
-                  ))}
-                </Picker>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Correct answer"
+                  value={question.correctAnswer}
+                  onChangeText={(text) => updateQuestion(index, 'correctAnswer', text)}
+                  placeholderTextColor="#4a7a5d"
+                />
               </>
             )}
-            {q.type === 'truefalse' && (
+            {question.type === 'ToF' && (
               <Picker
-                selectedValue={q.correctAnswer}
+                selectedValue={question.correctToF}
                 style={styles.picker}
-                onValueChange={(itemValue) => updateQuestion(qIndex, 'correctAnswer', itemValue)}
+                onValueChange={(itemValue) => updateQuestion(index, 'correctToF', itemValue)}
               >
-                <Picker.Item label="Select correct answer" value="" />
                 <Picker.Item label="True" value="true" />
                 <Picker.Item label="False" value="false" />
               </Picker>
             )}
-            {q.type === 'input' && (
+            {question.type === 'input' && (
               <TextInput
                 style={styles.input}
-                placeholder="Suggested Answer"
-                value={q.suggestedAnswer}
-                onChangeText={(value) => updateQuestion(qIndex, 'suggestedAnswer', value)}
+                placeholder="Suggested answer"
+                value={question.suggestedAnswer}
+                onChangeText={(text) => updateQuestion(index, 'suggestedAnswer', text)}
+                placeholderTextColor="#4a7a5d"
               />
             )}
-            <Button title="Remove Question" color="red" onPress={() => removeQuestion(qIndex)} />
+            <Button title="Remove Question" onPress={() => removeQuestion(index)} color="red" />
           </View>
         ))}
+
+<View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.addButton} onPress={() => addQuestion('mcq')}>
+            <Text style={styles.buttonText}>Add MCQ Question</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.addButton} onPress={() => addQuestion('ToF')}>
+            <Text style={styles.buttonText}>Add True/False Question</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.addButton} onPress={() => addQuestion('input')}>
+            <Text style={styles.buttonText}>Add Open-Ended Question</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity 
+          style={[styles.saveButton, loading && styles.disabledButton]} 
+          onPress={saveTest} 
+          disabled={loading}
+        >
+          <Text style={styles.saveButtonText}>Save Test</Text>
+        </TouchableOpacity>
+        {loading && <ActivityIndicator size="large" color="#2e7d32" />}
       </ScrollView>
-      <View style={styles.buttonContainer}>
-        <Button title="+ Add MCQ Question" onPress={() => addQuestion('mcq')} />
-        <Button title="+ Add True/False Question" onPress={() => addQuestion('truefalse')} />
-        <Button title="+ Add Input Question" onPress={() => addQuestion('input')} />
-        <Button title="Save and Upload" onPress={saveTest} disabled={loading} />
-        {loading && <ActivityIndicator size="large" color="#0000ff" />}
-      </View>
+
+      <OkAlert
+        visible={showAlert}
+        title={alertTitle}
+        message={alertMessage}
+        onOk={() => setShowAlert(false)}
+      />
     </KeyboardAvoidingView>
   );
 };
@@ -315,57 +361,125 @@ const TestCreator = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    marginTop: 30,
+    padding: 16,
+    backgroundColor: '#f0f7f1',
+    paddingTop: 36,
   },
   scrollView: {
-    paddingBottom: 20,
+    flexGrow: 1,
   },
   header: {
     fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    color: '#2e7d32',
     textAlign: 'center',
-    marginBottom: 20,
   },
   input: {
-    width: '100%',
-    padding: 8,
-    marginBottom: 10,
+    borderColor: '#4caf50',
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
+    padding: 12,
+    marginBottom: 16,
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+    color: '#2e7d32',
   },
   inputLabel: {
-    fontSize: 16,
-    marginTop: 10,
-    marginBottom: 5,
+    marginVertical: 8,
+    color: '#2e7d32',
+    fontWeight: '600',
   },
   dateText: {
-    padding: 8,
-    marginBottom: 10,
+    padding: 12,
+    backgroundColor: '#ffffff',
+    marginBottom: 16,
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    backgroundColor: '#f0f0f0',
-  },
-  picker: {
-    height: 50,
-    width: '100%',
-    marginBottom: 10,
+    borderColor: '#4caf50',
+    color: '#2e7d32',
   },
   timePickerContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '32%',
   },
   questionContainer: {
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    marginTop: 20,
-    marginBottom: 20,
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
+    marginBottom: 16,
+    padding: 16,
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#4caf50',
+    shadowColor: '#000',
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+},
+tpicker: {
+  height: 50,
+  width: '80%',
+  marginBottom: 16,
+  color: '#2e7d32',
+  backgroundColor: '#ffffff',
+},
+picker: {
+    height: 50,
+    width: '40%',
+    marginBottom: 16,
+    color: '#2e7d32',
+    backgroundColor: '#ffffff',
+},
+buttonContainer: {
+    gap: 12,
+    marginVertical: 16,
+},
+addButton: {
+    backgroundColor: '#4caf50',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+        width: 0,
+        height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+},
+buttonText: {
+    color: '#ffffff',
+    fontWeight: '600',
+    fontSize: 16,
+},
+saveButton: {
+    backgroundColor: '#2e7d32',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 24,
+    marginBottom: 32,
+    shadowColor: '#000',
+    shadowOffset: {
+        width: 0,
+        height: 3,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+},
+saveButtonText: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+    fontSize: 18,
+},
+disabledButton: {
+    backgroundColor: '#a5d6a7',
+    opacity: 0.7,
+}
 });
 
 export default TestCreator;

@@ -1,15 +1,31 @@
-//Settings Screen
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { auth } from '../../../firebase'; // Adjust the path according to your firebase config
+import { signOut } from 'firebase/auth';
+import YesNoAlert from '../../../components/YesNoAlert'; // Adjust the import path as needed
 
 const SettingsScreen = ({navigation}) => {
-  const handleBack = () =>{
+  const [showLogoutAlert, setShowLogoutAlert] = useState(false);
+
+  const handleBack = () => {
     navigation.goBack();
-  }
-  const handleProfile =() =>{
-    navigation.navigate('Profile Screen')
-  }
+  };
+
+  const handleProfile = () => {
+    navigation.navigate('Profile Screen');
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      // Navigate to Login screen or wherever you want after logout
+      navigation.replace('Login Screen'); // Adjust the screen name according to your navigation setup
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -17,11 +33,9 @@ const SettingsScreen = ({navigation}) => {
           <Ionicons name='arrow-back-outline' size={30} style={styles.back_arrow}/>
         </TouchableOpacity>
           
-          <Text style={styles.headerText}>Settings</Text>
-  
+        <Text style={styles.headerText}>Settings</Text>
       </View>
      
-
       <TouchableOpacity style={styles.card} onPress={handleProfile}>
         <FontAwesome name="user-circle-o" size={24} color="#006400" />
         <View style={styles.cardContent}>
@@ -54,18 +68,28 @@ const SettingsScreen = ({navigation}) => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.card} onPress={{}}>
+      <TouchableOpacity 
+        style={styles.card} 
+        onPress={() => setShowLogoutAlert(true)}
+      >
         <MaterialIcons name="logout" size={24} color="#006400" />
         <View style={styles.cardContent}>
           <Text style={styles.cardTitle}>Log Out</Text>
         </View>
       </TouchableOpacity>
-      
 
+      <YesNoAlert
+        visible={showLogoutAlert}
+        title="Confirm Logout"
+        message="Are you sure you want to log out?"
+        onYes={handleLogout}
+        onNo={() => setShowLogoutAlert(false)}
+      />
     </View>
   );
 };
 
+// Your existing styles remain the same
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -76,7 +100,7 @@ const styles = StyleSheet.create({
     color: '#1D7801'
   },
   headerText: {
-    fontSize: 24,
+    fontSize:  24,
     fontWeight: 'bold',
     marginBottom: 25,
     marginLeft: 100,
@@ -120,8 +144,3 @@ const styles = StyleSheet.create({
 });
 
 export default SettingsScreen;
-
-
-
-
-
