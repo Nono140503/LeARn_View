@@ -22,15 +22,15 @@ function BottomTabBar({ navigation, currentScreen }) {
             </TouchableOpacity>
            
             <TouchableOpacity
-                onPress={() => navigation.navigate('Grades')}
+                onPress={() => navigation.navigate('Grades Screen')}
                 style={styles.iconContainer}
             >
                 <Icon 
                     name='school-outline' 
                     size={25} 
-                    color={currentScreen === 'Grades' ? activeColor : defaultColor} 
+                    color={currentScreen === 'Grades Screen' ? activeColor : defaultColor} 
                 />
-                <Text style={{ color: currentScreen === 'Cart' ? activeColor : defaultColor }}>Grades</Text>
+                <Text style={{ color: currentScreen === 'Grades Screen' ? activeColor : defaultColor }}>Grades</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => navigation.navigate('Games Screen')}

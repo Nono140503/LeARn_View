@@ -74,6 +74,7 @@ const TestList = ({ navigation }) => {
           title={item.isTestAvailable && attemptsLeft > 0 ? "Take Test" : "Not Available"}
           onPress={() => item.isTestAvailable && handleTestPress(item)}
           disabled={!item.isTestAvailable || attemptsLeft === 0}
+          style={styles.button}
         />
       </View>
     );
@@ -97,17 +98,20 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f9f9f9',
   },
+
   header: {
     fontSize: 24,
     textAlign: 'center',
     marginBottom: 20,
     fontWeight: 'bold',
+    marginTop: 20,
+    color: '#08A750'
   },
   testContainer: {
     marginBottom: 15,
     padding: 15,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#08A750',
     borderRadius: 10,
     backgroundColor: '#fff',
     shadowColor: '#000',

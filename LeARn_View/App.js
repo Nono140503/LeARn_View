@@ -32,6 +32,7 @@ import ScoreScreen from './app/screens/StudentScreens/ScoreScreen';
 import TestList from './app/screens/StudentScreens/TestList';
 import TestDetail from './app/screens/StudentScreens/TestDetails';
 import AnnouncementPage from './app/screens/StudentScreens/Announcements';
+import GradesScreen from './app/screens/StudentScreens/GradesScreen';
 
 const Stack = createStackNavigator();
 
@@ -93,6 +94,7 @@ const App = () => {
             <Stack.Screen name="Score Screen" options={{headerShown: false}}>
               {(props) => <ScoreScreen {...props} score={score} setScore={setScore} />}
             </Stack.Screen>
+            <Stack.Screen name="Grades Screen" component={GradesScreen} options={{headerShown: false}}/>
           </>
         )}
       </Stack.Navigator>
