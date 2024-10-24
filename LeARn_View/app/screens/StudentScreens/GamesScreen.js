@@ -28,7 +28,7 @@ const GamesScreen = ({ navigation }) => {
     {
       title: 'Malware Mayhem',
       image: require('../../../assets/malware.jpeg'),
-      rules: 'Identify and eliminate malware threats before they cause damage.',
+      rules: 'Identify and eliminate malware threats before they cause damage.\n1.The onjective is to identify the malware in the given scenario.\n2.Select level of Difficulty\n3.Select the answer that best suits the scenario',
       gif: require('../../../assets/The Hacker.gif'),
       nav: '',
     },
