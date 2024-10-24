@@ -21,9 +21,9 @@ const GamesScreen = ({ navigation }) => {
     {
       title: 'Check Your Knowledge',
       image: require('../../../assets/concept-computer-repair-service-vector-illustration_357257-792.jpg'),
-      rules: 'Challenge your knowledge of computer fundamentals, terminology, and concepts',
+      rules: 'Challenge your knowledge of computer fundamentals, terminology, and concepts\n1. Select the module you would like to practice\n2. Select the answer that best suits the question',
       gif: require('../../../assets/I Have An Idea!.gif'),
-      nav: 'Laptop Troubleshooting',
+      nav: 'Check Your Knowledge',
     },
     {
       title: 'Malware Mayhem',
@@ -38,7 +38,7 @@ const GamesScreen = ({ navigation }) => {
     <View style={styles.container}>
       <GamesHeader navigation={navigation} currentScreen={currentScreen} onNavigate={handleNavigation} />
       <ImageBackground source={require('../../../assets/gradient-background-green-tones_23-2148388109.jpg')} style={styles.background}>
-        {/* Dark Overlay */}
+        
         <View style={styles.overlay} />
         <ScrollView contentContainerStyle={styles.content}>
           <View style={styles.gamesGrid}>

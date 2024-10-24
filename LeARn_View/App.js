@@ -27,7 +27,18 @@ import AddAnnouncementScreen from './app/screens/LecturerScreens/AddCommunicatio
 import LecturerSettingsScreen from './app/screens/LecturerScreens/Lecturer Settings';
 import QuizList from './app/screens/StudentScreens/QuizList';
 import QuizDetails from './app/screens/StudentScreens/QuizDetails';
-import LaptopTroubleShooting from './app/screens/StudentScreens/LaptopTroubleshooting';
+import QuestionScreenFour from './app/screens/StudentScreens/QuestionScreenFour';
+import QuestionScreenThree from './app/screens/StudentScreens/QuestionsScreenThree';
+import QuestionScreenTwo from './app/screens/StudentScreens/QuestioneTwoScreen';
+import QuestionScreen from './app/screens/StudentScreens/QuestionsScreen';
+import CorrectionsScreen from './app/screens/StudentScreens/CorrectionsScreen';
+import CorrectionsScreenFour from './app/screens/StudentScreens/CorrectionScreenFour';
+import CorrectionsScreenTwo from './app/screens/StudentScreens/CorrectionsScreenTwo';
+import CorrectionsScreenThree from './app/screens/StudentScreens/CorrectionsScreenThree';
+import CheckYourKnowledgeMenu from './app/screens/StudentScreens/CheckYourKnowledgeMenu';
+import ScoreScreenFour from './app/screens/StudentScreens/ScoreScreenFour';
+import ScoreScreenThree from './app/screens/StudentScreens/ScoreScreenThree';
+import ScoreScreenTwo from './app/screens/StudentScreens/ScoreScreenTwo';
 import ScoreScreen from './app/screens/StudentScreens/ScoreScreen';
 import TestList from './app/screens/StudentScreens/TestList';
 import TestDetail from './app/screens/StudentScreens/TestDetails';
@@ -38,10 +49,16 @@ const Stack = createStackNavigator();
 
 const App = () => {
   const [showSplashScreen, setShowSplashScreen] = useState(true);
-  const [score, setScore] = useState(0); // State for managing score
 
   const handleSplashFinish = () => {
     setShowSplashScreen(false); 
+  };
+  const [score, setScore] = useState(0);
+  const [userAnswers, setUserAnswers] = useState([]);
+
+  const resetQuiz = () => {
+    setScore(0);
+    setUserAnswers([]);
   };
 
   return (
@@ -87,16 +104,111 @@ const App = () => {
             <Stack.Screen name="Test Details" component={TestDetail} options={{headerShown: false}}/>
             <Stack.Screen name="Announcements" component={AnnouncementPage} options={{headerShown: false}}/>
             <Stack.Screen name="Forgot Password" component={ForgotPassword} options={{headerShown: false}}/>
-            {/* Passing score and setScore to LaptopTroubleShooting and ScoreScreen */}
-            <Stack.Screen name="Laptop Troubleshooting" options={{headerShown: false}}>
-              {(props) => <LaptopTroubleShooting {...props} score={score} setScore={setScore} />}
-            </Stack.Screen>
-            <Stack.Screen name="Score Screen" options={{headerShown: false}}>
-              {(props) => <ScoreScreen {...props} score={score} setScore={setScore} />}
-            </Stack.Screen>
             <Stack.Screen name="Grades Screen" component={GradesScreen} options={{headerShown: false}}/>
+            
+            <Stack.Screen name="Check Your Knowledge" component={CheckYourKnowledgeMenu} options={{headerShown: false}}/>
+            <Stack.Screen name="Question" options={{headerShown: false}}>
+              {props => (
+                <QuestionScreen
+                  {...props}
+                  score={score}
+                  setScore={setScore}
+                  userAnswers={userAnswers}
+                  setUserAnswers={setUserAnswers}
+                />
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="Score" options={{headerShown: false}}>
+              {props => (
+                <ScoreScreen
+                  {...props}
+                  score={score}
+                  userAnswers={userAnswers}
+                  resetQuiz={resetQuiz}
+                />
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="Corrections" component={CorrectionsScreen} options={{headerShown: false}}/>
+          
+            <Stack.Screen name="Question2"  options={{headerShown: false}}>
+              {props => (
+                <QuestionScreenTwo
+                  {...props}
+                  score={score}
+                  setScore={setScore}
+                  userAnswers={userAnswers}
+                  setUserAnswers={setUserAnswers}
+                />
+              )}
+
+            </Stack.Screen>
+            <Stack.Screen name="ScoreTwo"  options={{headerShown: false}}>
+              {props => (
+                <ScoreScreenTwo
+                  {...props}
+                  score={score}
+                  userAnswers={userAnswers}
+                  resetQuiz={resetQuiz}
+                />
+              )}
+            </Stack.Screen>
+
+            <Stack.Screen name="CorrectionsTwo" component={CorrectionsScreenTwo} options={{headerShown: false}}/>
+
+            <Stack.Screen name="Question3" options={{headerShown: false}}>
+              {props => (
+                <QuestionScreenThree
+                  {...props}
+                  score={score}
+                  setScore={setScore}
+                  userAnswers={userAnswers}
+                  setUserAnswers={setUserAnswers}
+                />
+              )}
+
+            </Stack.Screen>
+            <Stack.Screen name="ScoreThree" options={{headerShown: false}}>
+              {props => (
+                <ScoreScreenThree
+                  {...props}
+                  score={score}
+                  userAnswers={userAnswers}
+                  resetQuiz={resetQuiz}
+                />
+              )}
+            </Stack.Screen>
+
+            <Stack.Screen name="CorrectionsThree" component={CorrectionsScreenThree} options={{headerShown: false}}/>
+          
+
+            <Stack.Screen name="Question4" options={{headerShown: false}}>
+              {props => (
+                <QuestionScreenFour
+                  {...props}
+                  score={score}
+                  setScore={setScore}
+                  userAnswers={userAnswers}
+                  setUserAnswers={setUserAnswers}
+                />
+              )}
+            </Stack.Screen>
+            
+            <Stack.Screen name="ScoreFour" options={{headerShown: false}}>
+              {props => (
+                <ScoreScreenFour
+                  {...props}
+                  score={score}
+                  userAnswers={userAnswers}
+                  resetQuiz={resetQuiz}
+                />
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="CorrectionsFour" component={CorrectionsScreenFour} options={{headerShown: false}}/>
           </>
+
+          
         )}
+
       </Stack.Navigator>
     </NavigationContainer>
   );
