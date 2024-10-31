@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView,Image } from 'react-native';
 import questions from '../../../components/questionThree'; // Import your questions
 
 const QuestionScreenThree = ({ route, navigation, score, setScore, userAnswers, setUserAnswers }) => {
@@ -30,8 +30,14 @@ const QuestionScreenThree = ({ route, navigation, score, setScore, userAnswers, 
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContainer}>
+      {/* Display question number / progress */}
+      <Text style={styles.progressText}>Question {index + 1} of {questions.length}</Text>
+
+      <Image source={currentQuestion.image} style={styles.questionImage} />
+
       <Text style={styles.questionText}>{currentQuestion.question}</Text>
+
       <View style={styles.optionsContainer}>
         {currentQuestion.options.map((option, idx) => (
           <TouchableOpacity key={idx} style={styles.optionBox} onPress={() => handleAnswer(option)}>
@@ -39,7 +45,7 @@ const QuestionScreenThree = ({ route, navigation, score, setScore, userAnswers, 
           </TouchableOpacity>
         ))}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -48,17 +54,37 @@ const QuestionScreenThree = ({ route, navigation, score, setScore, userAnswers, 
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  scrollView: {
+    flex: 1, // Ensure ScrollView takes up the entire screen
+    backgroundColor: '#261376', // Background color for the whole screen
+  },
+  scrollViewContainer: {
+    flexGrow: 1, // Ensure ScrollView takes up available space and allows scrolling
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#261376',
+    backgroundColor: '#261376', // Same background color as the screen
   },
+  progressText: {
+    fontSize: 18,
+    marginBottom: 10,
+    textAlign: 'center',
+    color: '#fff',
+    fontWeight: 'bold',
+    marginTop: 20,
+  },
+  questionImage: {
+    width: 300,
+    height: 200,
+    marginBottom: 20,
+    borderRadius: 10,
+  },
+
   questionText: {
     fontSize: 20,
     marginBottom: 20,
     textAlign: 'center',
+    color: '#fff'
   },
   optionsContainer: {
     width: '100%',

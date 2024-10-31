@@ -7,7 +7,8 @@ const questions = [
         "C) Square",
         "D) Triangle"
       ],
-      answer: "A) Star"
+      answer: "A) Star",
+      image: require('../assets/Powersupply.webp'),
     },
     {
       question: "What is the main difference between a LAN and a WAN?",
@@ -17,7 +18,8 @@ const questions = [
         "C) LAN is faster than WAN",
         "D) LAN is only for homes, while WAN is for businesses"
       ],
-      answer: "A) LAN covers a small geographic area, while WAN covers a large area"
+      answer: "A) LAN covers a small geographic area, while WAN covers a large area",
+      image: require('../assets/Powersupply.webp'),
     },
     {
       question: "Which device is used to connect multiple devices within a network and manage traffic between them?",
@@ -27,7 +29,8 @@ const questions = [
         "C) Modem",
         "D) Router"
       ],
-      answer: "B) Switch"
+      answer: "B) Switch",
+      image: require('../assets/Powersupply.webp'),
     },
     {
       question: "What does a router do in a network?",
@@ -37,7 +40,8 @@ const questions = [
         "C) Amplifies network signals",
         "D) Stores data"
       ],
-      answer: "B) Routes data between different networks"
+      answer: "B) Routes data between different networks",
+      image: require('../assets/Powersupply.webp'),
     },
     {
       question: "What is the purpose of a firewall in a network?",
@@ -47,7 +51,8 @@ const questions = [
         "C) To protect the network from unauthorized access",
         "D) To connect different network types"
       ],
-      answer: "C) To protect the network from unauthorized access"
+      answer: "C) To protect the network from unauthorized access",
+      image: require('../assets/Powersupply.webp'),
     },
     {
       question: "What is client-side virtualization?",
@@ -57,7 +62,8 @@ const questions = [
         "C) Using cloud services to manage applications",
         "D) Running applications on mobile devices"
       ],
-      answer: "A) Running multiple operating systems on a single physical machine"
+      answer: "A) Running multiple operating systems on a single physical machine",
+      image: require('../assets/Powersupply.webp'),
     },
     {
       question: "Which of the following protocols is commonly used for email communication?",
@@ -67,7 +73,8 @@ const questions = [
         "C) SMTP",
         "D) SNMP"
       ],
-      answer: "C) SMTP"
+      answer: "C) SMTP",
+      image: require('../assets/Powersupply.webp'),
     },
     {
       question: "What is a common method for troubleshooting network connectivity issues?",
@@ -77,7 +84,8 @@ const questions = [
         "C) Restarting the computer",
         "D) Changing the monitor"
       ],
-      answer: "B) Using the ping command"
+      answer: "B) Using the ping command",
+      image: require('../assets/Powersupply.webp'),
     },
     {
       question: "What does cloud computing provide?",
@@ -87,7 +95,8 @@ const questions = [
         "C) Increased hardware requirements",
         "D) Permanent data storage"
       ],
-      answer: "B) On-demand access to computing resources over the internet"
+      answer: "B) On-demand access to computing resources over the internet",
+      image: require('../assets/Powersupply.webp'),
     },
     {
       question: "Which of the following is a characteristic of a peer-to-peer network?",
@@ -97,7 +106,8 @@ const questions = [
         "C) Requires a dedicated server",
         "D) Limited scalability"
       ],
-      answer: "B) Shared resources among all devices"
+      answer: "B) Shared resources among all devices",
+      image: require('../assets/Powersupply.webp'),
     },
     {
       question: "What is the function of a DHCP server?",
@@ -107,7 +117,8 @@ const questions = [
         "C) To secure network connections",
         "D) To store files"
       ],
-      answer: "A) To assign IP addresses to devices on a network"
+      answer: "A) To assign IP addresses to devices on a network",
+      image: require('../assets/Powersupply.webp'),
     },
     {
       question: "What is the purpose of network cables?",
@@ -117,7 +128,8 @@ const questions = [
         "C) To store data",
         "D) To amplify signals"
       ],
-      answer: "B) To connect devices and facilitate data transmission"
+      answer: "B) To connect devices and facilitate data transmission",
+      image: require('../assets/Powersupply.webp'),
     }
   ];
   
