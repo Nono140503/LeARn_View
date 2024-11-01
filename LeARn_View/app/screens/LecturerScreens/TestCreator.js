@@ -330,12 +330,7 @@ const TestCreator = ({ navigation }) => {
           <TouchableOpacity style={styles.addButton} onPress={() => addQuestion('mcq')}>
             <Text style={styles.buttonText}>Add MCQ Question</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.addButton} onPress={() => addQuestion('ToF')}>
-            <Text style={styles.buttonText}>Add True/False Question</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.addButton} onPress={() => addQuestion('input')}>
-            <Text style={styles.buttonText}>Add Open-Ended Question</Text>
-          </TouchableOpacity>
+       
         </View>
 
         <TouchableOpacity 
