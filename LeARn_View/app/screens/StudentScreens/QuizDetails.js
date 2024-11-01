@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Button, TouchableOpacity, ScrollView, StyleSheet, Alert } from 'react-native';
 import { db } from '../../../firebase';
 import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { auth } from '../../../firebase';
+import themeContext from '../../../components/ThemeContext';
 
 const QuizDetail = ({ route, navigation }) => {
   const { quiz, attempts } = route.params;
@@ -10,6 +11,7 @@ const QuizDetail = ({ route, navigation }) => {
   const [score, setScore] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const theme = useContext(themeContext);
   const studentId = auth.currentUser.uid;
 
   useEffect(() => {
@@ -65,7 +67,7 @@ const QuizDetail = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.header}>{quiz.title}</Text>
         <Text style={styles.details}>Duration: {quiz.duration} minutes</Text>

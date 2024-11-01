@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import themeContext from './ThemeContext';
 
 function LecturerBottomTabBar({ navigation, currentScreen }) {
     const defaultColor = 'grey';
     const activeColor = '#1D7801';
+    const theme = useContext(themeContext)
+
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
             <TouchableOpacity
                 onPress={() => navigation.navigate('Lecturer Dashboard')}
                 style={styles.iconContainer}

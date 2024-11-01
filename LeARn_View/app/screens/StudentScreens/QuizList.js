@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, FlatList, TouchableOpacity, ImageBackground, StyleSheet } from 'react-native';
 import { db } from '../../../firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { auth } from '../../../firebase';
+import themeContext from '../../../components/ThemeContext';
 
 const QuizList = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [attemptsData, setAttemptsData] = useState({});
+  const theme = useContext(themeContext);
   const studentId = auth.currentUser.uid;
 
   useEffect(() => {
@@ -86,7 +88,7 @@ const QuizList = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <Text style={styles.header}>Available Quizzes</Text>
       <FlatList
         data={quizzes}

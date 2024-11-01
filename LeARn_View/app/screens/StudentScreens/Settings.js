@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { auth } from '../../../firebase'; // Adjust the path according to your firebase config
 import { signOut } from 'firebase/auth';
 import YesNoAlert from '../../../components/YesNoAlert'; // Adjust the import path as needed
+import themeContext from '../../../components/ThemeContext';
 
 const SettingsScreen = ({navigation}) => {
   const [showLogoutAlert, setShowLogoutAlert] = useState(false);
+  const theme = useContext(themeContext)
 
   const handleBack = () => {
     navigation.goBack();
@@ -26,8 +28,12 @@ const SettingsScreen = ({navigation}) => {
     }
   };
 
+  const handleNotifications = () => {
+    navigation.navigate('Notification Settings')
+  }
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleBack}>
           <Ionicons name='arrow-back-outline' size={30} style={styles.back_arrow}/>
@@ -44,7 +50,7 @@ const SettingsScreen = ({navigation}) => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.card}>
+      <TouchableOpacity style={styles.card} onPress={handleNotifications}>
         <Ionicons name="notifications-outline" size={24} color="#006400" />
         <View style={styles.cardContent}>
           <Text style={styles.cardTitle}>Notifications</Text>

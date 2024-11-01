@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity,Image } from 'react-native';
 import questions from '../../../components/questionThree'; // Import your questions for module 3
+import themeContext from '../../../components/ThemeContext';
 
 const ScoreScreenThree = ({ route, navigation, resetQuiz }) => {
   const score = route.params?.score || 0;
   const totalQuestions = questions.length;
+  const theme = useContext(themeContext);
 
   let feedback;
   if (score >= totalQuestions * 0.83) {
@@ -22,7 +24,7 @@ const ScoreScreenThree = ({ route, navigation, resetQuiz }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <Text style={styles.gameOver}>Game Over!</Text>
       <Image source={image} style={styles.gif}/>
       <Text style={styles.scoreText}>Your Score: {score}/{totalQuestions}</Text>

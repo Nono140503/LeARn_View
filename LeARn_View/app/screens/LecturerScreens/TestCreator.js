@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
 import OkAlert from '../../../components/OkAlert'; // Ensure this path is correct
+import themeContext from '../../../components/ThemeContext';
 
 const TestCreator = ({ navigation }) => {
   const [testTitle, setTestTitle] = useState('');
@@ -35,6 +36,8 @@ const TestCreator = ({ navigation }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+
+  const theme = useContext(themeContext)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -170,7 +173,7 @@ const TestCreator = ({ navigation }) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
+      style={[styles.container, {backgroundColor: theme.backgroundColor}]}
     >
       <ScrollView contentContainerStyle={styles.scrollView}>
         <Text style={styles.header}>Create a Test</Text>
@@ -274,7 +277,7 @@ const TestCreator = ({ navigation }) => {
         </View>
 
         {questions.map((question, index) => (
-          <View key={index} style={styles.questionContainer}>
+          <View key={index} style={[styles.questionContainer, {backgroundColor: theme.backgroundColor}]}>
             <TextInput
               style={styles.input}
               placeholder={`Question ${index + 1}`}

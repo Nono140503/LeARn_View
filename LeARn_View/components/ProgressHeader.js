@@ -1,14 +1,18 @@
-import React, { cloneElement } from 'react';
+import React, { cloneElement, useContext } from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import  Icon from 'react-native-vector-icons/Ionicons';
+import themeContext from './ThemeContext';
 
 function ProgressHeader({navigation}){
     const handleBack = ()=>{
         navigation.goBack();
     }
+
+    const theme = useContext(themeContext)
+
     return (
         <>
-        <View style={styles.header}>
+        <View style={[styles.header, {backgroundColor: theme.backgroundColor}]}>
                 <TouchableOpacity onPress={handleBack} style={styles.icon_cont}>
             
             <Icon name='arrow-back-outline' size={30} style={styles.icon}  onPress={handleBack}/>
@@ -19,7 +23,7 @@ function ProgressHeader({navigation}){
     )
 }
 const styles = StyleSheet.create({
-    title: {
+title: {
         fontSize: 20,
         fontWeight: 'bold',
         marginTop: '8%',

@@ -8,9 +8,8 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../../../firebase'
 import { Audio } from 'expo-av'
 import themeContext from '../../../components/ThemeContext'
-import NotificationSettings from './NotificationSettings'
 
-export default function Profile( { navigation } ) {
+export default function LecturerProfile( { navigation } ) {
 
     const [image, setImage] = useState('')
     const theme = useContext(themeContext)
@@ -216,11 +215,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 7,
         borderColor: "#1D7801",
-        width: '100%',
+        width: '100%', 
         maxWidth: 300, 
         height: 50,
         padding: 3,
-        marginVertical: 10,
+        marginVertical: 10, 
     },
 
     textInputText: {
@@ -255,7 +254,7 @@ const styles = StyleSheet.create({
         maxWidth: 300, 
         height: 50,
         justifyContent: 'center',
-        alignItems: 'center', 
+        alignItems: 'center',
         padding: 5,
     },
 
@@ -282,7 +281,7 @@ const styles = StyleSheet.create({
         maxWidth: 300, 
         height: 50,
         justifyContent: 'center',
-        alignItems: 'center', 
+        alignItems: 'center',
         padding: 5,
     },
 

@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { db } from '../../../firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { auth } from '../../../firebase';
+import themeContext from '../../../components/ThemeContext';
 
 const TestList = ({ navigation }) => {
     const [tests, setTests] = useState([]);
     const [attemptsData, setAttemptsData] = useState({});
+    const theme = useContext(themeContext)
     const studentId = auth.currentUser.uid;
   
     useEffect(() => {
@@ -99,7 +101,7 @@ const TestList = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <Text style={styles.header}>Available Tests</Text>
       <FlatList data={tests} renderItem={renderItem} keyExtractor={item => item.id} />
     </View>

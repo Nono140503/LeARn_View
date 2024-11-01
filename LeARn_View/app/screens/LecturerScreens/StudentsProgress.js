@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LecturerBottomTabBar from '../../../components/LecturerBottomTabBar';
+import themeContext from '../../../components/ThemeContext';
 
 const students = [
     { 
@@ -64,7 +65,7 @@ const students = [
 
 const StudentProgress = ({ navigation }) => {
     const [searchQuery, setSearchQuery] = useState(''); 
-
+    const theme = useContext(themeContext)
 
     const filteredStudents = students.filter(student =>
         `${student.name} ${student.surname}`.toLowerCase().includes(searchQuery.toLowerCase())
@@ -93,16 +94,17 @@ const StudentProgress = ({ navigation }) => {
     );
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
+        <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+            <View style={[styles.header, {backgroundColor: theme.backgroundColor}]}>
                 <Icon name="arrow-back-outline" size={30} style={styles.icon} onPress={() => navigation.goBack()} />
                 <Text style={styles.headerText}>Student Progress</Text>
             </View>
             <Text style={styles.studentHead}>Students</Text>
-            <Text style={styles.total}>Total number of students: 144</Text>
+            <Text style={[styles.total, {color: theme.color}]}>Total number of students: 144</Text>
             <TextInput
-                style={styles.searchInput}
+                style={[styles.searchInput, {color: theme.color}]}
                 placeholder="Search for a student"
+                placeholderTextColor= {theme.placeholderTextColor}
                 value={searchQuery}
                 onChangeText={text => setSearchQuery(text)}
             />

@@ -1,11 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import BottomTabBar from '../../../components/BottomTabBar';
+import themeContext from '../../../components/ThemeContext';
+
 
 const GradesScreen = ({navigation}) => {
   // Sample user and quiz data
   const [currentScreen, setCurrentScreen] = useState('Grades Screen');
+  const theme = useContext(themeContext);
+
     const handleNavigation = (screen) => {
         setCurrentScreen(screen);
         navigation.navigate(screen);
@@ -37,7 +41,7 @@ const GradesScreen = ({navigation}) => {
 
   return (
     <>
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <View style={styles.header}>
         <Ionicons name="menu" size={28} color="black" />
         <Text style={styles.title}>Grades</Text>

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Button, Image, TouchableOpacity} from 'react-native';
 import questions from '../../../components/questionFour'; // Adjust the path as necessary
+import themeContext from '../../../components/ThemeContext';
 
 const ScoreScreenFour = ({ route, navigation, resetQuiz }) => {
   const score = route.params?.score || 0; // Safely extract score
   const totalQuestions = questions.length;
+  const theme = useContext(themeContext);
 
   let feedback;
   if (score >= totalQuestions * 0.83) {
@@ -22,7 +24,7 @@ const ScoreScreenFour = ({ route, navigation, resetQuiz }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <Text style={styles.gameOver}>Game Over!</Text>
       <Image source={image} style={styles.gif}/>
       <Text style={styles.scoreText}>Your Score: {score}/{totalQuestions}</Text>
