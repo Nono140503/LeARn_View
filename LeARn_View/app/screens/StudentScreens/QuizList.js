@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, FlatList, Alert } from 'react-native';
+=======
+import React, { useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, ImageBackground, StyleSheet } from 'react-native';
+>>>>>>> parent of cda7e02 (Added Changes)
 import { db } from '../../../firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { auth } from '../../../firebase';

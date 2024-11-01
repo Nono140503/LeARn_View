@@ -1,10 +1,16 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, FlatList, Alert } from 'react-native';
+=======
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
+>>>>>>> parent of cda7e02 (Added Changes)
 import { db } from '../../../firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { auth } from '../../../firebase';
 
 const TestList = ({ navigation }) => {
+<<<<<<< HEAD
   const [tests, setTests] = useState([]);
   const [attemptsData, setAttemptsData] = useState({});
   const studentId = auth.currentUser.uid;
@@ -22,6 +28,47 @@ const TestList = ({ navigation }) => {
         const attempts = {};
         attemptsSnapshot.docs.forEach(doc => {
           attempts[doc.data().testId] = doc.data().attempts;
+=======
+    const [tests, setTests] = useState([]);
+    const [attemptsData, setAttemptsData] = useState({});
+    const studentId = auth.currentUser.uid;
+  
+    useEffect(() => {
+      const fetchTests = async () => {
+        try {
+          const testsCollection = collection(db, 'tests');
+          const testSnapshot = await getDocs(testsCollection);
+          const testList = testSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setTests(testList);
+  
+          const attemptsQuery = query(collection(db, 'testAttempts'), where('studentId', '==', studentId));
+          const attemptsSnapshot = await getDocs(attemptsQuery);
+          const attempts = {};
+          attemptsSnapshot.docs.forEach(doc => {
+            attempts[doc.data().testId] = doc.data().attempts;
+          });
+          setAttemptsData(attempts);
+        } catch (error) {
+          console.error("Error fetching tests:", error);
+          Alert.alert('Error', 'Could not retrieve tests. Please try again later.');
+        }
+      };
+  
+      fetchTests();
+  
+      // Live update interval
+      const intervalId = setInterval(() => {
+        setTests(prevTests => {
+          return prevTests.map(test => {
+            const currentTime = new Date();
+            const unlockDate = new Date(test.unlockDate);
+            const dueDate = new Date(test.dueDate);
+            return {
+              ...test,
+              isTestAvailable: currentTime >= unlockDate && currentTime <= dueDate
+            };
+          });
+>>>>>>> parent of cda7e02 (Added Changes)
         });
         setAttemptsData(attempts);
       } catch (error) {

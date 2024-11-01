@@ -1,14 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // for the icons at the bottom
-import themeContext from '../../../components/ThemeContext';
 
 const GradesScreen = () => {
-
-  const theme = useContext(themeContext);
-
   return (
-    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+    <View style={styles.container}>
       {/* Header Section */}
       <View style={styles.header}>
         <Ionicons name="notifications-outline" size={30} color="#4CAF50" />
