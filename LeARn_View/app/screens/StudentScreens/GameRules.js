@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
+import themeContext from '../../../components/ThemeContext';
 
 const GamesRules = ({ route, navigation }) => {
+
+  const theme = useContext(themeContext)
+
   const { gameTitle, rules, gif, nav } = route.params; 
     const handleBack = () => {
         navigation.goBack();
@@ -12,7 +16,7 @@ const GamesRules = ({ route, navigation }) => {
       
     };
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <View style={styles.gif_cont}>
           <Image source={gif} style={styles.gif}/>
       </View>
@@ -24,7 +28,7 @@ const GamesRules = ({ route, navigation }) => {
       <Text style={styles.title}>{gameTitle}</Text>
       <View style={styles.rule_cont}>
         <Text style={styles.rulesHead}>Rules:</Text>
-        <Text style={styles.rules}>{rules}</Text>
+        <Text style={[styles.rules, {color: theme.color}]}>{rules}</Text>
       </View>
       <TouchableOpacity style={styles.startButton} onPress={handleGame}>
         <Text style={styles.startText}>Start</Text>

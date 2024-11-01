@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator,
 } from 'react-native';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../firebase'; // Assuming firebase.js is in the parent folder
 import GreenOkAlert from '../../components/OkAlert'; // Import the custom alert component
+import themeContext from '../../components/ThemeContext';
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+  const theme = useContext(themeContext);
 
   const handlePasswordReset = async () => {
     if (!email) {
@@ -45,11 +47,12 @@ const ForgotPasswordScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Reset Password</Text>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+      <Text style={[styles.title, {color: theme.color}]}>Reset Password</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, {color: theme.color}]}
         placeholder="Email"
+        placeholderTextColor={theme.placeholderTextColor}
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"

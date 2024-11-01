@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { collection, addDoc } from 'firebase/firestore'; // Import Firestore functions
 import { db } from '../../../firebase'; // Ensure correct db import
+import themeContext from '../../../components/ThemeContext';
 
 const AddAnnouncementScreen = ({ navigation }) => {
   const [announcement, setAnnouncement] = useState('');
+  const theme = useContext(themeContext)
 
   // Optional: To handle navigation focus or reset on screen load
   useEffect(() => {
@@ -35,11 +37,12 @@ const AddAnnouncementScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <Text style={styles.headerText}>Add New Announcement</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, {color: theme.color}]}
         placeholder="Enter your announcement"
+        placeholderTextColor= {theme.placeholderTextColor}
         value={announcement}
         onChangeText={setAnnouncement}
       />

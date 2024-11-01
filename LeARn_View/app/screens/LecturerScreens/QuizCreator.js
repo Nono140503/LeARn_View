@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, Button, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { db } from '../../../firebase';
@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import GreenOkAlert from '../../../components/OkAlert';
+import themeContext from '../../../components/ThemeContext';
 
 const QuizCreator = ({ navigation }) => {
   const [quizTitle, setQuizTitle] = useState('');
@@ -23,6 +24,8 @@ const QuizCreator = ({ navigation }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+
+  const theme = useContext(themeContext)
 
   const addQuestion = () => {
     setQuestions([...questions, { question: '', options: ['', '', '', ''], correctAnswer: '' }]);
@@ -113,7 +116,7 @@ const QuizCreator = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <View style={styles.header_cont}>
         <Icon name='arrow-back-outline' size={30} style={styles.icon} onPress={handleBack} color="#2E7D32" />
         <Text style={styles.heading}>Create a Quiz</Text>

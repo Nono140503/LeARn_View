@@ -1,23 +1,25 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import questions from '../../../components/questionThree'; // Import your questions for module 3
+import themeContext from '../../../components/ThemeContext';
 
 const CorrectionsScreenThree = ({ route }) => {
   const { userAnswers } = route.params;
+  const theme = useContext(themeContext);
 
   return (
     <ScrollView>
-      <View style={styles.container}>
-        <Text style={styles.title}>Corrections</Text>
+      <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+        <Text style={[styles.title, {color: theme.color}]}>Corrections</Text>
         {questions.map((question, index) => {
           if (userAnswers[index] !== question.answer) {
             return (
-              <View key={index} style={styles.questionContainer}>
-                <Text style={styles.questionText}>{question.question}</Text>
-                <Text style={styles.answerText}>
+              <View key={index} style={[styles.questionContainer, {backgroundColor: theme.backgroundColor}]}>
+                <Text style={[styles.questionText, {color: theme.color}]}>{question.question}</Text>
+                <Text style={[styles.answerText, {color: theme.color}]}>
                   Your answer: {userAnswers[index] || 'No answer provided.'}
                 </Text>
-                <Text style={styles.correctText}>
+                <Text style={[styles.correctText, {color: theme.color}]}>
                   Correct answer: {question.answer}
                 </Text>
               </View>
@@ -43,23 +45,27 @@ const styles = StyleSheet.create({
   },
   questionContainer: {
     marginBottom: 20,
-    padding: 10,
+    padding: 15,
     backgroundColor: '#fff',
     borderRadius: 8,
+    borderWidth: 1,          
+    borderColor: 'green',    
     elevation: 1,
   },
   questionText: {
     fontSize: 18,
     marginBottom: 10,
+    fontWeight: 'bold',      
     color: 'black',
+  },
+  answerText: {
+    fontSize: 16,
+    fontStyle: 'italic',     
+    color: 'red',
   },
   correctText: {
     fontSize: 16,
     color: 'green',
-  },
-  answerText: {
-    fontSize: 16,
-    color: 'red',
   },
 });
 

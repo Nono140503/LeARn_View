@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import { collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../../firebase'; // Ensure correct Firebase config
 import LecturerBottomTab from '../../../components/LecturerBottomTabBar';
+import themeContext from '../../../components/ThemeContext';
 
 const FeedbackScreen = ({ navigation }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [currentScreen, setCurrentScreen] = useState('Feedback Screen');
+
+  const theme = useContext(themeContext)
 
   // Fetch announcements from Firestore on mount
   useEffect(() => {
@@ -39,7 +42,7 @@ const FeedbackScreen = ({ navigation }) => {
 
   return (
     <>
-      <View style={styles.container}>
+      <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
         <Text style={styles.headerText}>Feedback & Communication</Text>
         <Text style={styles.subHeaderText}>Announcements</Text>
 

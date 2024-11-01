@@ -1,39 +1,130 @@
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Pressable, Button, ScrollView, SafeAreaView, Alert, Switch } from 'react-native'
 import React, { useEffect, useState, createContext, useContext } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
+import * as ImagePicker from 'expo-image-picker'
+import { EventRegister } from 'react-native-event-listeners'
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { auth, db } from '../../../firebase'
+import { Audio } from 'expo-av'
+import themeContext from '../../../components/ThemeContext'
+import NotificationSettings from './NotificationSettings'
 
-export default function Profile() {
+export default function Profile( { navigation } ) {
 
-    const [isEnabled, setIsEnabled] = useState(false)
-    const toggleSwitch = () => setIsEnabled(isEnabled => !isEnabled)
+    const [image, setImage] = useState('')
+    const theme = useContext(themeContext)
+    const [darkMode, setDarkMode] = useState(false)
+    const [notificationSound, setNotificationSound] = useState(null)
+    const [displayUserName, setDisplayUserName] = useState('')
+
+    const user = auth.currentUser
+
+    // Fetch User Data from Firestore    
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            const userRef = doc(db, 'users', user.uid)
+            const userDoc = await getDoc(userRef)
+
+            if(userDoc.exists())
+            {
+                const userData = userDoc.data()
+                setImage(userData.profileImage || '')
+                setDarkMode(userData.darkMode || false)
+                setDisplayUserName(userData.username)
+                EventRegister.emit('ChangeTheme', userData.darkMode || false)
+            }
+        }
+
+        fetchUserProfile()
+    }, [])
+
+    
+    
+    // Image Picker
+    const handleImagePicker = async() => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [1,1],
+            quality: 1,
+        })
+
+        if(!result.canceled)
+        {
+            const selectedImageURI = result.assets[0].uri
+            setImage(selectedImageURI)
+
+            const response = await fetch(selectedImageURI)
+            const blob = await response.blob()
+            const storage = getStorage()
+            const storageRef = ref(storage, `Profile_Images/${Date.now()}`)
+
+            uploadBytes(storageRef, blob).then(async (snapshot) => {
+                console.log('Uploaded a blob or file', snapshot)
+
+                const downloadURL = await getDownloadURL(storageRef)
+                console.log('File available at', downloadURL)
+
+                await updateDoc(doc(db, 'users', user.uid), {
+                    profileImage: downloadURL,
+                    darkMode: darkMode,
+                })
+            }).catch((error) => {
+                console.error('Upload failed', error)
+            })
+
+        }
+    }
+
+    // Save changes made to profile
+    const saveChanges = async () => {
+        await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+            darkMode: darkMode,
+            profileImage: image,
+        })
+        Alert.alert('Changes saved!')
+        
+    }
 
     return (
         <SafeAreaView style={styles.container}>
 
             <ScrollView>
 
-                {/* Profile Picture */}
-                <View style={styles.profilePic}>
-                    <Image source={''} style={styles.pfp}></Image>
-                    <Text style={styles.userNameDisplay}>Username</Text>
+               {/* Profile Picture */}
+               <Pressable>
+                    <TouchableOpacity style={styles.imagePicker} onPress={handleImagePicker}>
+                        <View style={[styles.profilePic, {borderColor: theme.borderColor}]}>
+
+                            {image && <Image source={ { uri: image } } style={styles.pfp}/>}
+
+                        </View>
+                    </TouchableOpacity>
+                </Pressable>
+                
+
+                {/* Username display */}
+                <View style={styles.username}>
+                    <Text style={[styles.userNameDisplay, {color: theme.color}]}>{displayUserName}</Text>
                 </View>
 
 
                 {/* Username Input */}
                 <View style={styles.textInput}>
-                    <TextInput placeholder='Username' style={styles.textInputText}></TextInput>
+                    <TextInput placeholder='Username' placeholderTextColor= {theme.placeholderTextColor} style={[styles.textInputText, {color: theme.color}]}></TextInput>
                 </View>
 
 
                 {/* Email Input */}
                 <View style={styles.textInput}>
-                    <TextInput placeholder='Email' style={styles.textInputText}></TextInput>
+                    <TextInput placeholder='Email' placeholderTextColor= {theme.placeholderTextColor} style={[styles.textInputText, {color: theme.color}]}></TextInput>
                 </View>
 
 
                 {/* Phone Number Input */}
                 <View style={styles.textInput}>
-                    <TextInput placeholder='Phone Number' style={styles.textInputText}></TextInput>
+                    <TextInput placeholder='Phone Number' placeholderTextColor= {theme.placeholderTextColor} style={[styles.textInputText, {color: theme.color}]}></TextInput>
                 </View>
 
 
@@ -41,18 +132,21 @@ export default function Profile() {
                 <View style={styles.lightDarkMode}>
                     <Switch
                         trackColor={{ false: "#1D7801", true: "#c5c9c3" }}
-                        thumbColor={isEnabled ? "#1D7801" : "#c5c9c3"}
-                        onValueChange={toggleSwitch}
-                        value={isEnabled}
+                        thumbColor={darkMode ? "#1D7801" : "#c5c9c3"}
+                        value={darkMode}
+                        onValueChange={(value) => {
+                            setDarkMode(value)
+                            EventRegister.emit('ChangeTheme', value)
+                        }}
                         style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
                     />
 
-                    <Text style={styles.lightDarkText}>Light/Dark Mode</Text>
+                    <Text style={[styles.lightDarkText, {color: theme.color}]}>Light/Dark Mode</Text>
                 </View>
 
 
                 {/* Save Changes Button */}
-                <View style={styles.saveChangesButton}>
+                <View style={styles.notificationsButton}>
 
                     <Pressable>
 
@@ -64,7 +158,7 @@ export default function Profile() {
                             style={styles.gradient}
                         >
 
-                            <TouchableOpacity style={styles.saveBTN}>
+                            <TouchableOpacity style={styles.saveBTN} onPress={saveChanges}>
                                 <Text style={styles.saveBtnText}>Save Changes</Text>
                             </TouchableOpacity>
 
@@ -84,42 +178,49 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         height: 'auto',
+        padding: 20, 
     },
 
     profilePic: {
         flex: 1,
         justifyContent: 'center',
-        marginVertical: 70,
+        marginTop: 70,
+        borderWidth: 2,
+        borderRadius: 100,
+        width: 150,
+        height: 150,
+        margin: 'auto',
+        alignSelf: 'center',
+        overflow: 'hidden',
     },
 
     pfp: {
-        width: 150,
-        height: 150,
+        width: '100%',
+        height: '100%',
+        borderRadius: 100,
+    },
 
-        borderRadius: 70,
-
-        margin: 'auto',
-        alignSelf: 'center'
+    username: {
+        marginTop: 40,
+        marginBottom: 30,
     },
 
     userNameDisplay: {
         textAlign: 'center',
         marginTop: 10,
         fontSize: 18,
+        fontWeight: 'bold',
     },
 
     textInput: {
         borderWidth: 1,
         borderRadius: 7,
         borderColor: "#1D7801",
-
-        width: 300,
+        width: '100%',
+        maxWidth: 300, 
         height: 50,
         padding: 3,
-
-        margin: 'auto',
-        flexDirection: 'column',
-        marginVertical: 5,
+        marginVertical: 10,
     },
 
     textInputText: {
@@ -129,19 +230,20 @@ const styles = StyleSheet.create({
     },
 
     lightDarkMode: {
-        marginLeft: 40,
-        marginRight: 'auto',
         marginVertical: 20,
         flexDirection: 'row',
+        alignItems: 'center', 
+        marginLeft: 10,
     },
 
     lightDarkText: {
         marginLeft: 10,
-        marginTop: 15,
+        fontSize: 16, 
     },
 
-    saveChangesButton: {
-        margin: 'auto',
+    notificationsButton: {
+        marginVertical: 10, 
+        alignItems: 'center', 
     },
 
     saveBTN: {
@@ -149,12 +251,12 @@ const styles = StyleSheet.create({
         borderRadius: 7,
         borderColor: "transparent",
         backgroundColor: "transparent",
-
-        width: 150,
+        width: '100%', 
+        maxWidth: 300, 
         height: 50,
-        padding: 5,
-
         justifyContent: 'center',
+        alignItems: 'center', 
+        padding: 5,
     },
 
     saveBtnText: {
@@ -166,7 +268,29 @@ const styles = StyleSheet.create({
 
     gradient: {
         borderRadius: 7,
+        padding: 0, 
+        width: '100%', 
+        maxWidth: 300, 
+    },
+
+    notiBTN: {
+        borderWidth: 1,
+        borderRadius: 7,
+        borderColor: "transparent",
+        backgroundColor: "transparent",
+        width: '100%', 
+        maxWidth: 300, 
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center', 
         padding: 5,
     },
-})
+
+    notiText: {
+        textAlign: 'center',
+        color: "#FFFFFF",
+        fontWeight: "bold",
+        fontSize: 18,
+    },
+});
 

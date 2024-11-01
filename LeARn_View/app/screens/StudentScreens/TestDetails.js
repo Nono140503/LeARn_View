@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Button, ScrollView, StyleSheet, Alert, TextInput, TouchableOpacity } from 'react-native';
 import { db } from '../../../firebase';
 import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { auth } from '../../../firebase';
+import themeContext from '../../../components/ThemeContext';
 
 const TestDetail = ({ route, navigation }) => {
   const { test, attempts } = route.params;
@@ -10,6 +11,7 @@ const TestDetail = ({ route, navigation }) => {
   const [score, setScore] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const theme = useContext(themeContext);
   const studentId = auth.currentUser.uid;
 
   // Countdown State
@@ -120,7 +122,7 @@ const TestDetail = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <Text style={styles.countdown}>{formatTime(remainingTime)}</Text>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.header}>{test.title}</Text>

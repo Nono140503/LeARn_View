@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { FontAwesome, Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
 import { auth } from '../../../firebase'; // Adjust the path according to your firebase config
 import { signOut } from 'firebase/auth';
 import YesNoAlert from '../../../components/YesNoAlert'; // Adjust the import path as needed
+import themeContext from '../../../components/ThemeContext';
 
 const LecturerSettingsScreen = ({ navigation }) => {
   const [showLogoutAlert, setShowLogoutAlert] = useState(false);
+  const theme = useContext(themeContext)
 
   const handleBack = () => {
     navigation.goBack();
@@ -15,6 +17,14 @@ const LecturerSettingsScreen = ({ navigation }) => {
   const handleLecturerDashboard = () => {
     navigation.navigate('Lecturer Dashboard');
   };
+
+  const handleLecturerProfile = () => {
+    navigation.navigate('Lecturer Profile')
+  }
+
+  const handleLecturerNotification = () => {
+    navigation.navigate('Lecturer Notification')
+  }
 
   const handleLogout = async () => {
     try {
@@ -27,7 +37,7 @@ const LecturerSettingsScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 15 }}>
+    <ScrollView style={[styles.container, {backgroundColor: theme.backgroundColor}]} contentContainerStyle={{ paddingBottom: 15 }}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleBack}>
           <Ionicons name='arrow-back-outline' size={30} style={styles.backArrow} />
@@ -36,7 +46,7 @@ const LecturerSettingsScreen = ({ navigation }) => {
       </View>
 
       {/* Profile Settings */}
-      <TouchableOpacity style={styles.card}>
+      <TouchableOpacity style={styles.card} onPress={handleLecturerProfile}>
         <FontAwesome name="user-circle-o" size={24} color="#006400" />
         <View style={styles.cardContent}>
           <Text style={styles.cardTitle}>Profile</Text>
@@ -45,7 +55,7 @@ const LecturerSettingsScreen = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Notification Settings */}
-      <TouchableOpacity style={styles.card}>
+      <TouchableOpacity style={styles.card} onPress={handleLecturerNotification}>
         <Ionicons name="notifications-outline" size={24} color="#006400" />
         <View style={styles.cardContent}>
           <Text style={styles.cardTitle}>Notifications</Text>

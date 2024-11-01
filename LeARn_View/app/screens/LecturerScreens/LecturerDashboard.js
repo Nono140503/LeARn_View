@@ -1,12 +1,15 @@
-import React, {useState} from 'react';
+import React, { useState, useContext } from 'react';
 import {View, StyleSheet, Text} from 'react-native'
 import LecturerHome from '../../../components/LecturerHome';
 import LecturerHeader from '../../../components/LecturerHeader';
 import LecturerBottomTabBar from '../../../components/LecturerBottomTabBar';
+import themeContext from '../../../components/ThemeContext';
 
 function LecturerDashboard({navigation}){
 
     const [currentScreen, setCurrentScreen] = useState('Home Screen');
+    const theme = useContext(themeContext)
+
     const handleNavigation = (screen) => {
         setCurrentScreen(screen);
         navigation.navigate(screen);
@@ -14,7 +17,7 @@ function LecturerDashboard({navigation}){
 
     return (
         <>
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
             <LecturerHeader/>
 
             <LecturerHome navigation={navigation}/>

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, SafeAreaView
 } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase'; // Assuming firebase.js is in the parent folder
+import themeContext from '../../components/ThemeContext';
 
 const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -16,6 +17,10 @@ const SignUpScreen = ({ navigation }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
   const [showRequirements, setShowRequirements] = useState(false); // New state to control visibility
+  const [darkMode, setDarkMode] = useState(false);
+  const [profileImage, setProfileImage] = useState('');
+  const [notificationSound, setNotificationSound] = useState('NotificationSounds/notification1.wav')
+  const theme = useContext(themeContext);
 
   const handleSignUp = async () => {
     if (!email || !password || !username) {
@@ -39,6 +44,9 @@ const SignUpScreen = ({ navigation }) => {
         username,
         email,
         role,
+        darkMode,
+        profileImage,
+        notificationSound,
       });
 
       Alert.alert('Sign Up Successful', `Welcome ${username}!`);
@@ -74,19 +82,21 @@ const SignUpScreen = ({ navigation }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <SafeAreaView style={{ flex: 1 }}>
-        <Text style={styles.title}>Sign Up</Text>
+        <Text style={[styles.title, {color: theme.color}]}>Sign Up</Text>
         <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
           <View style={styles.innerContainer}>
             <TextInput
-              style={styles.input}
+              style={[styles.input, {color: theme.color}]}
               placeholder="Username"
+              placeholderTextColor={theme.placeholderTextColor}
               value={username}
               onChangeText={setUsername}
             />
 
             <TextInput
-              style={styles.input}
+              style={[styles.input, {color: theme.color}]}
               placeholder="Email"
+              placeholderTextColor={theme.placeholderTextColor}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -95,8 +105,9 @@ const SignUpScreen = ({ navigation }) => {
 
             <View>
               <TextInput
-                style={styles.input}
+                style={[styles.input, {color: theme.color}]}
                 placeholder="Password"
+                placeholderTextColor={theme.placeholderTextColor}
                 value={password}
                 onChangeText={handlePasswordChange} // Use the new handler
                 secureTextEntry={!isPasswordVisible}
@@ -122,8 +133,9 @@ const SignUpScreen = ({ navigation }) => {
 
             <View>
               <TextInput
-                style={styles.input}
+                style={[styles.input, {color: theme.color}]}
                 placeholder="Confirm Password"
+                placeholderTextColor={theme.placeholderTextColor}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 secureTextEntry={!isConfirmPasswordVisible}
@@ -141,7 +153,7 @@ const SignUpScreen = ({ navigation }) => {
                 <View style={[styles.radioOuter, isLecturer && styles.radioSelected]}>
                   {isLecturer && <View style={styles.radioInner} />}
                 </View>
-                <Text style={styles.radioLabel}>Request Lecturer credentials</Text>
+                <Text style={[styles.radioLabel, {color: theme.color}]}>Request Lecturer credentials</Text>
               </TouchableOpacity>
             </View>
 

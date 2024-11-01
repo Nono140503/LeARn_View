@@ -1,14 +1,18 @@
-import React, { cloneElement } from 'react';
+import React, { cloneElement, useContext } from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import  Icon from 'react-native-vector-icons/Ionicons';
+import themeContext from './ThemeContext';
 
 function LecturerHeader({navigation}){
     const handleBack = ()=>{
         navigation.navigate('Home');
     }
+
+    const theme = useContext(themeContext)
+
     return (
         <>
-        <View style={styles.header}>
+        <View style={[styles.header, {backgroundColor: theme.backgroundColor}]}>
                 <TouchableOpacity onPress={handleBack} style={styles.icon_cont}>
             
             <Icon name='menu-outline' size={30} style={styles.icon}  onPress={handleBack}/>
