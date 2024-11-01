@@ -1,9 +1,5 @@
 import React from 'react';
-<<<<<<< HEAD
 import { View, Text, StyleSheet, Button } from 'react-native';
-=======
-import { View, Text, StyleSheet, TouchableOpacity,Image } from 'react-native';
->>>>>>> parent of cda7e02 (Added Changes)
 import questions from '../../../components/questionThree'; // Import your questions for module 3
 
 const ScoreScreenThree = ({ route, navigation, resetQuiz }) => {
@@ -23,11 +19,6 @@ const ScoreScreenThree = ({ route, navigation, resetQuiz }) => {
 
   return (
     <View style={styles.container}>
-<<<<<<< HEAD
-=======
-      <Text style={styles.gameOver}>Game Over!</Text>
-      <Image source={image} style={styles.gif}/>
->>>>>>> parent of cda7e02 (Added Changes)
       <Text style={styles.scoreText}>Your Score: {score}/{totalQuestions}</Text>
       <Text style={styles.feedbackText}>{feedback}</Text>
       <Button title="Back to Home" onPress={() => { resetQuiz(); navigation.navigate('Home'); }} />
