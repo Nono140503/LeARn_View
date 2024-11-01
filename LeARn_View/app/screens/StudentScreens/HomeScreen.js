@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, StyleSheet, Text} from 'react-native'
+import {View, StyleSheet, Text, BackHandler} from 'react-native'
 import { EventRegister } from 'react-native-event-listeners';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage'
 import { auth, db } from '../../../firebase'
@@ -109,7 +109,21 @@ function HomeScreen({navigation}){
       }
     }, [])
 
+    // Prevent user from navigating to Login with device back button
+    // useEffect(() => {
+    //     const backAction = () => {
+    //         return true;
+    //     };
 
+    //     const backHandler = BackHandler.addEventListener(
+    //         'hardwareBackPress',
+    //         backAction
+    //     );
+
+    //     return () => backHandler.remove();
+    // }, []);
+
+    // Navigation handler
     const handleNavigation = (screen) => {
         setCurrentScreen(screen);
         navigation.navigate(screen);

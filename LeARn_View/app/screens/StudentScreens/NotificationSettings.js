@@ -27,6 +27,7 @@ export default function NotificationSettings() {
 
     const user = auth.currentUser
 
+    // Get notification sound
     useEffect(() => {
         const getNotificationSound = async () => {
             const userId = user?.uid;
@@ -48,6 +49,8 @@ export default function NotificationSettings() {
 
     }, []);
 
+
+    // Save notification sound
     const saveNotificationSound = async () => {
         const userId = user?.uid;
 
@@ -73,6 +76,8 @@ export default function NotificationSettings() {
 
     };
 
+
+    // Play sound
     const playSound = async () => {
         try {
 

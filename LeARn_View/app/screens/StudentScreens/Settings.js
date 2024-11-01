@@ -58,21 +58,13 @@ const SettingsScreen = ({navigation}) => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.card}>
+      {/* <TouchableOpacity style={styles.card}>
         <MaterialIcons name="settings" size={24} color="#006400" />
         <View style={styles.cardContent}>
           <Text style={styles.cardTitle}>AR Settings</Text>
           <Text style={styles.cardSubtitle}>Configure AR features</Text>
         </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.card}>
-        <MaterialIcons name="settings-applications" size={24} color="#006400" />
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>App Preferences</Text>
-          <Text style={styles.cardSubtitle}>Light, Dark, System default theme</Text>
-        </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity 
         style={styles.card} 

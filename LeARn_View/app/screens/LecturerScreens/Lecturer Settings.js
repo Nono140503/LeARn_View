@@ -63,42 +63,6 @@ const LecturerSettingsScreen = ({ navigation }) => {
         </View>
       </TouchableOpacity>
 
-      {/* Class Management Settings */}
-      <TouchableOpacity style={styles.card}>
-        <MaterialIcons name="class" size={24} color="#006400" />
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>Class Management</Text>
-          <Text style={styles.cardSubtitle}>Manage class schedules and rosters</Text>
-        </View>
-      </TouchableOpacity>
-
-      {/* Grading Preferences */}
-      <TouchableOpacity style={styles.card}>
-        <Entypo name="graduation-cap" size={24} color="#006400" />
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>Grading Preferences</Text>
-          <Text style={styles.cardSubtitle}>Set grading scales and policies</Text>
-        </View>
-      </TouchableOpacity>
-
-      {/* AR Features for Classroom */}
-      <TouchableOpacity style={styles.card}>
-        <MaterialIcons name="settings" size={24} color="#006400" />
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>AR Classroom Settings</Text>
-          <Text style={styles.cardSubtitle}>Configure AR features for teaching</Text>
-        </View>
-      </TouchableOpacity>
-
-      {/* Theme and App Preferences */}
-      <TouchableOpacity style={styles.card}>
-        <MaterialIcons name="settings-applications" size={24} color="#006400" />
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>App Preferences</Text>
-           <Text style={styles.cardSubtitle}>Adjust theme, language, and settings</Text>
-        </View>
-      </TouchableOpacity>
-
       {/* Logout Option */}
       <TouchableOpacity 
         style={styles.card} 

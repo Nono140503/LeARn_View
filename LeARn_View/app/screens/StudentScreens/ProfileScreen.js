@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Pressable, Button, ScrollView, SafeAreaView, Alert, Switch } from 'react-native'
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Pressable, Button, ScrollView, SafeAreaView, Alert, Switch, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState, createContext, useContext } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import * as ImagePicker from 'expo-image-picker'
@@ -17,6 +17,9 @@ export default function Profile( { navigation } ) {
     const [darkMode, setDarkMode] = useState(false)
     const [notificationSound, setNotificationSound] = useState(null)
     const [displayUserName, setDisplayUserName] = useState('')
+    const [usernameChange, setUsername] = useState('')
+    const [loading, setLoading] = useState(false); // Loading state
+
 
     const user = auth.currentUser
 
@@ -38,8 +41,6 @@ export default function Profile( { navigation } ) {
 
         fetchUserProfile()
     }, [])
-
-    
     
     // Image Picker
     const handleImagePicker = async() => {
@@ -79,12 +80,28 @@ export default function Profile( { navigation } ) {
 
     // Save changes made to profile
     const saveChanges = async () => {
-        await updateDoc(doc(db, 'users', auth.currentUser.uid), {
-            darkMode: darkMode,
-            profileImage: image,
-        })
-        Alert.alert('Changes saved!')
-        
+
+        setLoading(true)
+
+        if(usernameChange.length > 0)
+        {
+            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                darkMode: darkMode,
+                profileImage: image,
+                username: usernameChange,
+            })
+            Alert.alert("Changes Saved!")
+            setLoading(false)
+        }
+        else{
+            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                darkMode: darkMode,
+                profileImage: image,
+            })
+            Alert.alert('Changes Saved!')
+            setLoading(false)
+        }
+
     }
 
     return (
@@ -112,19 +129,7 @@ export default function Profile( { navigation } ) {
 
                 {/* Username Input */}
                 <View style={styles.textInput}>
-                    <TextInput placeholder='Username' placeholderTextColor= {theme.placeholderTextColor} style={[styles.textInputText, {color: theme.color}]}></TextInput>
-                </View>
-
-
-                {/* Email Input */}
-                <View style={styles.textInput}>
-                    <TextInput placeholder='Email' placeholderTextColor= {theme.placeholderTextColor} style={[styles.textInputText, {color: theme.color}]}></TextInput>
-                </View>
-
-
-                {/* Phone Number Input */}
-                <View style={styles.textInput}>
-                    <TextInput placeholder='Phone Number' placeholderTextColor= {theme.placeholderTextColor} style={[styles.textInputText, {color: theme.color}]}></TextInput>
+                    <TextInput placeholder='Username' placeholderTextColor= {theme.placeholderTextColor} style={[styles.textInputText, {color: theme.color}]} onChangeText={(text) => setUsername(text)} value={usernameChange}></TextInput>
                 </View>
 
 
@@ -158,8 +163,14 @@ export default function Profile( { navigation } ) {
                             style={styles.gradient}
                         >
 
-                            <TouchableOpacity style={styles.saveBTN} onPress={saveChanges}>
-                                <Text style={styles.saveBtnText}>Save Changes</Text>
+                            <TouchableOpacity style={styles.saveBTN} onPress={saveChanges} disabled={loading}>
+
+                                {loading ? (
+                                    <ActivityIndicator size="small" color="#fff" />
+                                ): (
+                                    <Text style={styles.saveBtnText}>Save Changes</Text>
+                                )}
+
                             </TouchableOpacity>
 
                         </LinearGradient>
@@ -251,7 +262,7 @@ const styles = StyleSheet.create({
         borderRadius: 7,
         borderColor: "transparent",
         backgroundColor: "transparent",
-        width: '100%', 
+        width: 150, 
         maxWidth: 300, 
         height: 50,
         justifyContent: 'center',
