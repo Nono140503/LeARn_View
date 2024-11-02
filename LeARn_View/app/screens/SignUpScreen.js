@@ -20,7 +20,17 @@ const SignUpScreen = ({ navigation }) => {
   const [darkMode, setDarkMode] = useState(false);
   const [profileImage, setProfileImage] = useState('');
   const [notificationSound, setNotificationSound] = useState('NotificationSounds/notification1.wav')
+
+  const [studentNumber, setStudentNumber] = useState('');
+  const [course, setCourse] = useState('BIT');
+  const [year, setYear] = useState('First Year')
+
   const theme = useContext(themeContext);
+
+  const generateStudentNumber = () => {
+    const studentNumber = Math.floor(100000000 + Math.random() * 900000000).toString();
+    return studentNumber;
+  };
 
   const handleSignUp = async () => {
     if (!email || !password || !username) {
@@ -40,6 +50,9 @@ const SignUpScreen = ({ navigation }) => {
 
       const role = isLecturer ? 'lecturer' : 'student';
 
+      const studentNumber = generateStudentNumber()
+
+      // Set User Information
       await setDoc(doc(db, 'users', user.uid), {
         username,
         email,
@@ -48,6 +61,14 @@ const SignUpScreen = ({ navigation }) => {
         profileImage,
         notificationSound,
       });
+
+      // Set Student Information
+      await setDoc(doc(db, 'students', user.uid), {
+        username,
+        studentNumber,
+        course,
+        year,
+      })
 
       Alert.alert('Sign Up Successful', `Welcome ${username}!`);
       navigation.navigate('Login Screen');

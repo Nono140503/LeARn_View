@@ -58,6 +58,16 @@ const QuizDetail = ({ route, navigation }) => {
 
     if (docSnapshot.exists()) {
       const attemptsData = docSnapshot.data();
+      const currentAttempts = attemptsData.attempts || [];
+
+      if(currentAttempts.length < 1)
+      {
+        Alert.alert("Attempts exhausted!", "You can no longer attempt this test")
+        setLoading(false)
+        return;
+      }
+
+
       const updatedAttempts = [...attemptsData.attempts, calculatedScore];
       await updateDoc(quizAttemptsRef, { attempts: updatedAttempts });
     } else {

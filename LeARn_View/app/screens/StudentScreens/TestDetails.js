@@ -105,7 +105,7 @@ const TestDetail = ({ route, navigation }) => {
     Alert.alert(
       'Test Completed',
       `You scored ${calculatedScore} out of ${test.questions.length}`,
-      [{ text: 'OK', onPress: () => navigation.navigate('TestList') }] // Navigate back to the test list after submission
+      [{ text: 'OK', onPress: () => navigation.navigate('Test List') }] // Navigate back to the test list after submission
     );
 
     const testAttemptsRef = doc(db, 'testAttempts', `${test.id}_${studentId}`);
@@ -113,10 +113,28 @@ const TestDetail = ({ route, navigation }) => {
 
     if (docSnapshot.exists()) {
       const attemptsData = docSnapshot.data();
+      const currentAttempts = attemptsData.attempts || [];
+
+      if(currentAttempts.length < 1)
+      {
+        Alert.alert("Attempts exhausted!", "You can no longer attempt this test")
+        setLoading(false)
+        return;
+      }
+
+
       const updatedAttempts = [...attemptsData.attempts, calculatedScore];
-      await updateDoc(testAttemptsRef, { attempts: updatedAttempts, answers });
+      await updateDoc(testAttemptsRef, { 
+        attempts: updatedAttempts, 
+        answers: answers, 
+      });
     } else {
-      await setDoc(testAttemptsRef, { testId: test.id, studentId, attempts: [calculatedScore], answers });
+      await setDoc(testAttemptsRef, { 
+        testId: test.id, 
+        studentId, 
+        attempts: [calculatedScore], 
+        answers: answers, 
+      });
     }
     setLoading(false);
   };
@@ -128,7 +146,7 @@ const TestDetail = ({ route, navigation }) => {
         <Text style={styles.header}>{test.title}</Text>
         {test.questions.map((q, index) => (
           <View key={index} style={styles.questionContainer}>
-            <Text style={styles.question}>{`Q${index + 1}: ${q.question}`}</Text>
+            <Text style={[styles.question, {color: theme.color}]}>{`Q${index + 1}: ${q.question}`}</Text>
             {q.type === 'MCQ' || q.type === 'True/False' ? (
               q.options.map((option, oIndex) => {
                 const isSelected = answers[index] === oIndex;
@@ -148,8 +166,9 @@ const TestDetail = ({ route, navigation }) => {
               })
             ) : (
               <TextInput
-                style={styles.input}
+                style={[styles.input, {color: theme.color}]}
                 placeholder="Your answer..."
+                placeholderTextColor={theme.placeholderTextColor}
                 onChangeText={(text) => handleInputChange(index, text)}
                 editable={!submitted}
                 value={answers[index] || ''} // Show previous answer if available
@@ -158,9 +177,9 @@ const TestDetail = ({ route, navigation }) => {
           </View>
         ))}
       </ScrollView>
-
+        
       <View style={styles.buttonContainer}>
-        <Button title="Submit Answers" onPress={submitAnswers} disabled={loading || submitted} />
+        <Button title="Submit Answers" onPress={submitAnswers} disabled={loading || submitted} /> 
       </View>
 
       {score !== null && (
