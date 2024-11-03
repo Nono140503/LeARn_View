@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { db, auth } from '../../../firebase';
 import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
+import { useFocusEffect } from '@react-navigation/native';
+import YesNoAlert from '../../../components/YesNoAlert'; // Adjust the import path as necessary
 
 const QuizDetail = ({ route, navigation }) => {
   const { quiz } = route.params;
@@ -9,21 +11,37 @@ const QuizDetail = ({ route, navigation }) => {
   const [score, setScore] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(null);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
   const studentId = auth.currentUser .uid;
 
-  useEffect(() => {
-    const currentDate = new Date();
-    const dueDate = new Date(quiz.dueDate.seconds * 1000); // Convert Firestore timestamp to Date
-    const unlockDate = new Date(quiz.unlockDate.seconds * 1000); // Convert Firestore timestamp to Date
+  const parseDuration = (duration) => {
+    const [hours, minutes, seconds] = duration.split(':').map(Number);
+    return hours * 3600 + minutes * 60 + seconds;
+  };
 
-    if (currentDate < unlockDate) {
-      Alert.alert('Quiz Locked', 'This quiz is not available yet.');
-      navigation.goBack();
-    } else if (currentDate > dueDate) {
-      Alert.alert('Quiz Expired', 'This quiz is no longer available.');
-      navigation.goBack();
-    }
-  }, [quiz, navigation]);
+  useEffect(() => {
+    setRemainingTime(parseDuration(quiz.duration));
+
+    const timer = setInterval(() => {
+      setRemainingTime((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(timer);
+          submitAnswers();
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [quiz.duration]);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
 
   const handleAnswerSelect = (questionIndex, optionIndex) => {
     const updatedAnswers = [...answers];
@@ -31,54 +49,12 @@ const QuizDetail = ({ route, navigation }) => {
     setAnswers(updatedAnswers);
   };
 
-  const saveHighestScore = async (calculatedScore) => {
-    const quizScoresRef = doc(db, 'quizScores', studentId);
-    const docSnapshot = await getDoc(quizScoresRef);
-  
-    const submissionDate = new Date().toISOString(); // Get current date and time in ISO format
-  
-    try {
-      if (docSnapshot.exists()) {
-        const scoresData = docSnapshot.data();
-        const currentScore = scoresData[quiz.id]?.score || 0;
-  
-        if (calculatedScore > currentScore) {
-          await updateDoc(quizScoresRef, {
-            [quiz.id]: {
-              score: calculatedScore,
-              totalQuestions: quiz.questions.length, // Save total number of questions
-              title: quiz.title,
-              submittedAt: submissionDate,
-            },
-          });
-          Alert.alert('Score Updated', `Your new highest score is ${calculatedScore}. Total questions: ${quiz.questions.length}`);
-        } else {
-          Alert.alert('Score Not Updated', `Your score of ${calculatedScore} is not higher than your previous score of ${currentScore}. Total questions: ${quiz.questions.length}`);
-        }
-      } else {
-        await setDoc(quizScoresRef, {
-          [quiz.id]: {
-            score: calculatedScore,
-            totalQuestions: quiz.questions.length, // Save total number of questions
-            title: quiz.title,
-            submittedAt: submissionDate,
-          },
-        });
-        Alert.alert('Score Saved', `Your score of ${calculatedScore} has been saved. Total questions: ${quiz.questions.length}`);
-      }
-    } catch (error) {
-      Alert.alert('Error', 'There was an error saving your score. Please try again later.');
-      console.error("Error saving score: ", error);
-    }
-  };
-
   const submitAnswers = async () => {
     setLoading(true);
     let calculatedScore = 0;
 
-    // Calculate score based on selected answers
     quiz.questions.forEach((q, index) => {
-      if (answers[index] === parseInt(q.correctAnswer.charCodeAt(0) - 65)) { // Convert 'A' to 0, 'B' to 1, etc.
+      if (answers[index] === parseInt(q.correctAnswer.charCodeAt(0) - 65)) {
         calculatedScore += 1;
       }
     });
@@ -91,7 +67,6 @@ const QuizDetail = ({ route, navigation }) => {
       [{ text: 'OK' }]
     );
 
-    // Record attempt
     const quizAttemptsRef = doc(db, 'quizAttempts', `${quiz.id}_${studentId}`);
     const docSnapshot = await getDoc(quizAttemptsRef);
 
@@ -108,9 +83,45 @@ const QuizDetail = ({ route, navigation }) => {
     }
 
     await saveHighestScore(calculatedScore);
-    navigation.navigate('Quiz List'); // Replace 'QuizList' with the actual name of your quiz list screen
+    navigation.navigate('Quiz List');
     setLoading(false);
   };
+
+  const handleLeaveQuiz = async () => {
+    const quizAttemptsRef = doc(db, 'quizAttempts', `${quiz.id}_${studentId}`);
+    const docSnapshot = await getDoc(quizAttemptsRef);
+
+    if (docSnapshot.exists()) {
+      const attemptsData = docSnapshot.data().attempts;
+      await updateDoc(quizAttemptsRef, { attempts: [...attemptsData, -1] });
+    } else {
+      await setDoc(quizAttemptsRef, { quizId: quiz.id, studentId, attempts: [-1] });
+    }
+
+    setIsAlertVisible(false); // Close the alert
+    navigation.goBack(); // Navigate back
+  };
+
+  const handleCancelLeave = () => {
+    setIsAlertVisible(false); // Close the alert
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const handleLeaveWarning = (e) => {
+        if (!submitted && !isAlertVisible) {
+          e.preventDefault(); // Prevent the default back action
+          setIsAlertVisible(true); // Show the custom alert
+        }
+      };
+
+      const unsubscribe = navigation.addListener('beforeRemove', handleLeaveWarning);
+
+      return () => {
+        unsubscribe();
+      };
+    }, [submitted, navigation, isAlertVisible])
+  );
 
   return (
     <View style={styles.container}>
@@ -119,6 +130,10 @@ const QuizDetail = ({ route, navigation }) => {
         <Text style={styles.details}>Duration: {quiz.duration}</Text>
         <Text style={styles.details}>Due Date: {new Date(quiz.dueDate.seconds * 1000).toLocaleDateString()} {quiz.dueTime.hours}:{quiz.dueTime.minutes}</Text>
         <Text style={styles.details}>Unlock Date: {new Date(quiz.unlockDate.seconds * 1000).toLocaleDateString()} {quiz.unlockTime.hours}:{quiz.unlockTime.minutes}</Text>
+
+        <View style={styles.timerContainer}>
+          <Text style={styles.timerText}>Time Left: {formatTime(remainingTime)}</Text>
+        </View>
 
         {quiz.questions.map((q, index) => (
           <View key={index} style={styles.questionContainer}>
@@ -171,30 +186,50 @@ const QuizDetail = ({ route, navigation }) => {
       {score !== null && (
         <Text style={styles.scoreText}>You scored: {score} / {quiz.questions.length}</Text>
       )}
+
+      <YesNoAlert
+        visible={isAlertVisible}
+        title="Warning"
+        message="You have not submitted your answers. Leaving will deduct an attempt. Are you sure you want to leave?"
+        onYes={handleLeaveQuiz}
+        onNo={handleCancelLeave}
+      />
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f7f7f7'
+    backgroundColor: '#f7f7f7',
   },
   scrollContainer: {
     paddingBottom: 100,
   },
   header: {
     fontSize: 24,
-    textAlign: 'center',
     marginBottom: 20,
-    color: '#2ecc71' // Green
+    color: '#2ecc71',
+    paddingTop: 15,
+    left: 0,
   },
   details: {
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 10,
-    color: '#555'
+    color: '#555',
+  },
+  timerContainer: {
+    position: 'absolute',
+    top: 10, right: 0,
+    backgroundColor: '#e0e0e0',
+    padding: 5,
+    borderRadius: 5,
+  },
+  timerText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2ecc71',
   },
   questionContainer: {
     marginBottom: 20,
@@ -208,50 +243,40 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     marginBottom: 10,
     borderRadius: 5,
-    borderColor: '#2ecc71', // Green
-    borderWidth: 1
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   selectedOption: {
-    backgroundColor: '#d3f8d3',
+    backgroundColor: '#cce5ff',
   },
   correctOption: {
-    backgroundColor: '#2ecc71', 
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-    borderColor: '#2ecc71', // Green
-    borderWidth: 1
+    backgroundColor: '#c8e6c9',
   },
   wrongOption: {
-    backgroundColor: '#f8d7da',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-    borderColor: '#2ecc71', // Green
-    borderWidth: 1
-  },
-  scoreText: {
-    marginTop: 20,
-    fontSize: 18,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    color: '#2ecc71' // Green
+    backgroundColor: '#ffcdd2',
   },
   buttonContainer: {
     position: 'absolute',
     bottom: 20,
-    left: 20,
-    right: 20,
+    width: '100%',
+    alignItems: 'center',
   },
   submitButton: {
-    backgroundColor: '#2ecc71', // Green
-    padding: 10,
+    padding: 15,
+    backgroundColor: '#2ecc71',
     borderRadius: 5,
   },
   submitButtonText: {
+    color: '#fff',
     fontSize: 18,
-    color: '# fff',
     textAlign: 'center',
+  },
+  scoreText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#2ecc71',
+    marginTop: 20,
   },
 });
 
