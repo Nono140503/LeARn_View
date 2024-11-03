@@ -1,39 +1,46 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ImageBackground, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ImageBackground, StyleSheet, Alert } from 'react-native';
 import { db } from '../../../firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { auth } from '../../../firebase';
 import themeContext from '../../../components/ThemeContext';
 
-const QuizList = () => {
+const QuizList = ({ navigation }) => {
   const [quizzes, setQuizzes] = useState([]);
   const [attemptsData, setAttemptsData] = useState({});
   const theme = useContext(themeContext);
-  const studentId = auth.currentUser.uid;
+  const studentId = auth.currentUser .uid;
 
   useEffect(() => {
-    const fetchQuizzes = async () => {
-      try {
-        const quizzesCollection = collection(db, 'quizzes');
-        const quizSnapshot = await getDocs(quizzesCollection);
-        const quizList = quizSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setQuizzes(quizList);
+    // Real-time listener for quizzes
+    const quizzesCollection = collection(db, 'quizzes');
+    const unsubscribeQuizzes = onSnapshot(quizzesCollection, (snapshot) => {
+      const quizList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setQuizzes(quizList);
+    }, (error) => {
+      console.error("Error fetching quizzes:", error);
+      Alert.alert('Error', 'Could not retrieve quizzes. Please try again later.');
+    });
 
-        const attemptsQuery = query(collection(db, 'quizAttempts'), where('studentId', '==', studentId));
-        const attemptsSnapshot = await getDocs(attemptsQuery);
-        const attempts = {};
-        attemptsSnapshot.docs.forEach(doc => {
-          attempts[doc.data().quizId] = doc.data().attempts;
-        });
-        setAttemptsData(attempts);
-      } catch (error) {
-        console.error("Error fetching quizzes:", error);
-        Alert.alert('Error', 'Could not retrieve quizzes. Please try again later.');
-      }
+    // Real-time listener for quiz attempts
+    const attemptsQuery = query(collection(db, 'quizAttempts'), where('studentId', '==', studentId));
+    const unsubscribeAttempts = onSnapshot(attemptsQuery, (snapshot) => {
+      const attempts = {};
+      snapshot.docs.forEach(doc => {
+        attempts[doc.data().quizId] = doc.data().attempts || [];
+      });
+      setAttemptsData(attempts);
+    }, (error) => {
+      console.error("Error fetching attempts:", error);
+      Alert.alert('Error', 'Could not retrieve attempts. Please try again later.');
+    });
+
+    // Clean up listeners on component unmount
+    return () => {
+      unsubscribeQuizzes();
+      unsubscribeAttempts();
     };
-
-    fetchQuizzes();
-  }, []);
+  }, [studentId]);
 
   const handleQuizPress = (quiz) => {
     const attempts = attemptsData[quiz.id] || [];
@@ -46,16 +53,33 @@ const QuizList = () => {
       if (currentDate > dueDate) {
         Alert.alert('Quiz Expired', 'This quiz is no longer available.');
       } else {
+        // Record the attempt in Firestore
+        recordAttempt(quiz.id);
         navigation.navigate('Quiz Details', { quiz, attempts });
       }
+    }
+  };
+
+  const recordAttempt = async (quizId) => {
+    const quizAttemptsRef = doc(db, 'quizAttempts', `${quizId}_${studentId}`);
+    const docSnapshot = await getDoc(quizAttemptsRef);
+
+    try {
+      if (docSnapshot.exists()) {
+        const attemptsData = docSnapshot.data();
+        await updateDoc(quizAttemptsRef, { attempts: [...attemptsData.attempts, new Date()] });
+      } else {
+        await setDoc(quizAttemptsRef, { quizId, studentId, attempts: [new Date()] });
+      }
+    } catch (error) {
+      console.error("Error recording attempt:", error);
+      Alert.alert('Error', 'Could not record your attempt. Please try again later.');
     }
   };
 
   const renderItem = ({ item }) => {
     const attempts = attemptsData[item.id] || [];
     const attemptsLeft = 3 - attempts.length;
-  
-
 
     return (
       <View style={styles.testContainer}>
@@ -66,10 +90,10 @@ const QuizList = () => {
         >
           <View style={styles.overlay} />
           <View style={styles.testContent}>
-            <Text style={[styles.textShadow,styles.testTitle]}>{item.title}</Text>
-            <Text style={[styles.textShadow,styles.infoText]}>Duration: {item.duration} minutes</Text>
-            <Text style={[styles.textShadow,styles.infoText]}>Due Date: {new Date(item.dueDate).toLocaleDateString()}</Text>
-            <Text style={[styles.textShadow,styles.attemptsText, attemptsLeft === 0 && styles.attemptsExhausted]}>
+            <Text style={[styles.textShadow, styles.testTitle]}>{item.title}</Text>
+            <Text style={[styles.textShadow, styles.infoText]}>Duration: {item.duration} minutes</Text>
+            <Text style={[styles.textShadow, styles.infoText]}>Due Date: {new Date(item.dueDate).toLocaleDateString()}</Text>
+            <Text style={[styles.textShadow, styles.attemptsText, attemptsLeft === 0 && styles.attemptsExhausted]}>
               Attempts left: {attemptsLeft}
             </Text>
           </View>
@@ -88,7 +112,7 @@ const QuizList = () => {
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+    <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
       <Text style={styles.header}>Available Quizzes</Text>
       <FlatList
         data={quizzes}
