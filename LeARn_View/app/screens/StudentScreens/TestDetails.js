@@ -1,190 +1,292 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, Button, ScrollView, StyleSheet, Alert, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  Button,
+  ScrollView,
+  StyleSheet,
+  Alert,
+  TextInput,
+  TouchableOpacity,
+  BackHandler,
+  ActivityIndicator,
+} from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { db } from '../../../firebase';
 import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { auth } from '../../../firebase';
-import themeContext from '../../../components/ThemeContext';
+import YesNoAlert from '../../../components/YesNoAlert'; // Adjust the import path as necessary
 
 const TestDetail = ({ route, navigation }) => {
-  const { test, attempts } = route.params;
+  const { test: testFromParams } = route.params;
+  const [test, setTest] = useState(testFromParams);
   const [answers, setAnswers] = useState(Array(test.questions.length).fill(null));
-  const [score, setScore] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const theme = useContext(themeContext);
-  const studentId = auth.currentUser.uid;
+  const studentId = auth.currentUser .uid;
 
   // Countdown State
   const [remainingTime, setRemainingTime] = useState(0);
+  const timerId = useRef(null); // To store the timer ID
+
+  // State to control the exit confirmation alert
+  const [showExitAlert, setShowExitAlert] = useState(false);
 
   useEffect(() => {
-    const fetchAnswers = async () => {
-      const testAttemptsRef = doc(db, 'testAttempts', `${test.id}_${studentId}`);
-      const docSnapshot = await getDoc(testAttemptsRef);
-
-      if (docSnapshot.exists()) {
-        const attemptsData = docSnapshot.data();
-        setAnswers(attemptsData.answers || Array(test.questions.length).fill(null));
+    const handleBackPress = () => {
+      if (!submitted) {
+        setShowExitAlert(true); // Show the exit alert
+        return true; // Prevent default back button behavior
       }
+      return false; // Allow back button if test is submitted
     };
 
-    fetchAnswers();
+    // Add event listener for back button press
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-    // Convert duration to seconds
-    const durationParts = test.duration.split(':');
-    const durationInSeconds = parseInt(durationParts[0]) * 3600 + parseInt(durationParts[1]) * 60 + parseInt(durationParts[2]);
-    setRemainingTime(durationInSeconds);
+    const initializeTimer = () => {
+      const durationParts = test.duration.split(':');
+      const durationInSeconds =
+        parseInt(durationParts[0]) * 3600 +
+        parseInt(durationParts[1]) * 60 +
+        parseInt(durationParts[2]);
+      setRemainingTime(durationInSeconds);
+      startTimer();
+    };
 
-    const timerId = setInterval(() => {
+    initializeTimer();
+
+    // Clean up the timer and event listener when the component unmounts
+    return () => {
+      clearInterval(timerId.current);
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, [test.duration, navigation]);
+
+  const startTimer = () => {
+    timerId.current = setInterval(() => {
       setRemainingTime((prevTime) => {
         if (prevTime <= 0) {
-          clearInterval(timerId);
-          Alert.alert('Time Over', 'The time for this test has expired.', [
-            {
-              text: 'OK',
-              onPress: () => navigation.navigate('TestList'), // Navigate back to the test list
-            },
-          ]);
+          clearInterval(timerId.current);
+          handleSubmitAnswers(); // Automatically submit when time is up
           return 0;
         }
-        return prevTime - 1;
+        return prevTime - 1; // Update remaining time
       });
     }, 1000);
-
-    return () => clearInterval(timerId);
-  }, [test.duration, navigation]);
+  };
 
   // Format time for display
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Handle option selection for MCQ and True/False
+  // Handle option selection for MCQ
   const handleAnswerSelect = (questionIndex, optionIndex) => {
-    const updatedAnswers = [...answers];
-    updatedAnswers[questionIndex] = optionIndex;
-    setAnswers(updatedAnswers);
+    setAnswers((prevAnswers) => {
+      const updatedAnswers = [...prevAnswers];
+      updatedAnswers[questionIndex] = optionIndex;
+      return updatedAnswers;
+    });
   };
 
   // Handle input answer for input type questions
   const handleInputChange = (questionIndex, text) => {
-    const updatedAnswers = [...answers];
-    updatedAnswers[questionIndex] = text;
-    setAnswers(updatedAnswers);
+    setAnswers((prevAnswers) => {
+      const updatedAnswers = [...prevAnswers];
+      updatedAnswers[questionIndex] = text;
+      return updatedAnswers;
+    });
+  };
+
+  // Handle selection for True/False questions
+  const handleTrueFalseSelect = (questionIndex, selectedValue) => {
+    setAnswers((prevAnswers) => {
+      const updatedAnswers = [...prevAnswers];
+      updatedAnswers[questionIndex] = selectedValue;
+      return updatedAnswers;
+    });
+  };
+
+  // Save highest score function
+  const saveHighestScore = async (calculatedScore) => {
+    const quizScoresRef = doc(db, 'quizScores', studentId);
+    const docSnapshot = await getDoc(quizScoresRef);
+
+    const submissionDate = new Date().toISOString();
+
+    try {
+      if (docSnapshot.exists()) {
+        const scoresData = docSnapshot.data();
+        const currentScore = scoresData[test.id]?.score || 0;
+
+        if (calculatedScore > currentScore) {
+          await updateDoc(quizScoresRef, {
+            [test.id]: {
+              score: calculatedScore,
+              totalQuestions: test.questions.length,
+              title: `${test.title} Test`,
+              submittedAt: submissionDate,
+            },
+          });
+          Alert.alert('Score Updated', `Your new highest score is ${calculatedScore}. Total questions: ${test.questions.length}`);
+        } else {
+          Alert.alert('Score Not Updated', `Your score of ${calculatedScore} is not higher than your previous score of ${currentScore}. Total questions: ${test.questions.length}`);
+        }
+      } else {
+        await setDoc(quizScoresRef, {
+          [test.id]: {
+            score: calculatedScore,
+            totalQuestions : test.questions.length,
+            title: `${test.title} Test`,
+            submittedAt: submissionDate,
+          },
+        });
+        Alert.alert('Score Saved', `Your score of ${calculatedScore} has been saved. Total questions: ${test.questions.length}`);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'There was an error saving your score. Please try again later.');
+      console.error("Error saving score: ", error);
+    }
   };
 
   // Submit answers and calculate score
-  const submitAnswers = async () => {
+  const handleSubmitAnswers = async () => {
     if (answers.includes(null)) {
-      Alert.alert('Validation Error', 'Please answer all questions before submitting.');
+      Alert.alert(
+        'Validation Error',
+        'Please answer all questions before submitting.',
+        [
+          {
+            text: 'OK',
+          },
+        ]
+      );
       return;
     }
 
     setLoading(true);
-    let calculatedScore = 0;
 
-    test.questions.forEach((q, index) => {
-      const selectedAnswer = answers[index];
-      const correctAnswer = q.correctAnswer;
-
-      if (q.type === 'MCQ' || q.type === 'True/False') {
-        if (selectedAnswer === correctAnswer) {
-          calculatedScore += 1;
-        }
-      } else if (q.type === 'Input') {
-        if (selectedAnswer && selectedAnswer.trim().toLowerCase() === correctAnswer.trim().toLowerCase()) {
-          calculatedScore += 1;
-        }
-      }
-    });
-
-    setScore(calculatedScore);
-    setSubmitted(true);
-    Alert.alert(
-      'Test Completed',
-      `You scored ${calculatedScore} out of ${test.questions.length}`,
-      [{ text: 'OK', onPress: () => navigation.navigate('Test List') }] // Navigate back to the test list after submission
-    );
-
-    const testAttemptsRef = doc(db, 'testAttempts', `${test.id}_${studentId}`);
-    const docSnapshot = await getDoc(testAttemptsRef);
-
-    if (docSnapshot.exists()) {
-      const attemptsData = docSnapshot.data();
-      const currentAttempts = attemptsData.attempts || [];
-
-      if(currentAttempts.length < 1)
-      {
-        Alert.alert("Attempts exhausted!", "You can no longer attempt this test")
-        setLoading(false)
-        return;
-      }
-
-
-      const updatedAttempts = [...attemptsData.attempts, calculatedScore];
-      await updateDoc(testAttemptsRef, { 
-        attempts: updatedAttempts, 
-        answers: answers, 
+    try {
+      // Update Firestore with submitted answers
+      const testAttemptsRef = doc(db, 'testAttempts', `${test.id}_${studentId}`);
+      await updateDoc(testAttemptsRef, {
+        answers,
+        submitted: true,
       });
-    } else {
-      await setDoc(testAttemptsRef, { 
-        testId: test.id, 
-        studentId, 
-        attempts: [calculatedScore], 
-        answers: answers, 
-      });
+
+      // Calculate score
+      const calculatedScore = answers.reduce((acc, current, index) => {
+        if (current === test.questions[index].correctAnswer) {
+          return acc + 1;
+        }
+        return acc;
+      }, 0);
+
+      // Save highest score
+      await saveHighestScore(calculatedScore);
+
+      setSubmitted(true);
+    } catch (error) {
+      console.error('Error submitting test:', error);
+    } finally {
+      setLoading(false);
+      navigation.goBack();
     }
-    setLoading(false);
+  };
+
+  // Handle exit confirmation
+  const handleExitYes = () => {
+    setShowExitAlert(false);
+    navigation.goBack();
+  };
+
+  const handleExitNo = () => {
+    setShowExitAlert(false);
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
-      <Text style={styles.countdown}>{formatTime(remainingTime)}</Text>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <View style={styles.container}>
+      <ScrollView style={styles.scrollContainer}>
         <Text style={styles.header}>{test.title}</Text>
-        {test.questions.map((q, index) => (
-          <View key={index} style={styles.questionContainer}>
-            <Text style={[styles.question, {color: theme.color}]}>{`Q${index + 1}: ${q.question}`}</Text>
-            {q.type === 'MCQ' || q.type === 'True/False' ? (
-              q.options.map((option, oIndex) => {
-                const isSelected = answers[index] === oIndex;
-                const isCorrect = oIndex === parseInt(q.correctAnswer);
-                const optionStyle = submitted ? (isCorrect ? styles.correctOption : (isSelected ? styles.wrongOption : styles.optionButton)) : styles.optionButton;
+        <Text style={styles.details}>
+          Due Date: {test.dueDate ? new Date(test.dueDate).toLocaleString() : 'N/A'} | 
+          Unlock Date: {test.unlockDate ? new Date(test.unlockDate).toLocaleString() : 'N/A'} | 
+          Due Time: {test.dueTime?.hours || 'N/A'}:{test.dueTime?.minutes || 'N/A'} | 
+          Duration: {test.duration}
+        </Text>
 
-                return (
+        {test.questions.map((question, index) => (
+          <View key={index} style={styles.questionContainer}>
+            <Text style={styles.question}>{question.question}</Text>
+
+            {question.type === 'mcq' && (
+              <View>
+                {question.options.map((option, optionIndex) => (
                   <TouchableOpacity
-                    key={oIndex}
-                    style={optionStyle}
-                    onPress={() => !submitted && handleAnswerSelect(index, oIndex)}
+                    key={optionIndex}
+                    onPress={() => handleAnswerSelect(index, optionIndex)}
+                    style={[
+                      styles.optionButton,
+                      answers[index] === optionIndex && styles.selectedOption,
+                    ]}
                   >
-                    <Text style={isSelected ? styles.selectedText : styles.optionText}>{`${String.fromCharCode(65 + oIndex)}: ${option}`}</Text>
-                    {isSelected && <Text style={styles.radioSelected}> ● </Text>}
+                    <Text style={styles.optionText}>{option}</Text>
                   </TouchableOpacity>
-                );
-              })
-            ) : (
+                ))}
+              </View>
+            )}
+
+            {question.type === 'input' && (
               <TextInput
-                style={[styles.input, {color: theme.color}]}
-                placeholder="Your answer..."
-                placeholderTextColor={theme.placeholderTextColor}
+                style={styles.inputField}
+                value={answers[index]}
                 onChangeText={(text) => handleInputChange(index, text)}
-                editable={!submitted}
-                value={answers[index] || ''} // Show previous answer if available
+                placeholder="Enter your answer"
               />
+            )}
+
+            {question.type === 'ToF' && (
+              <Picker
+                selectedValue={answers[index]}
+                onValueChange={(itemValue) => handleTrueFalseSelect(index, itemValue)}
+              >
+                <Picker.Item label="True" value={true} />
+                <Picker.Item label="False" value={false} />
+              </Picker>
             )}
           </View>
         ))}
       </ScrollView>
-        
-      <View style={styles.buttonContainer}>
-        <Button title="Submit Answers" onPress={submitAnswers} disabled={loading || submitted} /> 
+
+      {loading ? (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#2ecc71" />
+          <Text style={styles.loadingText}>Submitting...</Text>
+        </View>
+      ) : (
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Submit Answers"
+            onPress={handleSubmitAnswers}
+            disabled={submitted || loading} // Disable button during loading state
+            color={submitted || loading ? '#ccc' : '#2ecc71'} // Change button color during loading state
+          />
+        </View>
+      )}
+      <View style={styles.timerContainer}>
+        <Text style={styles.timerText}>{formatTime(remainingTime)}</ Text>
       </View>
 
-      {score !== null && (
-        <Text style={styles.scoreText}>You scored: {score} / {test.questions.length}</Text>
-      )}
+      <YesNoAlert
+        visible={showExitAlert}
+        title="Exit Test?"
+        message="Are you sure you want to exit the test? The timer will not reset, and your progress will be saved."
+        onYes={handleExitYes}
+        onNo={handleExitNo}
+      />
     </View>
   );
 };
@@ -193,27 +295,42 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-  },
-  countdown: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    fontSize: 18,
-    fontWeight: 'bold',
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    padding: 5,
-    borderRadius: 5,
+    backgroundColor: '#f7f7f7',
   },
   scrollContainer: {
     paddingBottom: 100,
   },
   header: {
     fontSize: 24,
-    textAlign: 'center',
     marginBottom: 20,
+    color: '#2ecc71',
+    paddingTop: 15,
+    left: 0,
+  },
+  details: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 10,
+    color: '#555',
+  },
+  timerContainer: {
+    position: 'absolute',
+    top: 40,
+    right: 10,
+    backgroundColor: '#e0e0e0',
+    padding: 5,
+    borderRadius: 5,
+  },
+  timerText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2ecc71',
   },
   questionContainer: {
     marginBottom: 20,
+    backgroundColor: '#e0e0e0',
+    padding: 5,
+    borderRadius: 5,
   },
   question: {
     fontSize: 18,
@@ -224,44 +341,55 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     marginBottom: 10,
     borderRadius: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
-  selectedText: {
-    fontWeight: 'bold',
-  },
-  optionText: {
-    flex: 1,
-  },
-  radioSelected: {
-    marginLeft: 10,
-    color: 'green',
+  selectedOption: {
+    backgroundColor: '#cce5ff',
   },
   correctOption: {
-    backgroundColor: '#d4edda',
+    backgroundColor: '#c8e6c9',
   },
   wrongOption: {
-    backgroundColor: '#f8d7da',
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingLeft: 10,
-    marginBottom: 10,
-  },
-  scoreText: {
-    marginTop: 20,
-    fontSize: 18,
-    textAlign: 'center',
-    fontWeight: 'bold',
+    backgroundColor: '#ffcdd2',
   },
   buttonContainer: {
     position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
+    bottom: 25,
+    width: '100%',
+    alignItems: 'center',
+  },
+  submitButton: {
+    padding: 15,
+    backgroundColor: '#2ecc71',
+    borderRadius: 5,
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  scoreText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#2ecc71',
+    marginTop: 20,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  loadingText: {
+    fontSize: 18,
+    color: '#2ecc71',
+    marginTop: 10,
   },
 });
 
