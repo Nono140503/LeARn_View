@@ -8,6 +8,7 @@ const ScoreScreenTwo = ({ route, navigation, resetQuiz }) => {
   const totalQuestions = questions.length;
   const theme = useContext(themeContext);
 
+  let image;
   let feedback;
   if (score >= totalQuestions * 0.83) {
     feedback = "Excellent, keep it up!";
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
   scoreText: {
     fontSize: 24,
     marginBottom: 20,
-    //color: 'green',
+    color: 'green',
   },
   feedbackText: {
     fontSize: 20,

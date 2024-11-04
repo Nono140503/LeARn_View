@@ -31,7 +31,7 @@ import QuizList from './app/screens/StudentScreens/QuizList';
 import QuizDetails from './app/screens/StudentScreens/QuizDetails';
 import QuestionScreenFour from './app/screens/StudentScreens/QuestionScreenFour';
 import QuestionScreenThree from './app/screens/StudentScreens/QuestionsScreenThree';
-import QuestionScreenTwo from './app/screens/StudentScreens/QuestioneTwoScreen';
+import QuestionScreenTwo from './app/screens/StudentScreens/QuestionTwoScreen';
 import QuestionScreen from './app/screens/StudentScreens/QuestionsScreen';
 import CorrectionsScreen from './app/screens/StudentScreens/CorrectionsScreen';
 import CorrectionsScreenFour from './app/screens/StudentScreens/CorrectionScreenFour';

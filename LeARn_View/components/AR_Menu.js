@@ -1,8 +1,17 @@
 import React, { useState } from "react";
-import { View, Text, ImageBackground, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, FlatList, TouchableOpacity, Linking, Alert } from 'react-native';
 import  Icon from "react-native-vector-icons/Ionicons";
 
 function ARMenu({ navigation }) {
+    const redirect = async (nav) =>{
+        const supported = await Linking.canOpenURL(nav);
+        if (supported){
+            await Linking.openURL(nav);
+        }else{
+            Alert.alert("error", "Unable to open app");
+        }
+
+    }
     const [list, setList] = useState([
         {
             title: 'Module 1',
@@ -10,7 +19,7 @@ function ARMenu({ navigation }) {
             image: require('../assets/Computer.jpeg'),
             progress: 'Progress: 0%',
             icon: '', 
-            navigation: 'AR Environment Screen', 
+            nav: '', 
             
         },
         {
@@ -19,7 +28,7 @@ function ARMenu({ navigation }) {
             image: require('../assets/Motherboard.jpeg'),
             progress: 'Locked',
             icon: 'lock-closed-outline',
-            navigation: 'AR Environment Screen',  
+            nav: 'https://anchor.arway.ai/map/d9553071-f805-434e-a700-91e58381c239',  
         },
         {
             title: 'Module 3',
@@ -27,7 +36,7 @@ function ARMenu({ navigation }) {
             image: require('../assets/CPU.jpeg'),
             progress: 'Locked',
             icon: 'lock-closed-outline',
-            navigation: 'AR Environment Screen', 
+            nav: 'AR Environment Screen', 
         },
     ]);
 
@@ -41,8 +50,8 @@ function ARMenu({ navigation }) {
                     <TouchableOpacity
                         style={styles.card}
                         onPress={() => {
-                            if (item?.navigation) {
-                                navigation.navigate(item.navigation);  
+                            if (item?.nav) {
+                                redirect
                             } else {
                                 console.warn('Invalid navigation route');
                             }
