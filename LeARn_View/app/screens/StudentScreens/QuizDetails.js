@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 20,
     color: '#2ecc71',
-    paddingTop: 15,
+    paddingTop: 55,
     left: 0,
   },
   details: {
