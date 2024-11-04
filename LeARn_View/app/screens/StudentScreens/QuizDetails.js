@@ -173,6 +173,9 @@ const QuizDetail = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+              <View style={styles.timerContainer}>
+          <Text style={styles.timerText}>Time Left: {formatTime(remainingTime)}</Text>
+        </View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.header}>{quiz.title}</Text>
         <Text style={styles.details}>Duration: {quiz.duration}</Text>
@@ -262,7 +265,7 @@ const styles = StyleSheet.create({
   },
   timerContainer: {
     position: 'absolute',
-    top: 10, right: 0,
+    top: 35, right: 0,
     backgroundColor: '#e0e0e0',
     padding: 5,
     borderRadius: 5,
