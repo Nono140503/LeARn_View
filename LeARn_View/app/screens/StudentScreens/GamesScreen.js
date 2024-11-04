@@ -1,212 +1,113 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, ActivityIndicator, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { auth, db } from '../../../firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import BottomTabBar from '../../../components/BottomTabBar';
-import themeContext from '../../../components/ThemeContext';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
+import GamesHeader from '../../../components/GamesHeader';
 
-const GradesScreen = ({ navigation }) => {
-  const [currentScreen, setCurrentScreen] = useState('Grades Screen');
-  const [image, setImage] = useState('');
-  const [username, setUsername] = useState('');
-  const [year, setYear] = useState('');
-  const [course, setCourse] = useState('');
-  const [email, setEmail] = useState('');
-  const [quizzes, setQuizzes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const theme = useContext(themeContext);
-  const user = auth.currentUser ;
+const GamesScreen = ({ navigation }) => {
+  const [currentScreen, setCurrentScreen] = useState('Games Screen');
 
   const handleNavigation = (screen) => {
     setCurrentScreen(screen);
     navigation.navigate(screen);
   };
 
-  // Fetch User data
-  useEffect(() => {
-    const fetchStudentProfile = async () => {
-      const userRef = doc(db, 'users', user.uid);
-      const userDoc = await getDoc(userRef);
-
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        setUsername(userData.username);
-        setEmail(userData.email);
-      } else {
-        Alert.alert('User  Not Found', 'Student profile does not exist.');
-      }
-
-      const userPFP = doc(db, 'users', user.uid);
-      const userPFP_Doc = await getDoc(userPFP);
-
-      if (userPFP_Doc.exists()) {
-        const userPFP_Data = userPFP_Doc.data();
-        setImage(userPFP_Data.profileImage);
-      }
-    };
-
-    const fetchQuizScores = async () => {
-      try {
-        const quizScoresRef = doc(db, 'quizScores', user.uid); // Use user.uid as studentId
-        const quizScoresDoc = await getDoc(quizScoresRef);
-
-        if (quizScoresDoc.exists()) {
-          const scoresData = quizScoresDoc.data();
-          const quizList = Object.keys(scoresData).map((quizId) => ({
-            id: quizId,
-            score: scoresData[quizId].score, // Get the score
-            totalQuestions: scoresData[quizId].totalQuestions, // Get total questions
-            date: scoresData[quizId].submittedAt || 'Date Not Available', // Get submission date
-            title: scoresData[quizId].title || 'Untitled Quiz', // Get quiz title
-          }));
-          setQuizzes(quizList);
-        } else {
-          Alert.alert('No Scores Found', 'You have not completed any quizzes yet.');
-        }
-      } catch (error) {
-        console.error("Error fetching quiz scores: ", error);
-        Alert.alert('Error', 'There was an error fetching your quiz scores. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStudentProfile();
-    fetchQuizScores();
-  }, [user.uid]);
-
-  if (loading) {
-    return <ActivityIndicator size="large" color="#4CAF50" style={{ flex: 1, justifyContent: 'center' }} />;
-  }
+  const games = [
+    {
+      title: 'Computer Components',
+      image: require('../../../assets/computer-assembly-pc-building-hardware-600nw-2229132749.jpg'),
+      rules: '1. Enter the name of the component displayed in the image\n2. Make sure that you enter the full name of the component!\n3 You have 30 seconds to answer each question.\n4. If your time finishes, the game will move to the next question.\n5 You cannot go to the previous question if the time finishes.\n6. Good luck and Enjoy!',
+      gif: require('../../../assets/06Techfix-illo-superJumbo.gif'),
+      nav: 'Computer Components',
+    },
+    {
+      title: 'Check Your Knowledge',
+      image: require('../../../assets/concept-computer-repair-service-vector-illustration_357257-792.jpg'),
+      rules: 'Challenge your knowledge of computer fundamentals, terminology, and concepts\n1. Select the module you would like to practice\n2. Select the answer that best suits the question',
+      gif: require('../../../assets/I Have An Idea!.gif'),
+      nav: 'Check Your Knowledge',
+    },
+    {
+      title: 'Malware Mayhem',
+      image: require('../../../assets/malware.jpeg'),
+      rules: 'Identify and eliminate malware threats before they cause damage.\n1.The onjective is to identify the malware in the given scenario.\n2.Select level of Difficulty\n3.Select the answer that best suits the scenario',
+      gif: require('../../../assets/The Hacker.gif'),
+      nav: 'Malware Mayhem',
+    },
+  ];
 
   return (
-    <>
-      <ScrollView style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Grades</Text>
-        </View>
-
-        {/* User Info */}
-        <View style={styles.userInfo}>
-          <Image source={image ? { uri: image } : null} style={styles.avatar} />
-          <View>
-            <Text style={styles.userDetail}>Name: {username}</Text>
-            <Text style={styles.userDetail}>Email: {email}</Text>
-            <Text style={styles.userDetail}>Year: 1st year</Text>
-            <Text style={styles.userDetail}>Course: BIT</Text>
+    <View style={styles.container}>
+      <GamesHeader navigation={navigation} currentScreen={currentScreen} onNavigate={handleNavigation} />
+      <ImageBackground source={require('../../../assets/gradient-background-green-tones_23-2148388109.jpg')} style={styles.background}>
+        
+        <View style={styles.overlay} />
+        <ScrollView contentContainerStyle={styles.content}>
+          <View style={styles.gamesGrid}>
+            {games.map((game, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.componentItem}
+                onPress={() => {
+                  navigation.navigate('Game Rules', {
+                    gameTitle: game.title,
+                    gameImage: game.image,
+                    rules: game.rules,
+                    gif: game.gif,
+                    nav: game.nav,
+                  });
+                }}
+              >
+                <Image source={game.image} style={styles.componentImage} />
+                <Text style={styles.componentTitle}>{game.title}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
-        </View>
-
-        {/* Quiz Grades */}
-        <View style={styles.quizzes}>
-      {quizzes.map((quiz) => {
-        const percentage = (quiz.score / quiz.totalQuestions) * 100;
-
-        // Determine background color based on percentage
-        let backgroundColor;
-        if (percentage >= 90) {
-          backgroundColor = '#007A33'; // Dark Green for 90% and above
-        } else if (percentage >= 80) {
-          backgroundColor = '#00cc00'; // Light Green for 80% to 89%
-        } else if (percentage >= 70) {
-          backgroundColor = '#99cc00'; // Light Yellow-Green for 70% to 79%
-        } else if (percentage >= 60) {
-          backgroundColor = '#ffcc00'; // Yellow for 60% to 69%
-        } else if (percentage >= 50) {
-          backgroundColor = '#ff9933'; // Light Orange for 50% to 59%
-        } else if (percentage >= 40) {
-          backgroundColor = '#ff6600'; // Orange for 40% to 49%
-        } else if (percentage >= 30) {
-          backgroundColor = '#ff3333'; // Light Red for 30% to 39%
-        } else {
-          backgroundColor = '#cc0000'; // Dark Red for below 30%
-        }
-
-        return (
-          <View key={quiz.id} style={styles.quizCard}>
-            <Text style={styles.quizTitle}>{quiz.title} Quiz</Text>
-            <Text style={styles.quizDate}>{quiz.date}</Text>
-            <Text style={[styles.quizMark, { backgroundColor }]}>
-              Score: {quiz.score}/{quiz.totalQuestions} ({percentage.toFixed(2)}%)
-            </Text>
-          </View>
-        );
-      })}
+        </ScrollView>
+      </ImageBackground>
     </View>
-      </ScrollView>
-      <BottomTabBar
-        navigation={navigation}
-        currentScreen={currentScreen}
-        onNavigate={handleNavigation}
-      />
-    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e8f5e9',
   },
-  header: {
+  background: {
+    flex: 1,
+  },
+  // overlay: {
+  //   ...StyleSheet.absoluteFillObject, // Ensures the overlay covers the entire background
+  //   backgroundColor: 'rgba(0, 0, 0, 0.2)', // Semi-transparent black color
+  // },
+  content: {
+    padding: 15,
+  },
+  gamesGrid: {
     flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
+    flexWrap: 'wrap',
+    justifyContent: 'space-between', 
   },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginLeft: 16,
-    paddingTop: 20,
-    color: '#227d39',
-  },
-  userInfo: {
-    flexDirection: 'row',
-    padding: 16,
-    backgroundColor: '#4CAF50',
-    margin: 16,
-    borderRadius: 8,
-    elevation: 4,
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginRight: 16,
-    marginTop: 10,
-  },
-  userDetail: {
-    fontSize: 16,
-    color: 'white',
-  },
-  quizzes: {
-    margin: 16,
-  },
-  quizCard: {
-    backgroundColor: 'white',
-    padding: 16,
-    marginBottom: 16,
-    borderRadius: 8,
+  componentItem: {
+    width: '45%', 
+    marginBottom: 15,
+    borderRadius: 10,
     elevation: 3,
+    shadowColor: 'rgba(0, 0, 0, 0.9)',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5.5,
   },
-  quizTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
+  componentImage: {
+    width: '100%',
+    height: 160,
+    borderRadius: 10,
   },
-  quizDate: {
-    fontSize: 14,
-    marginBottom: 8,
-    color: 'gray',
-  },
-  quizMark: {
-    fontSize: 16,
+  componentTitle: {
     color: 'white',
-    padding: 8,
-    borderRadius: 4,
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 10, 
   },
-
 });
 
-export default GradesScreen;
+export default GamesScreen;
