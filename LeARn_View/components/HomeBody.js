@@ -28,13 +28,13 @@ function HomeBody({ navigation }) {
     },
     {
         title: 'Practice Quizzes in the AR Environment',
-        description: 'Test your knowledge with interactive AR quizzes and reinforce your learning.',
+        description: 'Test your knowledge with quizzes and reinforce your learning.',
         image: require('../assets/bulb.jpg'),
         navigation: 'Quiz List',  
     },
     {
         title: 'Tests',
-        description: 'Check and take your tests set as a quiz or in the AR environment.',
+        description: 'Check and take your tests set as a quiz.',
         image: require('../assets/online-test-checklist-pencil-computer-monitor-online-form-survey-online-questionnaire-choos_153097-2893.jpg'),
         navigation: 'Test List', 
     },

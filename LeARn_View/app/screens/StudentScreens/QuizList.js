@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, FlatList, TouchableOpacity, ImageBackground, StyleSheet, Alert } from 'react-native';
 import { db } from '../../../firebase';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, query, where, doc, getDoc } from 'firebase/firestore';
 import { auth } from '../../../firebase';
 import themeContext from '../../../components/ThemeContext';
 

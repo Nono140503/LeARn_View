@@ -289,12 +289,27 @@ const styles = StyleSheet.create({
   },
   selectedOption: {
     backgroundColor: '#cce5ff',
+    backgroundColor: '#cce5ff',
+    marginBottom: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   correctOption: {
     backgroundColor: '#c8e6c9',
+    backgroundColor: '#cce5ff',
+    marginBottom: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   wrongOption: {
     backgroundColor: '#ffcdd2',
+    backgroundColor: '#cce5ff',
+    marginBottom: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   buttonContainer: {
     position: 'absolute',

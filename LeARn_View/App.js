@@ -49,6 +49,7 @@ import GradesScreen from './app/screens/StudentScreens/GradesScreen';
 import NotificationSettings from './app/screens/StudentScreens/NotificationSettings';
 import LecturerProfile from './app/screens/LecturerScreens/LecturerProfile';
 import LecturerNotification from './app/screens/LecturerScreens/LecturerNotification';
+import WebViewScreen from './components/WebView';
 import themeContext from './components/ThemeContext';
 import theme from './components/Theme';
 
@@ -130,6 +131,7 @@ const App = () => {
               <Stack.Screen name='Lecturer Profile' component={LecturerProfile}/>
               <Stack.Screen name='Lecturer Notification' component={LecturerNotification}/>
               <Stack.Screen name="Check Your Knowledge" component={CheckYourKnowledgeMenu} options={{headerShown: false}}/>
+              <Stack.Screen name="WebView Screen" component={WebViewScreen} options={{headerShown: false}}/>
               <Stack.Screen name="Question" options={{headerShown: false}}>
                 {props => (
                   <QuestionScreen

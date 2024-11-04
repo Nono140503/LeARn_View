@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { WebView } from 'react-native-webview';
+import Constants from 'expo-constants';
 import { View, Text, ImageBackground, StyleSheet, FlatList, TouchableOpacity, Linking, Alert } from 'react-native';
 import  Icon from "react-native-vector-icons/Ionicons";
+import { useNavigation } from '@react-navigation/native';
 
-function ARMenu({ navigation }) {
+function ARMenu() {
     const redirect = async (nav) =>{
         const supported = await Linking.canOpenURL(nav);
         if (supported){
@@ -12,6 +15,8 @@ function ARMenu({ navigation }) {
         }
 
     }
+
+    const navigation = useNavigation();
     const [list, setList] = useState([
         {
             title: 'Module 1',
@@ -19,7 +24,7 @@ function ARMenu({ navigation }) {
             image: require('../assets/Computer.jpeg'),
             progress: 'Progress: 0%',
             icon: '', 
-            nav: '', 
+            nav: 'https://player.onirix.com/exp/ew0mm4', 
             
         },
         {
@@ -51,7 +56,8 @@ function ARMenu({ navigation }) {
                         style={styles.card}
                         onPress={() => {
                             if (item?.nav) {
-                                redirect
+                                // Navigate to the WebViewScreen and pass the URL
+                                navigation.navigate('WebView Screen', { uri: item.nav });
                             } else {
                                 console.warn('Invalid navigation route');
                             }
@@ -66,10 +72,9 @@ function ARMenu({ navigation }) {
                                 <Text style={styles.title}>{item.title}</Text>
                                 <Text style={styles.description}>{item.description}</Text>
                                 <View style={styles.progress_cont}>
-                                <Text style={styles.progress}>{item.progress}</Text>
-                                <Icon name={item.icon} size={25} style={styles.icon}/>
+                                    <Text style={styles.progress}>{item.progress}</Text>
+                                    <Icon name={item.icon} size={25} style={styles.icon} />
                                 </View>
-                               
                             </View>
                         </ImageBackground>
                     </TouchableOpacity>
