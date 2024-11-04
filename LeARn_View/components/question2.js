@@ -7,7 +7,8 @@ const questions = [
         "C) To process graphics",
         "D) To power the computer"
       ],
-      answer: "B) To connect all components and peripherals"
+      answer: "B) To connect all components and peripherals",
+      image: require('../assets/Motherboard.jpeg'),
     },
     {
       question: "Which of the following is NOT a commonly considered feature when selecting a motherboard?",
@@ -17,7 +18,8 @@ const questions = [
         "C) Color of the casing",
         "D) Chipset"
       ],
-      answer: "C) Color of the casing"
+      answer: "C) Color of the casing",
+      image: require('../assets/Motherboard-Component-Diagnostics.jpg'),
     },
     {
       question: "What form factor is most commonly used in desktop motherboards?",
@@ -27,7 +29,8 @@ const questions = [
         "C) E-ATX",
         "D) MicroATX"
       ],
-      answer: "B) ATX"
+      answer: "B) ATX",
+      image: require('../assets/Form_factors.png'),
     },
     {
       question: "What is the purpose of the chipset on a motherboard?",
@@ -37,7 +40,8 @@ const questions = [
         "C) To store firmware",
         "D) To cool the motherboard"
       ],
-      answer: "B) To manage data flow between the CPU and other components"
+      answer: "B) To manage data flow between the CPU and other components",
+      image: require('../assets/processors.jpg'),
     },
     {
       question: "What does BIOS stand for?",
@@ -47,7 +51,8 @@ const questions = [
         "C) Basic Integrated Output System",
         "D) Boot Input Output System"
       ],
-      answer: "A) Basic Input Output System"
+      answer: "A) Basic Input Output System",
+      image: require('../assets/Bios.jpeg'),
     },
     {
       question: "Which feature in UEFI firmware allows for faster boot times compared to traditional BIOS?",
@@ -57,7 +62,8 @@ const questions = [
         "C) Legacy Boot",
         "D) Fast Boot"
       ],
-      answer: "D) Fast Boot"
+      answer: "D) Fast Boot",
+      image: require('../assets/news_endian-uefi-vs-bios.jpg'),
     },
     {
       question: "Which of the following is a common reason to access the BIOS/UEFI settings?",
@@ -67,7 +73,8 @@ const questions = [
         "C) To install an operating system",
         "D) To increase RAM capacity"
       ],
-      answer: "B) To configure hardware settings like boot order"
+      answer: "B) To configure hardware settings like boot order",
+      image: require('../assets/settings.jpg'),
     },
     {
       question: "What is the purpose of clearing the BIOS/UEFI settings using jumpers?",
@@ -77,7 +84,9 @@ const questions = [
         "C) To upgrade firmware",
         "D) To replace the CPU"
       ],
-      answer: "B) To reset to factory settings for troubleshooting"
+      answer: "B) To reset to factory settings for troubleshooting",
+      image: require('../assets/bios reset.jpg'),
+
     },
     {
       question: "How often should the CMOS battery typically be replaced?",
@@ -87,7 +96,8 @@ const questions = [
         "C) Every 10 years",
         "D) It never needs replacement"
       ],
-      answer: "B) Every 3-5 years"
+      answer: "B) Every 3-5 years",
+      image: require('../assets/cmos.jpg'),
     },
     {
       question: "What is one of the first steps to take when replacing a motherboard?",
@@ -97,7 +107,8 @@ const questions = [
         "C) Update the drivers",
         "D) Format the hard drive"
       ],
-      answer: "B) Remove all peripheral devices"
+      answer: "B) Remove all peripheral devices",
+      image: require('../assets/Motherboard.jpeg'),
     },
     {
       question: "Which component is crucial to ensure compatibility when selecting a new motherboard?",
@@ -107,7 +118,8 @@ const questions = [
         "C) The graphics card brand",
         "D) The operating system"
       ],
-      answer: "B) The form factor and processor socket"
+      answer: "B) The form factor and processor socket",
+      image: require('../assets/Form_factors.png'),
     },
     {
       question: "What happens if the CMOS battery fails?",
@@ -117,7 +129,8 @@ const questions = [
         "C) The CPU will overheat",
         "D) The motherboard will need to be replaced"
       ],
-      answer: "B) The BIOS/UEFI settings may reset, causing date and time issues"
+      answer: "B) The BIOS/UEFI settings may reset, causing date and time issues",
+      image: require('../assets/cmos.jpeg'),
     }
   ];
   

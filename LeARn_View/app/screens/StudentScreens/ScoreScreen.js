@@ -10,16 +10,16 @@ const ScoreScreen = ({ route, navigation, resetQuiz }) => {
   let image;
   if (score >= totalQuestions * 0.83) {
     feedback = "Excellent, keep it up!";
-    image= require('../../../assets/trophy.gif')
+    image= require('../../../assets/trophy.gif');
   } else if (score >= totalQuestions * 0.67) {
     feedback = "Great, keep going!";
-    image= require('../../../assets/Auth Genially.gif')
+    image= require('../../../assets/Auth Genially.gif');
   } else if (score >= totalQuestions * 0.50) {
     feedback = "Average, better luck next time!";
-    image= require('../../../assets/You Got It Yes Sticker by Emoji - Find & Share on GIPHY.gif')
+    image= require('../../../assets/You Got It Yes Sticker by Emoji - Find & Share on GIPHY.gif');
   } else {
     feedback = "Oh no, better luck next time!";
-    image= require('../../../assets/Sad-Cry-Sticker-Sad-Cry-Emoji--unscreen.gif')
+    image= require('../../../assets/Sad-Cry-Sticker-Sad-Cry-Emoji--unscreen.gif');
   }
 
   return (

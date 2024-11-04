@@ -1,13 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import questions from '../../../components/question2'; // Import your questions
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import questions from '../../../components/question2'; 
 
 const QuestionScreenTwo = ({ route, navigation, score, setScore, userAnswers, setUserAnswers }) => {
   const { index } = route.params;
 
   if (index < 0 || index >= questions.length) {
     navigation.navigate('ScoreTwo', { score, userAnswers });
-    return null; // Prevent rendering
+    return null; 
   }
 
   const currentQuestion = questions[index];
@@ -31,6 +31,11 @@ const QuestionScreenTwo = ({ route, navigation, score, setScore, userAnswers, se
 
   return (
     <View style={styles.container}>
+      {/* Display the question number */}
+      <Text style={styles.questionNumberText}>
+        Question {index + 1} of {questions.length}
+      </Text>
+      <Image source={currentQuestion.image} style={styles.image}/>
       <Text style={styles.questionText}>{currentQuestion.question}</Text>
       <View style={styles.optionsContainer}>
         {currentQuestion.options.map((option, idx) => (
@@ -43,10 +48,6 @@ const QuestionScreenTwo = ({ route, navigation, score, setScore, userAnswers, se
   );
 };
 
-
-
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -55,10 +56,24 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#261376',
   },
+  questionNumberText: {
+    fontSize: 18,
+    color: 'white',
+    marginBottom: 10,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
   questionText: {
     fontSize: 20,
     marginBottom: 20,
     textAlign: 'center',
+    color: 'white',
+  },
+  image: {
+    width: 340,
+    height: 240,
+    marginBottom: 20,
+    borderRadius: 10,
   },
   optionsContainer: {
     width: '100%',
