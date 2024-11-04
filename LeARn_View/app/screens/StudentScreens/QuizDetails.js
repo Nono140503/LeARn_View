@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { db, auth } from '../../../firebase';
 import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
-import YesNoAlert from '../../../components/YesNoAlert'; // Adjust the import path as necessary
 
 const QuizDetail = ({ route, navigation }) => {
   const { quiz } = route.params;
@@ -12,8 +11,8 @@ const QuizDetail = ({ route, navigation }) => {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [remainingTime, setRemainingTime] = useState(null);
+  const studentId = auth.currentUser.uid;
   const [isAlertVisible, setIsAlertVisible] = useState(false);
-  const studentId = auth.currentUser .uid;
 
   const parseDuration = (duration) => {
     const [hours, minutes, seconds] = duration.split(':').map(Number);
@@ -47,6 +46,47 @@ const QuizDetail = ({ route, navigation }) => {
     const updatedAnswers = [...answers];
     updatedAnswers[questionIndex] = optionIndex;
     setAnswers(updatedAnswers);
+  };
+
+  const saveHighestScore = async (calculatedScore) => {
+    const quizScoresRef = doc(db, 'quizScores', studentId);
+    const docSnapshot = await getDoc(quizScoresRef);
+
+    const submissionDate = new Date().toISOString();
+
+    try {
+      if (docSnapshot.exists()) {
+        const scoresData = docSnapshot.data();
+        const currentScore = scoresData[quiz.id]?.score || 0;
+
+        if (calculatedScore > currentScore) {
+          await updateDoc(quizScoresRef, {
+            [quiz.id]: {
+              score: calculatedScore,
+              totalQuestions: quiz.questions.length,
+              title: quiz.title,
+              submittedAt: submissionDate,
+            },
+          });
+          Alert.alert('Score Updated', `Your new highest score is ${calculatedScore}. Total questions: ${quiz.questions.length}`);
+        } else {
+          Alert.alert('Score Not Updated', `Your score of ${calculatedScore} is not higher than your previous score of ${currentScore}. Total questions: ${quiz.questions.length}`);
+        }
+      } else {
+        await setDoc(quizScoresRef, {
+          [quiz.id]: {
+            score: calculatedScore,
+            totalQuestions: quiz.questions.length,
+            title: quiz.title,
+            submittedAt: submissionDate,
+          },
+        });
+        Alert.alert('Score Saved', `Your score of ${calculatedScore} has been saved. Total questions: ${quiz.questions.length}`);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'There was an error saving your score. Please try again later.');
+      console.error("Error saving score: ", error);
+    }
   };
 
   const submitAnswers = async () => {
@@ -87,31 +127,38 @@ const QuizDetail = ({ route, navigation }) => {
     setLoading(false);
   };
 
-  const handleLeaveQuiz = async () => {
-    const quizAttemptsRef = doc(db, 'quizAttempts', `${quiz.id}_${studentId}`);
-    const docSnapshot = await getDoc(quizAttemptsRef);
-
-    if (docSnapshot.exists()) {
-      const attemptsData = docSnapshot.data().attempts;
-      await updateDoc(quizAttemptsRef, { attempts: [...attemptsData, -1] });
-    } else {
-      await setDoc(quizAttemptsRef, { quizId: quiz.id, studentId, attempts: [-1] });
-    }
-
-    setIsAlertVisible(false); // Close the alert
-    navigation.goBack(); // Navigate back
-  };
-
-  const handleCancelLeave = () => {
-    setIsAlertVisible(false); // Close the alert
-  };
-
   useFocusEffect(
     useCallback(() => {
       const handleLeaveWarning = (e) => {
         if (!submitted && !isAlertVisible) {
           e.preventDefault(); // Prevent the default back action
-          setIsAlertVisible(true); // Show the custom alert
+          setIsAlertVisible(true); // Set alert visibility to true
+          
+          Alert.alert(
+            'Warning',
+            'You have not submitted your answers. Leaving will deduct an attempt. Are you sure you want to leave?',
+            [
+              { text: 'Cancel', style: 'cancel', onPress: () => setIsAlertVisible(false) },
+              {
+                text: 'Leave',
+                style: 'destructive',
+                onPress: async () => {
+                  const quizAttemptsRef = doc(db, 'quizAttempts', `${quiz.id}_${studentId}`);
+                  const docSnapshot = await getDoc(quizAttemptsRef);
+
+                  if (docSnapshot.exists()) {
+                    const attemptsData = docSnapshot.data().attempts;
+                    await updateDoc(quizAttemptsRef, { attempts: [...attemptsData, -1] });
+                  } else {
+                    await setDoc(quizAttemptsRef, { quizId: quiz.id, studentId, attempts: [-1] });
+                  }
+                  setIsAlertVisible(false); // Reset alert visibility
+                  navigation.goBack(); // Navigate back
+                },
+              },
+            ],
+            { cancelable: false }
+          );
         }
       };
 
@@ -120,8 +167,9 @@ const QuizDetail = ({ route, navigation }) => {
       return () => {
         unsubscribe();
       };
-    }, [submitted, navigation, isAlertVisible])
+    }, [submitted, navigation, quiz.id, studentId, isAlertVisible]) // Add isAlertVisible to dependencies
   );
+
 
   return (
     <View style={styles.container}>
@@ -186,17 +234,10 @@ const QuizDetail = ({ route, navigation }) => {
       {score !== null && (
         <Text style={styles.scoreText}>You scored: {score} / {quiz.questions.length}</Text>
       )}
-
-      <YesNoAlert
-        visible={isAlertVisible}
-        title="Warning"
-        message="You have not submitted your answers. Leaving will deduct an attempt. Are you sure you want to leave?"
-        onYes={handleLeaveQuiz}
-        onNo={handleCancelLeave}
-      />
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
