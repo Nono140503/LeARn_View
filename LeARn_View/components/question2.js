@@ -8,7 +8,7 @@ const questions = [
         "D) To power the computer"
       ],
       answer: "B) To connect all components and peripherals",
-      image: require('../assets/Motherboard.jpeg'),
+      image: require('../assets/Random_access_memory.jpg'),
     },
     {
       question: "Which of the following is NOT a commonly considered feature when selecting a motherboard?",
@@ -19,7 +19,7 @@ const questions = [
         "D) Chipset"
       ],
       answer: "C) Color of the casing",
-      image: require('../assets/Motherboard-Component-Diagnostics.jpg'),
+      image: require('../assets/Random_access_memory.jpg'),
     },
     {
       question: "What form factor is most commonly used in desktop motherboards?",
@@ -30,7 +30,7 @@ const questions = [
         "D) MicroATX"
       ],
       answer: "B) ATX",
-      image: require('../assets/Form_factors.png'),
+      image: require('../assets/Random_access_memory.jpg'),
     },
     {
       question: "What is the purpose of the chipset on a motherboard?",
@@ -41,7 +41,7 @@ const questions = [
         "D) To cool the motherboard"
       ],
       answer: "B) To manage data flow between the CPU and other components",
-      image: require('../assets/processors.jpg'),
+      image: require('../assets/Random_access_memory.jpg'),
     },
     {
       question: "What does BIOS stand for?",
@@ -52,7 +52,7 @@ const questions = [
         "D) Boot Input Output System"
       ],
       answer: "A) Basic Input Output System",
-      image: require('../assets/Bios.jpeg'),
+      image: require('../assets/Random_access_memory.jpg'),
     },
     {
       question: "Which feature in UEFI firmware allows for faster boot times compared to traditional BIOS?",
@@ -63,7 +63,7 @@ const questions = [
         "D) Fast Boot"
       ],
       answer: "D) Fast Boot",
-      image: require('../assets/news_endian-uefi-vs-bios.jpg'),
+      image: require('../assets/Random_access_memory.jpg'),
     },
     {
       question: "Which of the following is a common reason to access the BIOS/UEFI settings?",
@@ -74,7 +74,7 @@ const questions = [
         "D) To increase RAM capacity"
       ],
       answer: "B) To configure hardware settings like boot order",
-      image: require('../assets/settings.jpg'),
+      image: require('../assets/Random_access_memory.jpg'),
     },
     {
       question: "What is the purpose of clearing the BIOS/UEFI settings using jumpers?",
@@ -85,8 +85,7 @@ const questions = [
         "D) To replace the CPU"
       ],
       answer: "B) To reset to factory settings for troubleshooting",
-      image: require('../assets/bios reset.jpg'),
-
+      image: require('../assets/Random_access_memory.jpg'),
     },
     {
       question: "How often should the CMOS battery typically be replaced?",
@@ -97,7 +96,7 @@ const questions = [
         "D) It never needs replacement"
       ],
       answer: "B) Every 3-5 years",
-      image: require('../assets/cmos.jpg'),
+      image: require('../assets/Random_access_memory.jpg'),
     },
     {
       question: "What is one of the first steps to take when replacing a motherboard?",
@@ -108,7 +107,7 @@ const questions = [
         "D) Format the hard drive"
       ],
       answer: "B) Remove all peripheral devices",
-      image: require('../assets/Motherboard.jpeg'),
+      image: require('../assets/Random_access_memory.jpg'),
     },
     {
       question: "Which component is crucial to ensure compatibility when selecting a new motherboard?",
@@ -119,7 +118,7 @@ const questions = [
         "D) The operating system"
       ],
       answer: "B) The form factor and processor socket",
-      image: require('../assets/Form_factors.png'),
+      image: require('../assets/Random_access_memory.jpg'),
     },
     {
       question: "What happens if the CMOS battery fails?",
@@ -130,7 +129,7 @@ const questions = [
         "D) The motherboard will need to be replaced"
       ],
       answer: "B) The BIOS/UEFI settings may reset, causing date and time issues",
-      image: require('../assets/cmos.jpeg'),
+      image: require('../assets/Random_access_memory.jpg'),
     }
   ];
   

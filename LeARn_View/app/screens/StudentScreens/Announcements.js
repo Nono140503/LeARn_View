@@ -1,13 +1,56 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { collection, getDocs, updateDoc, doc, query, where } from 'firebase/firestore';
+import { collection, getDocs, updateDoc, doc, query, where, getDoc, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '../../../firebase';
+import { Audio } from 'expo-av';
+import { EventRegister } from 'react-native-event-listeners';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import themeContext from '../../../components/ThemeContext';
 
 const AnnouncementPage = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [tests, setTests] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
+  const [notificationSound, setNotificationSound] = useState(null)
+  const [sound, setSound] = useState()
+  const theme = useContext(themeContext)
   const userId = auth.currentUser.uid;
+  const user = auth.currentUser
+
+  // Fetch and set notification sound
+  const fetchAndSetNotificationSound = async () => {
+    if(!user) return;
+        
+    const userRef = doc(db, 'users', user.uid);
+    const userDoc = await getDoc(userRef);
+
+    if(userDoc.exists())
+    {
+        const soundFileName = userDoc.data().notificationSound;
+        const storage = getStorage();
+        const storageRef = ref(storage, soundFileName);
+        const downloadURL = await getDownloadURL(storageRef);
+
+        setNotificationSound(downloadURL);
+        console.log("Fetched sound:", downloadURL);
+    }
+  }
+
+  // Play Sound
+  const playSound = async () => {
+    if(notificationSound)
+    {
+
+        if (sound) {
+            await sound.stopAsync();
+            await sound.unloadAsync();
+        }
+
+        const { sound } = await Audio.Sound.createAsync({uri: notificationSound})
+        setSound(sound)
+        await sound.playAsync()
+    }
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,6 +98,60 @@ const AnnouncementPage = () => {
     fetchData();
   }, []);
 
+    // Listen for new Announcements
+    useEffect(() => {
+      const unsubscribe = onSnapshot(collection(db, 'announcements'), (snapshot) => {
+          const newAnnouncements = snapshot.docChanges().filter(change => change.type === 'added');
+  
+          if (newAnnouncements.length > 0) {
+              // Check if notificationSound is set
+              if (notificationSound) {
+                  playSound();
+              } else {
+                  console.log("No notification sound URL available.");
+              }
+          }
+        });
+  
+        return () => unsubscribe();
+    }, [notificationSound]);
+    
+  
+    // Fetch Dark mode
+    useEffect(() => {
+      const fetchUserProfile = async () => {
+          const userRef = doc(db, 'users', user.uid)
+          const userDoc = await getDoc(userRef)
+  
+          if(userDoc.exists())
+          {
+              const userData = userDoc.data()
+              EventRegister.emit('ChangeTheme', userData.darkMode)
+          }
+      }
+  
+      fetchUserProfile()
+    }, [theme.darkMode])
+
+    // Fetch notification sounds on initial load
+    useEffect(() => {
+      fetchAndSetNotificationSound();
+    }, []);
+  
+  
+    // Reload new notification sound after updating in Notification Settings
+    useEffect(() => {
+  
+        const notificationSoundListener = EventRegister.addEventListener('NotificationSoundChanged', async() => {
+          await fetchAndSetNotificationSound();
+          playSound()
+        })
+  
+        return () => {
+            EventRegister.removeEventListener(notificationSoundListener)
+      }
+    }, [])
+
   const markAsRead = async (announcementId) => {
     try {
       const announcementRef = doc(db, 'announcements', announcementId);
@@ -95,13 +192,13 @@ const AnnouncementPage = () => {
   );
 
   const renderQuizItem = ({ item }) => (
-    <View style={styles.quizContainer}>
+    <View style={[styles.quizContainer, {backgroundColor: theme.backgroundColor}]}>
       <Text style={styles.quizTitle}>{item.title}</Text>
     </View>
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <Text style={styles.header}>Announcements</Text>
       <FlatList
         data={announcements}

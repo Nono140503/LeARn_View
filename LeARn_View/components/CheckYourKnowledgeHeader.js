@@ -4,7 +4,7 @@ import  Icon from 'react-native-vector-icons/Ionicons';
 
 function CheckYourKnowledgeHeader({navigation}){
     const handleBack = ()=>{
-        navigation.navigate('Home');
+        navigation.navigate('Home Screen');
     }
     return (
         <>

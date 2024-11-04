@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator,
 } from 'react-native';
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth'; // Add `sendPasswordResetEmail`
 import { doc, getDoc } from 'firebase/firestore'; 
 import { auth, db } from '../../firebase'; // Ensure correct imports
+import themeContext from '../../components/ThemeContext';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false); // Loading state
+  const theme = useContext(themeContext);
 
   const handleLogin = async () => {
     if (!email) {
@@ -62,18 +64,20 @@ const LoginScreen = ({ navigation }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Login</Text>
+        <Text style={[styles.title, {color: theme.color}]}>Login</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, {color: theme.color}]}
           placeholder="Email"
+          placeholderTextColor={theme.placeholderTextColor}
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
         />
         <TextInput
-          style={styles.input}
+          style={[styles.input, {color: theme.color}]}
           placeholder="Password"
+          placeholderTextColor={theme.placeholderTextColor}
           value={password}
           onChangeText={setPassword}
           secureTextEntry

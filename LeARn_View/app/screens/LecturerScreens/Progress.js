@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView, Image } from 'react-native';
 import { ProgressChart, LineChart, PieChart, BarChart } from 'react-native-chart-kit';
 import ProgressHeader from '../../../components/ProgressHeader';
+import themeContext from '../../../components/ThemeContext';
 
 const screenWidth = Dimensions.get('window').width;
 
 const Progress = ({ route, navigation }) => {
     const { student } = route.params;
+    const theme = useContext(themeContext)
 
     const totalItems = [8, 5, 3];
     const barData = {
@@ -21,9 +23,9 @@ const Progress = ({ route, navigation }) => {
 
 
     return (
-        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 100 }}>
+        <ScrollView style={[styles.container, {backgroundColor: theme.backgroundColor}]} contentContainerStyle={{ paddingBottom: 100 }}>
             <ProgressHeader navigation={navigation} />
-            <View style={styles.header}>
+            <View style={[styles.header, {backgroundColor: theme.backgroundColor}]}>
                 <Image source={student.image} style={styles.studentImage} />
                 <View>
                     <Text style={styles.studentName}>Name: {`${student.name} ${student.surname}`}</Text>

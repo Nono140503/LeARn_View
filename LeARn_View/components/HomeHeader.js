@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; 
 import Icon from 'react-native-vector-icons/Ionicons';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '../firebase'; 
 import { getAuth } from 'firebase/auth'; 
+import themeContext from './ThemeContext';
+
 
 const HomeScreen = () => {
     const navigation = useNavigation(); 
     const [unreadCount, setUnreadCount] = useState(0);
     const auth = getAuth();
+    const theme = useContext(themeContext);
     const user = auth.currentUser;
 
     useEffect(() => {
@@ -31,7 +34,7 @@ const HomeScreen = () => {
     }, [user]);
 
     return (
-        <View style={styles.header}>
+        <View style={[styles.header, {backgroundColor: theme.backgroundColor}]}>
             <TouchableOpacity onPress={() => navigation.navigate('Announcements')} style={styles.icon_cont}>
                 <View>
                     <Icon name='notifications' size={30} style={styles.icon} />

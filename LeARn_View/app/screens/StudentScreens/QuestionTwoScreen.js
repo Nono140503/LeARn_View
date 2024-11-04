@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import questions from '../../../components/question2'; 
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView,Image } from 'react-native';
+
+import questions from '../../../components/question2'; // Import your questions
 
 const QuestionScreenTwo = ({ route, navigation, score, setScore, userAnswers, setUserAnswers }) => {
   const { index } = route.params;
@@ -30,12 +31,13 @@ const QuestionScreenTwo = ({ route, navigation, score, setScore, userAnswers, se
   };
 
   return (
-    <View style={styles.container}>
-      {/* Display the question number */}
-      <Text style={styles.questionNumberText}>
-        Question {index + 1} of {questions.length}
-      </Text>
-      <Image source={currentQuestion.image} style={styles.image}/>
+    <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContainer}>
+
+      {/* Display question number / progress */}
+      <Text style={styles.progressText}>Question {index + 1} of {questions.length}</Text>
+
+      <Image source={currentQuestion.image} style={styles.questionImage} />
+
       <Text style={styles.questionText}>{currentQuestion.question}</Text>
       <View style={styles.optionsContainer}>
         {currentQuestion.options.map((option, idx) => (
@@ -44,36 +46,31 @@ const QuestionScreenTwo = ({ route, navigation, score, setScore, userAnswers, se
           </TouchableOpacity>
         ))}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
+
+
+
+
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  scrollView: {
+    flex: 1, // Ensure ScrollView takes up the entire screen
+    backgroundColor: '#261376', // Background color for the whole screen
+  },
+  scrollViewContainer: {
+    flexGrow: 1, // Ensure ScrollView takes up available space and allows scrolling
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#261376',
-  },
-  questionNumberText: {
-    fontSize: 18,
-    color: 'white',
-    marginBottom: 10,
-    textAlign: 'center',
-    fontWeight: 'bold',
+    backgroundColor: '#261376', // Same background color as the screen
   },
   questionText: {
     fontSize: 20,
     marginBottom: 20,
     textAlign: 'center',
-    color: 'white',
-  },
-  image: {
-    width: 340,
-    height: 240,
-    marginBottom: 20,
-    borderRadius: 10,
   },
   optionsContainer: {
     width: '100%',

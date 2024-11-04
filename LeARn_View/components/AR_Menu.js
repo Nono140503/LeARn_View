@@ -28,7 +28,7 @@ function ARMenu({ navigation }) {
             image: require('../assets/Motherboard.jpeg'),
             progress: 'Locked',
             icon: 'lock-closed-outline',
-            nav: 'AR Environment Screen',  
+            nav: 'https://anchor.arway.ai/map/d9553071-f805-434e-a700-91e58381c239',  
         },
         {
             title: 'Module 3',

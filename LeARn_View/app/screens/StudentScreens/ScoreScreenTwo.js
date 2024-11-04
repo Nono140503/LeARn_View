@@ -1,38 +1,41 @@
-import React from 'react';
-import { View, Text, StyleSheet, Button, Image , TouchableOpacity} from 'react-native';
+import React, { useContext } from 'react';
+import { View, Text, StyleSheet, Image,TouchableOpacity } from 'react-native';
 import questions from '../../../components/question2';
+import themeContext from '../../../components/ThemeContext';
 
 const ScoreScreenTwo = ({ route, navigation, resetQuiz }) => {
   const score = route.params?.score || 0;
   const totalQuestions = questions.length;
+  const theme = useContext(themeContext);
 
   let image;
   let feedback;
   if (score >= totalQuestions * 0.83) {
     feedback = "Excellent, keep it up!";
-    image= require('../../../assets/trophy.gif');
+    image= require('../../../assets/trophy.gif')
   } else if (score >= totalQuestions * 0.67) {
     feedback = "Great, keep going!";
-    image= require('../../../assets/Auth Genially.gif');
+    image= require('../../../assets/Auth Genially.gif')
   } else if (score >= totalQuestions * 0.50) {
     feedback = "Average, better luck next time!";
-    image= require('../../../assets/You Got It Yes Sticker by Emoji - Find & Share on GIPHY.gif');
+    image= require('../../../assets/You Got It Yes Sticker by Emoji - Find & Share on GIPHY.gif')
   } else {
     feedback = "Poor try, better luck next time!";
-    image= require('../../../assets/Sad-Cry-Sticker-Sad-Cry-Emoji--unscreen.gif');
+    image= require('../../../assets/Sad-Cry-Sticker-Sad-Cry-Emoji--unscreen.gif')
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <Text style={styles.gameOver}>Game Over!</Text>
       <Image source={image} style={styles.gif}/>
       <Text style={styles.scoreText}>Your Score: {score}/{totalQuestions}</Text>
       <Text style={styles.feedbackText}>{feedback}</Text>
-      <Button title="Back to Home" onPress={() => { resetQuiz(); navigation.navigate('Home'); }} />
-      <Button title="View Corrections" onPress={() => navigation.navigate('CorrectionsTwo', { userAnswers: route.params.userAnswers })} />
-      <TouchableOpacity
+      {/* <Button title="Back to Home" onPress={() => { resetQuiz(); navigation.navigate('Home'); }} />
+      <Button title="View Corrections" onPress={() => navigation.navigate('CorrectionsTwo', { userAnswers: route.params.userAnswers })} /> */}
+
+    <TouchableOpacity
       onPress={() => {
-        navigation.navigate('Corrections', { userAnswers: route.params.userAnswers });
+        navigation.navigate('CorrectionsTwo', { userAnswers: route.params.userAnswers });
       }} 
       style={styles.corrections}>
           <Text style={styles.text}>View Corrections</Text>
@@ -60,13 +63,11 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f5f5f5',
   },
-  corrections:{
-    padding: 15,
-    backgroundColor: '#28a745',
-    width: '75%',
-    alignItems: 'center',
-    borderRadius: 5,
-    
+  gameOver:{
+    marginTop: 40,
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: 'green',
   },
   buttonMenu:{
     padding: 15,
@@ -81,6 +82,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
   },
+  corrections:{
+    padding: 15,
+    backgroundColor: '#28a745',
+    width: '75%',
+    alignItems: 'center',
+    borderRadius: 5,
+    
+  },
   gif:{
     height: 200,
     width: 200,
@@ -89,18 +98,13 @@ const styles = StyleSheet.create({
   scoreText: {
     fontSize: 24,
     marginBottom: 20,
-  },
-  gameOver:{
-    marginTop: 30,
-    fontSize: 25,
-    fontWeight: 'bold',
     color: 'green',
   },
   feedbackText: {
     fontSize: 20,
     marginBottom: 40,
     textAlign: 'center',
-    color: 'green',
+    //color: 'green',
   },
 });
 

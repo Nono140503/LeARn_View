@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { BarChart, LineChart } from "react-native-chart-kit";
+import themeContext from '../../../components/ThemeContext';
 
 // Get screen width from dimensions
 const screenWidth = Dimensions.get('window').width;
@@ -10,6 +11,8 @@ function ClassPerformance({ navigation }) {
     const handleBack = () => {
         navigation.goBack();
     };
+
+    const theme = useContext(themeContext)
 
     // Data for the bar chart
     const barData = {
@@ -35,14 +38,14 @@ function ClassPerformance({ navigation }) {
 
     return (
         <>
-            <View style={styles.container}>
-                <View style={styles.header}>
+            <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+                <View style={[styles.header, {backgroundColor: theme.backgroundColor}]}>
                     <TouchableOpacity style={styles.icon_cont} onPress={handleBack}>
                         <Icon name="arrow-back-outline" size={30} style={styles.icon} />
                     </TouchableOpacity>
                     <Text style={styles.headerText}>Class Performance</Text>
                 </View>
-                <Text style={styles.heading}>Class average for the week:</Text>
+                <Text style={[styles.heading, {color: theme.color}]}>Class average for the week:</Text>
 
                 <BarChart
                     data={barData}
@@ -67,7 +70,7 @@ function ClassPerformance({ navigation }) {
                     }}
                 />
                 
-                <Text style={styles.heading}>Monthly Performance Summary</Text>
+                <Text style={[styles.heading, {color: theme.color}]}>Monthly Performance Summary</Text>
                 <LineChart
                     data={lineData}
                     width={screenWidth * 0.9}
@@ -92,7 +95,7 @@ function ClassPerformance({ navigation }) {
                         borderRadius: 16,
                     }}
                 />
-                <Text style={styles.heading}>Your top student for the month is:</Text>
+                <Text style={[styles.heading, {color: theme.color}]}>Your top student for the month is:</Text>
                 <View style={styles.top_student}>
                     <View style={styles.image_cont}>
                         <Image source={require('../../../assets/Layla.jpeg')} style={styles.image}/>

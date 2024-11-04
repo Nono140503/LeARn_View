@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Button, ScrollView, StyleSheet, Alert, TextInput, TouchableOpacity } from 'react-native';
 import { db } from '../../../firebase';
 import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { auth } from '../../../firebase';
+import themeContext from '../../../components/ThemeContext';
 
 const TestDetail = ({ route, navigation }) => {
   const { test, attempts } = route.params;
@@ -10,6 +11,7 @@ const TestDetail = ({ route, navigation }) => {
   const [score, setScore] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const theme = useContext(themeContext);
   const studentId = auth.currentUser.uid;
 
   // Countdown State
@@ -103,7 +105,7 @@ const TestDetail = ({ route, navigation }) => {
     Alert.alert(
       'Test Completed',
       `You scored ${calculatedScore} out of ${test.questions.length}`,
-      [{ text: 'OK', onPress: () => navigation.navigate('TestList') }] // Navigate back to the test list after submission
+      [{ text: 'OK', onPress: () => navigation.navigate('Test List') }] // Navigate back to the test list after submission
     );
 
     const testAttemptsRef = doc(db, 'testAttempts', `${test.id}_${studentId}`);
@@ -111,22 +113,40 @@ const TestDetail = ({ route, navigation }) => {
 
     if (docSnapshot.exists()) {
       const attemptsData = docSnapshot.data();
+      const currentAttempts = attemptsData.attempts || [];
+
+      if(currentAttempts.length < 1)
+      {
+        Alert.alert("Attempts exhausted!", "You can no longer attempt this test")
+        setLoading(false)
+        return;
+      }
+
+
       const updatedAttempts = [...attemptsData.attempts, calculatedScore];
-      await updateDoc(testAttemptsRef, { attempts: updatedAttempts, answers });
+      await updateDoc(testAttemptsRef, { 
+        attempts: updatedAttempts, 
+        answers: answers, 
+      });
     } else {
-      await setDoc(testAttemptsRef, { testId: test.id, studentId, attempts: [calculatedScore], answers });
+      await setDoc(testAttemptsRef, { 
+        testId: test.id, 
+        studentId, 
+        attempts: [calculatedScore], 
+        answers: answers, 
+      });
     }
     setLoading(false);
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <Text style={styles.countdown}>{formatTime(remainingTime)}</Text>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.header}>{test.title}</Text>
         {test.questions.map((q, index) => (
           <View key={index} style={styles.questionContainer}>
-            <Text style={styles.question}>{`Q${index + 1}: ${q.question}`}</Text>
+            <Text style={[styles.question, {color: theme.color}]}>{`Q${index + 1}: ${q.question}`}</Text>
             {q.type === 'MCQ' || q.type === 'True/False' ? (
               q.options.map((option, oIndex) => {
                 const isSelected = answers[index] === oIndex;
@@ -146,8 +166,9 @@ const TestDetail = ({ route, navigation }) => {
               })
             ) : (
               <TextInput
-                style={styles.input}
+                style={[styles.input, {color: theme.color}]}
                 placeholder="Your answer..."
+                placeholderTextColor={theme.placeholderTextColor}
                 onChangeText={(text) => handleInputChange(index, text)}
                 editable={!submitted}
                 value={answers[index] || ''} // Show previous answer if available
@@ -156,9 +177,9 @@ const TestDetail = ({ route, navigation }) => {
           </View>
         ))}
       </ScrollView>
-
+        
       <View style={styles.buttonContainer}>
-        <Button title="Submit Answers" onPress={submitAnswers} disabled={loading || submitted} />
+        <Button title="Submit Answers" onPress={submitAnswers} disabled={loading || submitted} /> 
       </View>
 
       {score !== null && (
