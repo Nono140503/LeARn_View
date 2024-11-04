@@ -22,6 +22,12 @@ function LecturerHome({ navigation }) {
             navigation: 'Test Creator', 
         },
         {
+            title: 'View tests and Quizzes',
+            description: 'View uploaded Tests and Quizzes.',
+            image: require('../assets/test.jpg'),
+            navigation: 'View T&Q', 
+        },
+        {
             title: 'AR Lesson Management',
             description: 'Assign and customize AR lessons for individuals or groups.',
             image: require('../assets/AR_Management.jpg'),

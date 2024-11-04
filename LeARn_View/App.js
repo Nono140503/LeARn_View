@@ -52,6 +52,7 @@ import LecturerNotification from './app/screens/LecturerScreens/LecturerNotifica
 import WebViewScreen from './components/WebView';
 import themeContext from './components/ThemeContext';
 import theme from './components/Theme';
+import Assessments from './app/screens/LecturerScreens/ViewT&Q';
 
 const Stack = createStackNavigator();
 
@@ -132,6 +133,7 @@ const App = () => {
               <Stack.Screen name='Lecturer Notification' component={LecturerNotification}/>
               <Stack.Screen name="Check Your Knowledge" component={CheckYourKnowledgeMenu} options={{headerShown: false}}/>
               <Stack.Screen name="WebView Screen" component={WebViewScreen} options={{headerShown: false}}/>
+              <Stack.Screen name="View T&Q" component={Assessments} options={{headerShown: false}}/>
               <Stack.Screen name="Question" options={{headerShown: false}}>
                 {props => (
                   <QuestionScreen
