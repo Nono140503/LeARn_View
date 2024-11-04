@@ -176,8 +176,8 @@ const QuizDetail = ({ route, navigation }) => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.header}>{quiz.title}</Text>
         <Text style={styles.details}>Duration: {quiz.duration}</Text>
-        <Text style={styles.details}>Due Date: {new Date(quiz.dueDate.seconds * 1000).toLocaleDateString()} {quiz.dueTime.hours}:{quiz.dueTime.minutes}</Text>
-        <Text style={styles.details}>Unlock Date: {new Date(quiz.unlockDate.seconds * 1000).toLocaleDateString()} {quiz.unlockTime.hours}:{quiz.unlockTime.minutes}</Text>
+        <Text style={styles.details}>Due Date: {quiz.dueDate.toLocaleString()} {quiz.dueTime.hours}:{quiz.dueTime.minutes}</Text>
+        <Text style={styles.details}>Unlock Date: {item.dueDate.toLocaleString()} {quiz.unlockTime.hours}:{quiz.unlockTime.minutes}</Text>
 
         <View style={styles.timerContainer}>
           <Text style={styles.timerText}>Time Left: {formatTime(remainingTime)}</Text>

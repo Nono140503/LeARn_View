@@ -92,7 +92,7 @@ const QuizList = ({ navigation }) => {
           <View style={styles.testContent}>
             <Text style={[styles.textShadow, styles.testTitle]}>{item.title}</Text>
             <Text style={[styles.textShadow, styles.infoText]}>Duration: {item.duration} minutes</Text>
-            <Text style={[styles.textShadow, styles.infoText]}>Due Date: {new Date(item.dueDate).toLocaleDateString()}</Text>
+            <Text style={[styles.textShadow, styles.infoText]}>Due Date: {item.dueDate.toLocaleString()}</Text>
             <Text style={[styles.textShadow, styles.attemptsText, attemptsLeft === 0 && styles.attemptsExhausted]}>
               Attempts left: {attemptsLeft}
             </Text>
