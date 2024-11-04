@@ -1,11 +1,12 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
-  View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, SafeAreaView
+  View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, SafeAreaView
 } from 'react-native';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../../firebase'; // Assuming firebase.js is in the parent folder
-import themeContext from '../../components/ThemeContext';
+import { auth, db } from '../../firebase'; // Make sure the path to firebase is correct
+import GreenOkAlert from '../../components/OkAlert'; 
+import GreenYesNoAlert from '../../components/YesNoAlert'; 
 
 const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -16,30 +17,24 @@ const SignUpScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
-  const [showRequirements, setShowRequirements] = useState(false); // New state to control visibility
-  const [darkMode, setDarkMode] = useState(false);
-  const [profileImage, setProfileImage] = useState('');
-  const [notificationSound, setNotificationSound] = useState('NotificationSounds/notification1.wav')
-
-  const [studentNumber, setStudentNumber] = useState('');
-  const [course, setCourse] = useState('BIT');
-  const [year, setYear] = useState('First Year')
-
-  const theme = useContext(themeContext);
-
-  const generateStudentNumber = () => {
-    const studentNumber = Math.floor(100000000 + Math.random() * 900000000).toString();
-    return studentNumber;
-  };
+  const [showRequirements, setShowRequirements] = useState(false);
+  const [showOkAlert, setShowOkAlert] = useState(false);
+  const [showYesNoAlert, setShowYesNoAlert] = useState(false); 
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   const handleSignUp = async () => {
     if (!email || !password || !username) {
-      Alert.alert('Missing Fields', 'Please fill in all fields.');
+      setAlertTitle('Missing Fields');
+      setAlertMessage('Please fill in all fields.');
+      setShowOkAlert(true);
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert('Password Mismatch', 'Passwords do not match.');
+      setAlertTitle('Password Mismatch');
+      setAlertMessage('Passwords do not match.');
+      setShowOkAlert(true);
       return;
     }
 
@@ -48,33 +43,56 @@ const SignUpScreen = ({ navigation }) => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      await sendEmailVerification(user);
+
       const role = isLecturer ? 'lecturer' : 'student';
 
-      const studentNumber = generateStudentNumber()
-
-      // Set User Information
+      // Use .then() after setDoc
       await setDoc(doc(db, 'users', user.uid), {
         username,
         email,
         role,
-        darkMode,
-        profileImage,
-        notificationSound,
+      })
+      .then(() => {
+        console.log('User data written to Firestore!');
+        setAlertTitle('Sign Up Successful');
+        setAlertMessage(`Welcome ${username}! A verification email has been sent to ${email}. Please verify your email before logging in.`);
+        setShowOkAlert(true);
+      })
+      .catch((error) => {
+        console.error('Error writing user data to Firestore:', error);
+        setAlertTitle('Database Error');
+        setAlertMessage('An error occurred while saving your information. Please try again later.');
+        setShowOkAlert(true);
       });
 
-      // Set Student Information
-      await setDoc(doc(db, 'students', user.uid), {
-        username,
-        studentNumber,
-        course,
-        year,
-      })
-
-      Alert.alert('Sign Up Successful', `Welcome ${username}!`);
-      navigation.navigate('Login Screen');
     } catch (error) {
-      const errorMessage = error.message;
-      Alert.alert('Sign Up Error', errorMessage);
+      let errorTitle = 'Sign Up Error';
+      let errorMessage = 'An unexpected error occurred. Please try again.';
+
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          errorTitle = 'Email Already in Use';
+          errorMessage = 'This email address is already associated with an account. Please use a different email or try logging in.';
+          break;
+        case 'auth/invalid-email':
+          errorTitle = 'Invalid Email';
+          errorMessage = 'Please enter a valid email address.';
+          break;
+        case 'auth/weak-password':
+          errorTitle = 'Weak Password';
+          errorMessage = 'Please choose a stronger password. It should be at least 6 characters long.';
+          break;
+        case 'auth/network-request-failed':
+          errorTitle = 'Network Error';
+          errorMessage = 'Please check your internet connection and try again.';
+          break;
+        // Add more cases as needed
+      }
+
+      setAlertTitle(errorTitle);
+      setAlertMessage(errorMessage);
+      setShowOkAlert(true);
     } finally {
       setIsLoading(false);
     }
@@ -89,13 +107,12 @@ const SignUpScreen = ({ navigation }) => {
     return { minLengthMet, hasNumber, hasSpecialChar, hasUpperCase };
   };
 
-  const { minLengthMet, hasNumber, hasSpecialChar, hasUpperCase } = checkPasswordRequirements();
-
-  // Update showRequirements state when password is typed
   const handlePasswordChange = (text) => {
     setPassword(text);
-    setShowRequirements(true); // Show requirements when user starts typing
+    setShowRequirements(true);
   };
+
+  const { minLengthMet, hasNumber, hasSpecialChar, hasUpperCase } = checkPasswordRequirements();
 
   return (
     <KeyboardAvoidingView
@@ -103,21 +120,19 @@ const SignUpScreen = ({ navigation }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <SafeAreaView style={{ flex: 1 }}>
-        <Text style={[styles.title, {color: theme.color}]}>Sign Up</Text>
+        <Text style={styles.title}>Sign Up</Text>
         <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
           <View style={styles.innerContainer}>
             <TextInput
-              style={[styles.input, {color: theme.color}]}
+              style={styles.input}
               placeholder="Username"
-              placeholderTextColor={theme.placeholderTextColor}
               value={username}
               onChangeText={setUsername}
             />
 
             <TextInput
-              style={[styles.input, {color: theme.color}]}
+              style={styles.input}
               placeholder="Email"
-              placeholderTextColor={theme.placeholderTextColor}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -126,18 +141,16 @@ const SignUpScreen = ({ navigation }) => {
 
             <View>
               <TextInput
-                style={[styles.input, {color: theme.color}]}
+                style={styles.input}
                 placeholder="Password"
-                placeholderTextColor={theme.placeholderTextColor}
                 value={password}
-                onChangeText={handlePasswordChange} // Use the new handler
+                onChangeText={handlePasswordChange}
                 secureTextEntry={!isPasswordVisible}
               />
               <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)} style={styles.peekButton}>
                 <Text>{isPasswordVisible ? 'Hide' : 'Show'}</Text>
               </TouchableOpacity>
 
-              {/* Show requirements only if the user starts typing the password */}
               {showRequirements && (
                 <View style={styles.requirementsContainer}>
                   {(!minLengthMet || !hasNumber || !hasSpecialChar || !hasUpperCase) && (
@@ -154,9 +167,8 @@ const SignUpScreen = ({ navigation }) => {
 
             <View>
               <TextInput
-                style={[styles.input, {color: theme.color}]}
+                style={styles.input}
                 placeholder="Confirm Password"
-                placeholderTextColor={theme.placeholderTextColor}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 secureTextEntry={!isConfirmPasswordVisible}
@@ -174,7 +186,7 @@ const SignUpScreen = ({ navigation }) => {
                 <View style={[styles.radioOuter, isLecturer && styles.radioSelected]}>
                   {isLecturer && <View style={styles.radioInner} />}
                 </View>
-                <Text style={[styles.radioLabel, {color: theme.color}]}>Request Lecturer credentials</Text>
+                <Text style={styles.radioLabel}>Request Lecturer credentials</Text>
               </TouchableOpacity>
             </View>
 
@@ -193,6 +205,29 @@ const SignUpScreen = ({ navigation }) => {
             <TouchableOpacity onPress={() => navigation.navigate('Login Screen')}>
               <Text style={styles.linkText}>Already have an account? Log in</Text>
             </TouchableOpacity>
+
+            <GreenOkAlert
+              visible={showOkAlert}
+              title={alertTitle}
+              message={alertMessage}
+              onOk={() => {
+                setShowOkAlert(false);
+                if (alertTitle === 'Sign Up Successful') {
+                  navigation.navigate('Login Screen');
+                }
+              }}
+            />
+
+            <GreenYesNoAlert
+              visible={showYesNoAlert}
+              title={alertTitle}
+              message={alertMessage}
+              onYes={() => {
+                setShowYesNoAlert(false);
+                // Add any specific action for 'Yes' here
+              }}
+              onNo={() => setShowYesNoAlert(false)}
+            />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -224,7 +259,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 15,
   },
-  button: {
+ button: {
     backgroundColor: '#28a745',
     padding: 15,
     borderRadius: 8,
