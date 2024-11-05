@@ -6,15 +6,7 @@ import  Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from '@react-navigation/native';
 
 function ARMenu() {
-    const redirect = async (nav) =>{
-        const supported = await Linking.canOpenURL(nav);
-        if (supported){
-            await Linking.openURL(nav);
-        }else{
-            Alert.alert("error", "Unable to open app");
-        }
-
-    }
+    
 
     const navigation = useNavigation();
     const [list, setList] = useState([
@@ -24,7 +16,7 @@ function ARMenu() {
             image: require('../assets/Computer.jpeg'),
             progress: 'Progress: 0%',
             icon: '', 
-            nav: 'https://player.onirix.com/exp/ew0mm4', 
+            nav: 'https://player.onirix.com/exp/3OkgJ8', 
             
         },
         {
@@ -33,7 +25,7 @@ function ARMenu() {
             image: require('../assets/Motherboard.jpeg'),
             progress: 'Locked',
             icon: 'lock-closed-outline',
-            nav: 'https://anchor.arway.ai/map/d9553071-f805-434e-a700-91e58381c239',  
+            nav: 'https://player.onirix.com/exp/LJDkp2',  
         },
         {
             title: 'Module 3',
@@ -41,7 +33,7 @@ function ARMenu() {
             image: require('../assets/CPU.jpeg'),
             progress: 'Locked',
             icon: 'lock-closed-outline',
-            nav: 'AR Environment Screen', 
+            nav: 'https://player.onirix.com/exp/ew0mm4', 
         },
     ]);
 

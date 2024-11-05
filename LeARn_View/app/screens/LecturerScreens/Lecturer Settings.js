@@ -22,10 +22,6 @@ const LecturerSettingsScreen = ({ navigation }) => {
     navigation.navigate('Lecturer Profile')
   }
 
-  const handleLecturerNotification = () => {
-    navigation.navigate('Lecturer Notification')
-  }
-
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -54,14 +50,7 @@ const LecturerSettingsScreen = ({ navigation }) => {
         </View>
       </TouchableOpacity>
 
-      {/* Notification Settings */}
-      <TouchableOpacity style={styles.card} onPress={handleLecturerNotification}>
-        <Ionicons name="notifications-outline" size={24} color="#006400" />
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>Notifications</Text>
-          <Text style={styles.cardSubtitle}>Manage notification preferences</Text>
-        </View>
-      </TouchableOpacity>
+      
 
       {/* Logout Option */}
       <TouchableOpacity 

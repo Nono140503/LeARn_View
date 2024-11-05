@@ -34,14 +34,24 @@ const AnnouncementPage = () => {
     if(userDoc.exists())
     {
         const soundFileName = userDoc.data().notificationSound;
-        const storage = getStorage();
-        const storageRef = ref(storage, soundFileName);
-        const downloadURL = await getDownloadURL(storageRef);
 
-        setNotificationSound(downloadURL);
-        console.log("Fetched sound:", downloadURL);
+        if(soundFileName)
+        {
+            const storage = getStorage();
+            const storageRef = ref(storage, soundFileName);
+
+            try{
+                const downloadURL = await getDownloadURL(storageRef);
+                setNotificationSound(downloadURL)
+                console.log("Fetched sound:", downloadURL)
+            }catch(error)
+            {
+                console.error("Error fetching download URL", error)
+            }
+        }
+
     }
-  }
+}
 
   // Play Sound
   const playSound = async () => {
