@@ -20,7 +20,11 @@ import themeContext from '../../../components/ThemeContext';
 
 const TestDetail = ({ route, navigation }) => {
   const { test: testFromParams } = route.params;
-  const [test, setTest] = useState(testFromParams);
+  const [test, setTest] = useState({
+    ...testFromParams,
+    unlockDate: new Date(testFromParams.unlockDate),
+    dueDate: new Date(testFromParams.dueDate)
+  });
   const [answers, setAnswers] = useState(Array(test.questions.length).fill(null));
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);

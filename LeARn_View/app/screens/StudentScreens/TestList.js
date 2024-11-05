@@ -96,7 +96,12 @@ const TestList = ({ navigation }) => {
             Alert.alert('Attempt exhausted', 'You have already taken this test.');
         } else {
             await recordAttempt(test.id); // Record the attempt before navigating
-            navigation.navigate('Test Details', { test });
+            navigation.navigate('Test Details', { 
+                test: {
+                    ...test,
+                    unlockDate: test.unlockDate.toISOString(),
+                    dueDate: test.dueDate.toISOString()
+                } });
         }
     };
 
