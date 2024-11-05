@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,7 @@ import { db } from '../../../firebase';
 import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { auth } from '../../../firebase';
 import YesNoAlert from '../../../components/YesNoAlert'; // Adjust the import path as necessary
+import themeContext from '../../../components/ThemeContext';
 
 const TestDetail = ({ route, navigation }) => {
   const { test: testFromParams } = route.params;
@@ -23,6 +24,7 @@ const TestDetail = ({ route, navigation }) => {
   const [answers, setAnswers] = useState(Array(test.questions.length).fill(null));
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const theme = useContext(themeContext);
   const studentId = auth.currentUser .uid;
 
   // Countdown State
@@ -208,7 +210,7 @@ const TestDetail = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <ScrollView style={styles.scrollContainer}>
         <Text style={styles.header}>{test.title}</Text>
         <Text style={styles.details}>

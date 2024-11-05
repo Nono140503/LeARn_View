@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, Button, StyleSheet, FlatList, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons'; // Make sure you have @expo/vector-icons installed
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { db } from '../../../firebase';
 import { collection, doc, deleteDoc, updateDoc, getDocs } from 'firebase/firestore';
+import themeContext from '../../../components/ThemeContext';
 
 const Assessments = () => {
   const navigation = useNavigation();
@@ -12,6 +13,8 @@ const Assessments = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+
+  const theme = useContext(themeContext);
 
   useEffect(() => {
     const fetchTestsAndQuizzes = async () => {
@@ -108,7 +111,7 @@ const Assessments = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       {/* Header with Back Button */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
