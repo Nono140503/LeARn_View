@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../../firebase'; // Make sure the path to firebase is correct
+import { auth, db } from '../../firebase'; 
 import GreenOkAlert from '../../components/OkAlert'; 
 import GreenYesNoAlert from '../../components/YesNoAlert'; 
 
@@ -47,7 +47,6 @@ const SignUpScreen = ({ navigation }) => {
 
       const role = isLecturer ? 'lecturer' : 'student';
 
-      // Use .then() after setDoc
       await setDoc(doc(db, 'users', user.uid), {
         username,
         email,
@@ -87,7 +86,6 @@ const SignUpScreen = ({ navigation }) => {
           errorTitle = 'Network Error';
           errorMessage = 'Please check your internet connection and try again.';
           break;
-        // Add more cases as needed
       }
 
       setAlertTitle(errorTitle);
@@ -229,7 +227,6 @@ const SignUpScreen = ({ navigation }) => {
               message={alertMessage}
               onYes={() => {
                 setShowYesNoAlert(false);
-                // Add any specific action for 'Yes' here
               }}
               onNo={() => setShowYesNoAlert(false)}
             />

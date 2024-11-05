@@ -17,7 +17,7 @@ import { db } from '../../../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
-import OkAlert from '../../../components/OkAlert'; // Ensure this path is correct
+import OkAlert from '../../../components/OkAlert'; 
 import themeContext from '../../../components/ThemeContext';
 
 const TestCreator = ({ navigation }) => {
@@ -43,14 +43,10 @@ const TestCreator = ({ navigation }) => {
     React.useCallback(() => {
       const unsubscribe = navigation.addListener('beforeRemove', (e) => {
         if (testTitle === '' && questions.every(q => q.question === '')) {
-          // Allow exit without confirmation
           return;
         }
-
-        // Prevent default behavior of leaving the screen
         e.preventDefault();
 
-        // Show alert
         setAlertTitle('Discard changes?');
         setAlertMessage('You have unsaved changes. Are you sure you want to discard them and leave the screen?');
         setShowAlert(true);

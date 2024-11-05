@@ -89,7 +89,7 @@ function HomeBody({ navigation }) {
         unsubscribe(); 
         unsubscribeFromBackHandler();
     };
-}, [navigation]); // Add navigation to the dependency array
+}, [navigation]);
 
   const handleLogout = () => {
       navigation.navigate('Login Screen'); 
@@ -98,12 +98,11 @@ function HomeBody({ navigation }) {
         const { name, surname, student_number, year, course } = studentData;
 
         if (name && surname && student_number && year && course) {
-            // Generate a new student ID if one does not exist
             const currentStudentId = studentId || doc(collection(db, 'students')).id;
 
-            setLoading(true); // Set loading to true
+            setLoading(true); 
             try {
-                const studentRef = doc(db, 'students', currentStudentId); // Correctly reference the document
+                const studentRef = doc(db, 'students', currentStudentId); 
                 await setDoc(studentRef, {
                     name,
                     surname,
@@ -113,13 +112,13 @@ function HomeBody({ navigation }) {
                     infoCollected: true
                 });
 
-                setModalVisible(false); // Close modal
+                setModalVisible(false); 
                 Alert.alert('Info Saved', 'Your information has been saved successfully.');
             } catch (error) {
                 console.error("Error saving student data: ", error);
                 Alert.alert('Error', 'There was an error saving your information.');
             } finally {
-                setLoading(false); // Set loading to false
+                setLoading(false); 
             }
         } else {
             Alert.alert('Error', 'Please fill in all the fields.');

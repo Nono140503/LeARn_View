@@ -131,8 +131,8 @@ const QuizDetail = ({ route, navigation }) => {
     useCallback(() => {
       const handleLeaveWarning = (e) => {
         if (!submitted && !isAlertVisible) {
-          e.preventDefault(); // Prevent the default back action
-          setIsAlertVisible(true); // Set alert visibility to true
+          e.preventDefault(); 
+          setIsAlertVisible(true); 
           
           Alert.alert(
             'Warning',
@@ -152,8 +152,8 @@ const QuizDetail = ({ route, navigation }) => {
                   } else {
                     await setDoc(quizAttemptsRef, { quizId: quiz.id, studentId, attempts: [-1] });
                   }
-                  setIsAlertVisible(false); // Reset alert visibility
-                  navigation.goBack(); // Navigate back
+                  setIsAlertVisible(false); 
+                  navigation.goBack(); 
                 },
               },
             ],
@@ -167,7 +167,7 @@ const QuizDetail = ({ route, navigation }) => {
       return () => {
         unsubscribe();
       };
-    }, [submitted, navigation, quiz.id, studentId, isAlertVisible]) // Add isAlertVisible to dependencies
+    }, [submitted, navigation, quiz.id, studentId, isAlertVisible])
   );
 
 

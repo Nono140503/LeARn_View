@@ -48,17 +48,17 @@ const GradesScreen = ({ navigation }) => {
 
     const fetchQuizScores = async () => {
       try {
-        const quizScoresRef = doc(db, 'quizScores', user.uid); // Use user.uid as studentId
+        const quizScoresRef = doc(db, 'quizScores', user.uid); 
         const quizScoresDoc = await getDoc(quizScoresRef);
 
         if (quizScoresDoc.exists()) {
           const scoresData = quizScoresDoc.data();
           const quizList = Object.keys(scoresData).map((quizId) => ({
             id: quizId,
-            score: scoresData[quizId].score, // Get the score
-            totalQuestions: scoresData[quizId].totalQuestions, // Get total questions
-            date: scoresData[quizId].submittedAt || 'Date Not Available', // Get submission date
-            title: scoresData[quizId].title || 'Untitled Quiz', // Get quiz title
+            score: scoresData[quizId].score, 
+            totalQuestions: scoresData[quizId].totalQuestions, 
+            date: scoresData[quizId].submittedAt || 'Date Not Available', 
+            title: scoresData[quizId].title || 'Untitled Quiz', 
           }));
           setQuizzes(quizList);
         } else {
@@ -106,21 +106,21 @@ const GradesScreen = ({ navigation }) => {
         // Determine background color based on percentage
         let backgroundColor;
         if (percentage >= 90) {
-          backgroundColor = '#007A33'; // Dark Green for 90% and above
+          backgroundColor = '#007A33'; 
         } else if (percentage >= 80) {
-          backgroundColor = '#00cc00'; // Light Green for 80% to 89%
+          backgroundColor = '#00cc00'; 
         } else if (percentage >= 70) {
-          backgroundColor = '#99cc00'; // Light Yellow-Green for 70% to 79%
+          backgroundColor = '#99cc00'; 
         } else if (percentage >= 60) {
-          backgroundColor = '#ffcc00'; // Yellow for 60% to 69%
+          backgroundColor = '#ffcc00'; 
         } else if (percentage >= 50) {
-          backgroundColor = '#ff9933'; // Light Orange for 50% to 59%
+          backgroundColor = '#ff9933'; 
         } else if (percentage >= 40) {
-          backgroundColor = '#ff6600'; // Orange for 40% to 49%
+          backgroundColor = '#ff6600'; 
         } else if (percentage >= 30) {
-          backgroundColor = '#ff3333'; // Light Red for 30% to 39%
+          backgroundColor = '#ff3333'; 
         } else {
-          backgroundColor = '#cc0000'; // Dark Red for below 30%
+          backgroundColor = '#cc0000'; 
         }
 
         return (

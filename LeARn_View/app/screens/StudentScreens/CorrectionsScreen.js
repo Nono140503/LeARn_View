@@ -12,7 +12,7 @@ const CorrectionsScreen = ({ route }) => {
       <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
         <Text style={[styles.title, {color: theme.color}]}>Corrections</Text>
         {questions.map((question, index) => {
-          // Only show incorrect answers
+          
           if (userAnswers[index] !== question.answer) {
             return (
               <View key={index} style={[styles.questionContainer, {backgroundColor: theme.backgroundColor}]}>
@@ -26,7 +26,7 @@ const CorrectionsScreen = ({ route }) => {
               </View>
             );
           }
-          return null; // Skip if the answer is correct
+          return null;
         })}
       </View>
     </ScrollView>

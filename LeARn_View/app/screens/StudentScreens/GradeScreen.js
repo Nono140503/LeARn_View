@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // for the icons at the bottom
+import { Ionicons } from '@expo/vector-icons'; 
 import themeContext from '../../../components/ThemeContext';
 
 const GradesScreen = () => {
@@ -18,7 +18,7 @@ const GradesScreen = () => {
       {/* Profile Section */}
       <View style={styles.profileSection}>
         <Image
-          source={require('../../../assets/Layla.jpeg')} // Using require for the avatar
+          source={require('../../../assets/Layla.jpeg')} 
           style={styles.avatar}
         />
         <View style={styles.profileInfo}>
@@ -121,11 +121,11 @@ const styles = StyleSheet.create({
   },
   quizMarkGreen: {
     fontSize: 16,
-    color: '#4CAF50', // Green color for high score
+    color: '#4CAF50', 
   },
   quizMarkRed: {
     fontSize: 16,
-    color: '#F44336', // Red color for low score
+    color: '#F44336', 
   },
   bottomNav: {
     flexDirection: 'row',

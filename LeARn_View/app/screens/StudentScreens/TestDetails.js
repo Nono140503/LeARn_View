@@ -15,7 +15,7 @@ import { Picker } from '@react-native-picker/picker';
 import { db } from '../../../firebase';
 import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { auth } from '../../../firebase';
-import YesNoAlert from '../../../components/YesNoAlert'; // Adjust the import path as necessary
+import YesNoAlert from '../../../components/YesNoAlert'; 
 import themeContext from '../../../components/ThemeContext';
 
 const TestDetail = ({ route, navigation }) => {
@@ -33,7 +33,7 @@ const TestDetail = ({ route, navigation }) => {
 
   // Countdown State
   const [remainingTime, setRemainingTime] = useState(0);
-  const timerId = useRef(null); // To store the timer ID
+  const timerId = useRef(null); 
 
   // State to control the exit confirmation alert
   const [showExitAlert, setShowExitAlert] = useState(false);
@@ -41,10 +41,10 @@ const TestDetail = ({ route, navigation }) => {
   useEffect(() => {
     const handleBackPress = () => {
       if (!submitted) {
-        setShowExitAlert(true); // Show the exit alert
-        return true; // Prevent default back button behavior
+        setShowExitAlert(true); 
+        return true; 
       }
-      return false; // Allow back button if test is submitted
+      return false; 
     };
 
     // Add event listener for back button press
@@ -74,10 +74,10 @@ const TestDetail = ({ route, navigation }) => {
       setRemainingTime((prevTime) => {
         if (prevTime <= 0) {
           clearInterval(timerId.current);
-          handleSubmitAnswers(); // Automatically submit when time is up
+          handleSubmitAnswers(); 
           return 0;
         }
-        return prevTime - 1; // Update remaining time
+        return prevTime - 1; 
       });
     }, 1000);
   };
@@ -176,7 +176,7 @@ const TestDetail = ({ route, navigation }) => {
     setLoading(true);
 
     try {
-      // Update Firestore with submitted answers
+      // Update database with submitted answers
       const testAttemptsRef = doc(db, 'testAttempts', `${test.id}_${studentId}`);
       await updateDoc(testAttemptsRef, {
         answers,
@@ -203,7 +203,7 @@ const TestDetail = ({ route, navigation }) => {
     }
   };
 
-  // Handle exit confirmation
+  // Exit Game
   const handleExitYes = () => {
     setShowExitAlert(false);
     navigation.goBack();
@@ -277,8 +277,8 @@ const TestDetail = ({ route, navigation }) => {
           <Button
             title="Submit Answers"
             onPress={handleSubmitAnswers}
-            disabled={submitted || loading} // Disable button during loading state
-            color={submitted || loading ? '#ccc' : '#2ecc71'} // Change button color during loading state
+            disabled={submitted || loading} 
+            color={submitted || loading ? '#ccc' : '#2ecc71'} 
           />
         </View>
       )}

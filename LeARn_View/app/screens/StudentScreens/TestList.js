@@ -16,7 +16,7 @@ const TestList = ({ navigation }) => {
                 
                 const testList = testSnapshot.docs.map(doc => {
                     const data = doc.data();
-                    const unlockDate = new Date(data.unlockDate.seconds * 1000); // Convert Firestore timestamp to Date
+                    const unlockDate = new Date(data.unlockDate.seconds * 1000); 
                     const dueDate = new Date(data.dueDate.seconds * 1000);
 
                     // Combine unlockDate and unlockTime
@@ -47,7 +47,7 @@ const TestList = ({ navigation }) => {
                         unlockDate: fullUnlockDate,
                         dueDate: fullDueDate,
                         questions: data.questions,
-                        isTestAvailable // Add availability status
+                        isTestAvailable 
                     };
                 });
 
@@ -70,7 +70,7 @@ const TestList = ({ navigation }) => {
             setAttemptsData(attempts);
         });
 
-        return () => unsubscribe(); // Clean up the listener on unmount
+        return () => unsubscribe();
     }, []);
 
     const recordAttempt = async (testId) => {
@@ -95,7 +95,7 @@ const TestList = ({ navigation }) => {
         if (attempts.length >= 1) {
             Alert.alert('Attempt exhausted', 'You have already taken this test.');
         } else {
-            await recordAttempt(test.id); // Record the attempt before navigating
+            await recordAttempt(test.id); 
             navigation.navigate('Test Details', { 
                 test: {
                     ...test,
@@ -107,7 +107,7 @@ const TestList = ({ navigation }) => {
 
     const renderItem = ({ item }) => {
         const attempts = attemptsData[item.id] || [];
-        const attemptsLeft = 1 - attempts.length; // Only 1 attempt allowed
+        const attemptsLeft = 1 - attempts.length; 
 
         return (
             <View style={styles.testContainer}>
@@ -120,7 +120,7 @@ const TestList = ({ navigation }) => {
                     title={item.isTestAvailable && attemptsLeft > 0 ? "Take Test" : "Not Available"}
                     onPress={() => item.isTestAvailable && handleTestPress(item)}
                     disabled={!item.isTestAvailable || attemptsLeft === 0}
-                    color={item.isTestAvailable && attemptsLeft > 0 ? "#4CAF50" : "#D32F2F"} // Green for available, red for not available
+                    color={item.isTestAvailable && attemptsLeft > 0 ? "#4CAF50" : "#D32F2F"} 
                 />
             </View >
         );
@@ -142,52 +142,52 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 10,
-        backgroundColor: '#F7F7F7', // Light gray background
+        backgroundColor: '#F7F7F7', 
     },
     header: {
         paddingTop:30,
         fontSize: 26,
         fontWeight: 'bold',
         marginBottom: 20,
-        color: '#4CAF50', // Green header
+        color: '#4CAF50', 
         textAlign: 'center',
     },
     testContainer: {
         padding: 20,
         marginBottom: 12,
         borderRadius: 10,
-        backgroundColor: '#FFFFFF', // White background for tests
-        shadowColor: '#000', // Shadow for modern look
+        backgroundColor: '#FFFFFF', 
+        shadowColor: '#000', 
         shadowOffset: {
             width: 0,
             height: 2,
         },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 3, // For Android shadow
+        elevation: 3, 
     },
     testTitle: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#4CAF50', // Green title
+        color: '#4CAF50', 
     },
     testInfo: {
         fontSize: 16,
         marginVertical: 4,
-        color: '#666666', // Dark gray info
+        color: '#666666', 
     },
     button: {
         marginTop: 10,
         borderRadius: 5,
-        backgroundColor: '#4CAF50', // Green button background
+        backgroundColor: '#4CAF50', 
         paddingVertical: 10,
         paddingHorizontal: 15,
     },
     buttonDisabled: {
-        backgroundColor: '#D32F2F', // Red for disabled button
+        backgroundColor: '#D32F2F', 
     },
     buttonText: {
-        color: '#FFFFFF', // White text for buttons
+        color: '#FFFFFF', 
         textAlign: 'center',
         fontWeight: 'bold',
     },

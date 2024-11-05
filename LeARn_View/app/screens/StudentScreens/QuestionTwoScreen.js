@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView,Image } from 'react-native';
 
-import questions from '../../../components/question2'; // Import your questions
+import questions from '../../../components/question2'; 
 
 const QuestionScreenTwo = ({ route, navigation, score, setScore, userAnswers, setUserAnswers }) => {
   const { index } = route.params;
@@ -57,15 +57,15 @@ const QuestionScreenTwo = ({ route, navigation, score, setScore, userAnswers, se
 
 const styles = StyleSheet.create({
   scrollView: {
-    flex: 1, // Ensure ScrollView takes up the entire screen
-    backgroundColor: '#261376', // Background color for the whole screen
+    flex: 1, 
+    backgroundColor: '#261376', 
   },
   scrollViewContainer: {
-    flexGrow: 1, // Ensure ScrollView takes up available space and allows scrolling
+    flexGrow: 1, 
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#261376', // Same background color as the screen
+    backgroundColor: '#261376', 
   },
   questionText: {
     fontSize: 20,

@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
-import questions from '../../../components/Questions'; // Import your questions
+import questions from '../../../components/Questions'; 
 
 const QuestionScreen = ({ route, navigation, score, setScore, userAnswers, setUserAnswers }) => {
   const { index } = route.params;
 
   if (index < 0 || index >= questions.length) {
     navigation.navigate('Score');
-    return null; // Prevent rendering
+    return null; 
   }
 
   const currentQuestion = questions[index];
@@ -20,7 +20,7 @@ const QuestionScreen = ({ route, navigation, score, setScore, userAnswers, setUs
     const updatedAnswers = [...userAnswers];
     updatedAnswers[index] = selectedOption;
     setUserAnswers(updatedAnswers);
-    setScore(newScore); // Update score in state
+    setScore(newScore); 
 
     // Navigate to the next question or score screen
     const nextIndex = index + 1;
@@ -60,15 +60,15 @@ const QuestionScreen = ({ route, navigation, score, setScore, userAnswers, setUs
 
 const styles = StyleSheet.create({
   scrollView: {
-    flex: 1, // Ensure ScrollView takes up the entire screen
-    backgroundColor: '#261376', // Background color for the whole screen
+    flex: 1,
+    backgroundColor: '#261376', 
   },
   scrollViewContainer: {
-    flexGrow: 1, // Ensure ScrollView takes up available space and allows scrolling
+    flexGrow: 1, 
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#261376', // Same background color as the screen
+    backgroundColor: '#261376', 
   },
   progressText: {
     fontSize: 18,

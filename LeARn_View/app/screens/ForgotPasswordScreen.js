@@ -3,8 +3,8 @@ import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator,
 } from 'react-native';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../../firebase'; // Assuming firebase.js is in the parent folder
-import GreenOkAlert from '../../components/OkAlert'; // Import the custom alert component
+import { auth } from '../../firebase'; 
+import GreenOkAlert from '../../components/OkAlert'; 
 import themeContext from '../../components/ThemeContext';
 
 const ForgotPasswordScreen = ({ navigation }) => {

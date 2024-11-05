@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity,Image } from 'react-native';
-import questions from '../../../components/questionThree'; // Import your questions for module 3
+import questions from '../../../components/questionThree'; 
 import themeContext from '../../../components/ThemeContext';
 
 const ScoreScreenThree = ({ route, navigation, resetQuiz }) => {

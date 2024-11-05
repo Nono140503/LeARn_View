@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { auth } from '../../../firebase'; // Adjust the path according to your firebase config
+import { auth } from '../../../firebase'; 
 import { signOut } from 'firebase/auth';
-import YesNoAlert from '../../../components/YesNoAlert'; // Adjust the import path as needed
+import YesNoAlert from '../../../components/YesNoAlert'; 
 import themeContext from '../../../components/ThemeContext';
 
 const SettingsScreen = ({navigation}) => {
@@ -21,8 +21,7 @@ const SettingsScreen = ({navigation}) => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      // Navigate to Login screen or wherever you want after logout
-      navigation.replace('Login Screen'); // Adjust the screen name according to your navigation setup
+      navigation.replace('Login Screen'); 
     } catch (error) {
       console.error('Error logging out:', error);
     }
@@ -58,14 +57,6 @@ const SettingsScreen = ({navigation}) => {
         </View>
       </TouchableOpacity>
 
-      {/* <TouchableOpacity style={styles.card}>
-        <MaterialIcons name="settings" size={24} color="#006400" />
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>AR Settings</Text>
-          <Text style={styles.cardSubtitle}>Configure AR features</Text>
-        </View>
-      </TouchableOpacity> */}
-
       <TouchableOpacity 
         style={styles.card} 
         onPress={() => setShowLogoutAlert(true)}
@@ -87,7 +78,7 @@ const SettingsScreen = ({navigation}) => {
   );
 };
 
-// Your existing styles remain the same
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Image, StyleSheet, ScrollView, TouchableOpacity, Alert, ImageBackground } from 'react-native';
 import { Audio } from 'expo-av';
-import { useIsFocused } from '@react-navigation/native'; // Import useIsFocused
+import { useIsFocused } from '@react-navigation/native'; 
 
 const easyComponents = [
   { name: 'motherboard', image: require('../../../assets/Motherboard.jpeg') },

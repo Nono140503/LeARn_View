@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, Button, StyleSheet, FlatList, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons'; // Make sure you have @expo/vector-icons installed
+import { Ionicons } from '@expo/vector-icons'; 
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { db } from '../../../firebase';
 import { collection, doc, deleteDoc, updateDoc, getDocs } from 'firebase/firestore';

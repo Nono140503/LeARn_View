@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Button, Image, TouchableOpacity} from 'react-native';
-import questions from '../../../components/Questions'; // Import your questions
+import questions from '../../../components/Questions'; 
 import themeContext from '../../../components/ThemeContext';
 
 const ScoreScreen = ({ route, navigation, resetQuiz }) => {
-  const score = route.params?.score || 0; // Safely extract score
+  const score = route.params?.score || 0; 
   const totalQuestions = questions.length;
   const theme = useContext(themeContext);
 

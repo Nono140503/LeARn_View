@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { collection, addDoc } from 'firebase/firestore'; // Import Firestore functions
-import { db } from '../../../firebase'; // Ensure correct db import
+import { collection, addDoc } from 'firebase/firestore'; 
+import { db } from '../../../firebase'; 
 import themeContext from '../../../components/ThemeContext';
 
 const AddAnnouncementScreen = ({ navigation }) => {
   const [announcement, setAnnouncement] = useState('');
   const theme = useContext(themeContext)
 
-  // Optional: To handle navigation focus or reset on screen load
+  
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      // Reset or refresh state on screen focus
       setAnnouncement('');
     });
 
@@ -23,11 +22,11 @@ const AddAnnouncementScreen = ({ navigation }) => {
       try {
         await addDoc(collection(db, 'announcements'), {
           announcement: announcement,
-          timestamp: new Date().toISOString(), // Store the current timestamp
-          readBy: [], // Store users who marked this as read
+          timestamp: new Date().toISOString(), 
+          readBy: [], 
         });
         Alert.alert('Success', 'Announcement added successfully.');
-        navigation.goBack(); // Go back after adding announcement
+        navigation.goBack(); 
       } catch (error) {
         Alert.alert('Error', 'Failed to add announcement.');
       }

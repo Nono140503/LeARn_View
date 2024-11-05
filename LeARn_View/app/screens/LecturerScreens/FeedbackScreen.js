@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import { collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
-import { db } from '../../../firebase'; // Ensure correct Firebase config
+import { db } from '../../../firebase'; 
 import LecturerBottomTab from '../../../components/LecturerBottomTabBar';
 import themeContext from '../../../components/ThemeContext';
 
@@ -12,7 +12,7 @@ const FeedbackScreen = ({ navigation }) => {
 
   const theme = useContext(themeContext)
 
-  // Fetch announcements from Firestore on mount
+  // Fetch announcements
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'announcements'), (snapshot) => {
       const fetchedAnnouncements = snapshot.docs.map((doc) => ({
@@ -22,13 +22,13 @@ const FeedbackScreen = ({ navigation }) => {
       setAnnouncements(fetchedAnnouncements);
     });
 
-    return unsubscribe; // Cleanup listener on unmount
+    return unsubscribe; 
   }, []);
 
-  // Function to delete an announcement
+  // Delete Announcement
   const handleDeleteAnnouncement = async (id) => {
     try {
-      await deleteDoc(doc(db, 'announcements', id)); // Deletes the announcement from Firestore
+      await deleteDoc(doc(db, 'announcements', id)); 
       Alert.alert('Success', 'Announcement deleted successfully!');
     } catch (error) {
       Alert.alert('Error', 'Failed to delete the announcement.');

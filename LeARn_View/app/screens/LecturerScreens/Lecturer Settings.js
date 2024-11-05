@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { FontAwesome, Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
-import { auth } from '../../../firebase'; // Adjust the path according to your firebase config
+import { auth } from '../../../firebase'; 
 import { signOut } from 'firebase/auth';
-import YesNoAlert from '../../../components/YesNoAlert'; // Adjust the import path as needed
+import YesNoAlert from '../../../components/YesNoAlert'; 
 import themeContext from '../../../components/ThemeContext';
 
 const LecturerSettingsScreen = ({ navigation }) => {
@@ -25,8 +25,7 @@ const LecturerSettingsScreen = ({ navigation }) => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      // Navigate to Login screen or wherever you want after logout
-      navigation.replace('Login Screen'); // Adjust the screen name according to your navigation setup
+      navigation.replace('Login Screen'); 
     } catch (error) {
       console.error('Error logging out:', error);
     }
@@ -87,7 +86,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 25,
-    marginLeft: 50, // Adjusted for better centering
+    marginLeft: 50, 
     color: '#1D7801',
   },
   header: {

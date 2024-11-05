@@ -12,7 +12,7 @@ const QuizList = ({ navigation }) => {
   const studentId = auth.currentUser .uid;
 
   useEffect(() => {
-    // Real-time listener for quizzes
+    // Listen for quizzes
     const quizzesCollection = collection(db, 'quizzes');
     const unsubscribeQuizzes = onSnapshot(quizzesCollection, (snapshot) => {
       const quizList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -22,7 +22,7 @@ const QuizList = ({ navigation }) => {
       Alert.alert('Error', 'Could not retrieve quizzes. Please try again later.');
     });
 
-    // Real-time listener for quiz attempts
+    // Listen for quiz attempts
     const attemptsQuery = query(collection(db, 'quizAttempts'), where('studentId', '==', studentId));
     const unsubscribeAttempts = onSnapshot(attemptsQuery, (snapshot) => {
       const attempts = {};
@@ -35,7 +35,7 @@ const QuizList = ({ navigation }) => {
       Alert.alert('Error', 'Could not retrieve attempts. Please try again later.');
     });
 
-    // Clean up listeners on component unmount
+    
     return () => {
       unsubscribeQuizzes();
       unsubscribeAttempts();
@@ -49,7 +49,7 @@ const QuizList = ({ navigation }) => {
     } else {
       // Check if the quiz is expired
       const currentDate = new Date();
-      const dueDate = new Date(quiz.dueDate); // Assuming dueDate is in ISO string format
+      const dueDate = new Date(quiz.dueDate); 
       if (currentDate > dueDate) {
         Alert.alert('Quiz Expired', 'This quiz is no longer available.');
       } else {

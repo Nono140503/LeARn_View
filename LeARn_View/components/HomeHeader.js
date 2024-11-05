@@ -17,19 +17,17 @@ const HomeScreen = () => {
 
     useEffect(() => {
         if (user) {
-            // Query announcements where the user's ID is NOT in the readBy array (i.e., unread)
             const q = query(
                 collection(db, 'announcements'),
-                where('readBy', 'array-contains', user.uid) // Get all announcements read by the user
+                where('readBy', 'array-contains', user.uid) 
             );
 
-            // Track unread announcements (not in 'readBy' array)
             const unsubscribe = onSnapshot(collection(db, 'announcements'), (snapshot) => {
                 const unreadAnnouncements = snapshot.docs.filter(doc => !doc.data().readBy.includes(user.uid));
-                setUnreadCount(unreadAnnouncements.length); // Set unread count
+                setUnreadCount(unreadAnnouncements.length); 
             });
 
-            return () => unsubscribe(); // Cleanup listener
+            return () => unsubscribe(); 
         }
     }, [user]);
 

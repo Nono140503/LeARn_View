@@ -109,7 +109,7 @@ export default function NotificationSettings() {
                 selectedValue={selectedSound}
                 onValueChange={(itemValue) => {
                     setSelectedSound(itemValue);
-                    // Stop the current sound if playing
+                    
                     if (sound) {
                         sound.stopAsync();
                     }

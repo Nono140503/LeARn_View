@@ -18,7 +18,7 @@ export default function Profile( { navigation } ) {
     const [notificationSound, setNotificationSound] = useState(null)
     const [displayUserName, setDisplayUserName] = useState('')
     const [usernameChange, setUsername] = useState('')
-    const [loading, setLoading] = useState(false); // Loading state
+    const [loading, setLoading] = useState(false); 
 
 
     const user = auth.currentUser

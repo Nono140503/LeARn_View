@@ -105,7 +105,7 @@ export default function LecturerNotification() {
                 selectedValue={selectedSound}
                 onValueChange={(itemValue) => {
                     setSelectedSound(itemValue);
-                    // Stop the current sound if playing
+                    
                     if (sound) {
                         sound.stopAsync();
                     }

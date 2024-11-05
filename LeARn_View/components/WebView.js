@@ -6,8 +6,8 @@ import { Camera } from 'expo-camera';
 const WebViewScreen = ({ route }) => {
     const { uri } = route.params;
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
-    const [loading, setLoading] = useState(true); // State for loading indicator
-    const [error, setError] = useState(false); // State for error handling
+    const [loading, setLoading] = useState(true); 
+    const [error, setError] = useState(false); 
 
     useEffect(() => {
         const requestCameraPermission = async () => {
@@ -18,7 +18,6 @@ const WebViewScreen = ({ route }) => {
         requestCameraPermission();
     }, []);
 
-    // If camera permission is not granted, show an alert
     if (hasCameraPermission === false) {
         Alert.alert("Camera Permission Required", "Camera access is required for this feature.");
     }
@@ -32,21 +31,21 @@ const WebViewScreen = ({ route }) => {
             
             <WebView
                 source={{ uri }}
-                onLoadStart={() => setLoading(true)} // Start loading
-                onLoadEnd={() => setLoading(false)} // End loading
+                onLoadStart={() => setLoading(true)} 
+                onLoadEnd={() => setLoading(false)} 
                 onHttpError={() => {
-                    setError(true); // Handle HTTP error
-                    setLoading(false); // Stop loading
+                    setError(true); 
+                    setLoading(false); 
                     Alert.alert("Error", "Unable to load the page.");
                 }}
                 onError={() => {
-                    setError(true); // Handle error
-                    setLoading(false); // Stop loading
+                    setError(true); 
+                    setLoading(false); 
                     Alert.alert("Error", "Something went wrong while loading the page.");
                 }}
                 style={styles.webview}
-                javaScriptEnabled={true} // Enable JavaScript
-                mediaPlaybackRequiresUserAction={false} // Automatically play media
+                javaScriptEnabled={true} 
+                mediaPlaybackRequiresUserAction={false} 
                 allowsInlineMediaPlayback={true}
             />
         </View>

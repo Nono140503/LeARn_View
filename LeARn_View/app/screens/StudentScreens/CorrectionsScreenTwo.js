@@ -25,7 +25,7 @@ const CorrectionsScreenTwo = ({ route }) => {
               </View>
             );
           }
-          return null; // Skip if the answer is correct
+          return null; 
         })}
       </View>
     </ScrollView>

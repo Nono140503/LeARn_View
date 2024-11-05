@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import questions from '../../../components/questionFour'; // Adjust the path as necessary
+import questions from '../../../components/questionFour'; 
 import themeContext from '../../../components/ThemeContext';
 
 const CorrectionsScreenFour = ({ route }) => {
@@ -25,7 +25,7 @@ const CorrectionsScreenFour = ({ route }) => {
               </View>
             );
           }
-          return null; // Skip if the answer is correct
+          return null; 
         })}
       </View>
     </ScrollView>
@@ -48,19 +48,19 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#fff',
     borderRadius: 8,
-    borderWidth: 1,          // Border width of 1
-    borderColor: 'green',    // Border color of green
+    borderWidth: 1,          
+    borderColor: 'green',    
     elevation: 1,
   },
   questionText: {
     fontSize: 18,
     marginBottom: 10,
-    fontWeight: 'bold',      // Make question text bold
+    fontWeight: 'bold',      
     color: 'black',
   },
   answerText: {
     fontSize: 16,
-    fontStyle: 'italic',     // Make answer text italic
+    fontStyle: 'italic',     
     color: 'red',
   },
   correctText: {

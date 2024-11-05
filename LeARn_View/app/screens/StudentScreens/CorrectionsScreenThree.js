@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import questions from '../../../components/questionThree'; // Import your questions for module 3
+import questions from '../../../components/questionThree'; 
 import themeContext from '../../../components/ThemeContext';
 
 const CorrectionsScreenThree = ({ route }) => {
@@ -25,7 +25,7 @@ const CorrectionsScreenThree = ({ route }) => {
               </View>
             );
           }
-          return null; // Skip if the answer is correct
+          return null; 
         })}
       </View>
     </ScrollView>

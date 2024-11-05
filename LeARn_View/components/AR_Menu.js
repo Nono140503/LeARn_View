@@ -48,7 +48,7 @@ function ARMenu() {
                         style={styles.card}
                         onPress={() => {
                             if (item?.nav) {
-                                // Navigate to the WebViewScreen and pass the URL
+                                
                                 navigation.navigate('WebView Screen', { uri: item.nav });
                             } else {
                                 console.warn('Invalid navigation route');
