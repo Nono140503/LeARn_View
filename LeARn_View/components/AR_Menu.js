@@ -33,7 +33,7 @@ function ARMenu() {
             image: require('../assets/CPU.jpeg'),
             progress: 'Locked',
             icon: 'lock-closed-outline',
-            nav: 'https://player.onirix.com/exp/ew0mm4', 
+            nav: 'https://player.onirix.com/exp/ejna5a', 
         },
     ]);
 

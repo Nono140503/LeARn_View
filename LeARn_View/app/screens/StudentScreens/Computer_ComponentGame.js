@@ -119,13 +119,8 @@ export default function GuessTheComponent({ navigation }) {
   }, [timeLeft]);
 
   useEffect(() => {
-    if (isFocused) {
-      const playBackgroundMusic = async () => {
-        if (backgroundMusic) {
-          await backgroundMusic.playAsync();
-        }
-      };
-      playBackgroundMusic();
+    if (isFocused && backgroundMusic) {
+      backgroundMusic.playAsync();
     } else {
       unloadSounds();
     }
