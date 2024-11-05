@@ -99,17 +99,41 @@ const GradesScreen = ({ navigation }) => {
         </View>
 
         {/* Quiz Grades */}
-        <View style={ styles.quizzes}>
-          {quizzes.map((quiz) => (
-            <View key={quiz.id} style={styles.quizCard}>
-              <Text style={styles.quizTitle}>{quiz.title}</Text>
-              <Text style={styles.quizDate}>{quiz.date}</Text>
-              <Text style={[styles.quizMark, { backgroundColor: quiz.score >= 5 ? '#00cc00' : '#ff6666' }]}>
-                Score: {quiz.score}/{quiz.totalQuestions} ({((quiz.score / quiz.totalQuestions) * 100).toFixed(2)}%)
-              </Text>
-            </View>
-          ))}
-        </View>
+        <View style={styles.quizzes}>
+      {quizzes.map((quiz) => {
+        const percentage = (quiz.score / quiz.totalQuestions) * 100;
+
+        // Determine background color based on percentage
+        let backgroundColor;
+        if (percentage >= 90) {
+          backgroundColor = '#007A33'; // Dark Green for 90% and above
+        } else if (percentage >= 80) {
+          backgroundColor = '#00cc00'; // Light Green for 80% to 89%
+        } else if (percentage >= 70) {
+          backgroundColor = '#99cc00'; // Light Yellow-Green for 70% to 79%
+        } else if (percentage >= 60) {
+          backgroundColor = '#ffcc00'; // Yellow for 60% to 69%
+        } else if (percentage >= 50) {
+          backgroundColor = '#ff9933'; // Light Orange for 50% to 59%
+        } else if (percentage >= 40) {
+          backgroundColor = '#ff6600'; // Orange for 40% to 49%
+        } else if (percentage >= 30) {
+          backgroundColor = '#ff3333'; // Light Red for 30% to 39%
+        } else {
+          backgroundColor = '#cc0000'; // Dark Red for below 30%
+        }
+
+        return (
+          <View key={quiz.id} style={styles.quizCard}>
+            <Text style={styles.quizTitle}>{quiz.title} Quiz</Text>
+            <Text style={styles.quizDate}>{quiz.date}</Text>
+            <Text style={[styles.quizMark, { backgroundColor }]}>
+              Score: {quiz.score}/{quiz.totalQuestions} ({percentage.toFixed(2)}%)
+            </Text>
+          </View>
+        );
+      })}
+    </View>
       </ScrollView>
       <BottomTabBar
         navigation={navigation}
