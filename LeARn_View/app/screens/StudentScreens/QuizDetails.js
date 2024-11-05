@@ -173,18 +173,12 @@ const QuizDetail = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-              <View style={styles.timerContainer}>
-          <Text style={styles.timerText}>Time Left: {formatTime(remainingTime)}</Text>
-        </View>
+             
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.header}>{quiz.title}</Text>
         <Text style={styles.details}>Duration: {quiz.duration}</Text>
         <Text style={styles.details}>Due Date: {quiz.dueDate.toLocaleString()} {quiz.dueTime.hours}:{quiz.dueTime.minutes}</Text>
-        <Text style={styles.details}>Unlock Date: {item.dueDate.toLocaleString()} {quiz.unlockTime.hours}:{quiz.unlockTime.minutes}</Text>
-
-        <View style={styles.timerContainer}>
-          <Text style={styles.timerText}>Time Left: {formatTime(remainingTime)}</Text>
-        </View>
+        <Text style={styles.details}>Unlock Date: {quiz.dueDate.toLocaleString()} {quiz.unlockTime.hours}:{quiz.unlockTime.minutes}</Text>
 
         {quiz.questions.map((q, index) => (
           <View key={index} style={styles.questionContainer}>
@@ -219,6 +213,10 @@ const QuizDetail = ({ route, navigation }) => {
           </View>
         ))}
       </ScrollView>
+
+      <View style={styles.timerContainer}>
+          <Text style={styles.timerText}>Time Left: {formatTime(remainingTime)}</Text>
+      </View>
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
