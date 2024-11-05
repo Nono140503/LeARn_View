@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, SafeAreaView
+  View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, SafeAreaView, ImageBackground
 } from 'react-native';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
@@ -120,6 +120,11 @@ const SignUpScreen = ({ navigation }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <SafeAreaView style={{ flex: 1 }}>
+
+        <View style={styles.imageContainer}>
+        <ImageBackground source={require('../../assets/LV_logo.png')} style={styles.backgroundLogo} resizeMode='cover'/>
+        </View>
+
         <Text style={styles.title}>Sign Up</Text>
         <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
           <View style={styles.innerContainer}>
@@ -314,6 +319,19 @@ const styles = StyleSheet.create({
   requirementsContainer: {
     marginTop: 5,
   },
+  backgroundLogo:{
+    width: 100,  
+    height: 100,  
+    alignSelf: 'center',
+    marginBottom: 5,
+    marginTop: 20,
+    top: 0, 
+    left: 0, 
+    opacity: 1,
+  },
+  imageContainer:{
+    marginTop: 20,
+  }
 });
 
 export default SignUpScreen;

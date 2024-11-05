@@ -9,6 +9,8 @@ import {
   ScrollView,
   Platform,
   ActivityIndicator,
+  ImageBackground,
+  Image,
 } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
@@ -125,6 +127,7 @@ const LoginScreen = ({ navigation }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.container}>
+      <ImageBackground source={require('../../assets/LV_logo.png')} style={styles.backgroundLogo} resizeMode='cover'/>
         <Text style={styles.title}>Login</Text>
         <TextInput
           style={styles.input}
@@ -239,6 +242,15 @@ const styles = StyleSheet.create({
     color: '#007bff',
     textAlign: 'center',
     marginTop: 10,
+  },
+  backgroundLogo:{
+    width: 110,  
+    height: 110,  
+    alignSelf: 'center',
+    marginBottom: 20,
+    top: 0, 
+    left: 0, 
+    opacity: 1,
   },
 });
 
