@@ -251,8 +251,8 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     marginBottom: 20,
-    color: '#2ecc71',
-    paddingTop: 55,
+    color: '#1D7801',
+    paddingTop: 40,
     left: 0,
   },
   details: {
@@ -264,14 +264,14 @@ const styles = StyleSheet.create({
   timerContainer: {
     position: 'absolute',
     top: 35, right: 0,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: 'lightred',
     padding: 5,
     borderRadius: 5,
   },
   timerText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#2ecc71',
+    color: 'red',
   },
   questionContainer: {
     marginBottom: 20,
@@ -320,8 +320,9 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     padding: 15,
-    backgroundColor: '#2ecc71',
+    backgroundColor: '#1D7801',
     borderRadius: 5,
+    marginLeft: "auto",
   },
   submitButtonText: {
     color: '#fff',

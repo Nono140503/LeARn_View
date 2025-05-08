@@ -75,20 +75,25 @@ function HomeBody({ navigation }) {
         return true; 
     };
 
-    // Add listener when focusing on the screen
-    const unsubscribe = navigation.addListener('focus', () => {
-        BackHandler.addEventListener('hardwareBackPress', backAction);
-    });
+    let backHandler;
 
-    // Remove listener only when NOT focused on this screen
-    const unsubscribeFromBackHandler = navigation.addListener('blur', () => {
-        BackHandler.removeEventListener('hardwareBackPress', backAction);
-    });
+  const unsubscribeFocus = navigation.addListener('focus', () => {
+    backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+  });
 
-    return () => {
-        unsubscribe(); 
-        unsubscribeFromBackHandler();
-    };
+  const unsubscribeBlur = navigation.addListener('blur', () => {
+    if (backHandler) {
+      backHandler.remove();
+    }
+  });
+
+  return () => {
+    unsubscribeFocus();
+    unsubscribeBlur();
+    if (backHandler) {
+      backHandler.remove();
+    }
+  };
 }, [navigation]);
 
   const handleLogout = () => {

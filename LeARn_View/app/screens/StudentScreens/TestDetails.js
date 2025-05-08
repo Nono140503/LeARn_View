@@ -48,7 +48,7 @@ const TestDetail = ({ route, navigation }) => {
     };
 
     // Add event listener for back button press
-    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
     const initializeTimer = () => {
       const durationParts = test.duration.split(':');
@@ -65,7 +65,7 @@ const TestDetail = ({ route, navigation }) => {
     // Clean up the timer and event listener when the component unmounts
     return () => {
       clearInterval(timerId.current);
-      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+      backHandler.remove();
     };
   }, [test.duration, navigation]);
 
@@ -322,9 +322,9 @@ const styles = StyleSheet.create({
   timerContainer: {
     position: 'absolute',
     top: 40,
-    right: 10,
+    right: 50,
     backgroundColor: '#e0e0e0',
-    padding: 5,
+    padding: 10,
     borderRadius: 5,
   },
   timerText: {
@@ -369,6 +369,7 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#2ecc71',
     borderRadius: 5,
+    marginLeft: 30,
   },
   submitButtonText: {
     color: '#fff',

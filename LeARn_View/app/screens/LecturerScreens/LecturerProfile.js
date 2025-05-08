@@ -6,7 +6,7 @@ import { EventRegister } from 'react-native-event-listeners'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../../../firebase'
-import { Audio } from 'expo-av'
+import { Audio } from 'expo-audio'
 import themeContext from '../../../components/ThemeContext'
 
 export default function LecturerProfile( { navigation } ) {

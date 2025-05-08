@@ -196,7 +196,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         marginTop: 70,
-        borderWidth: 2,
         borderRadius: 100,
         width: 150,
         height: 150,
@@ -212,15 +211,15 @@ const styles = StyleSheet.create({
     },
 
     username: {
-        marginTop: 40,
+        marginTop: 20,
         marginBottom: 30,
     },
 
     userNameDisplay: {
         textAlign: 'center',
-        marginTop: 10,
         fontSize: 18,
         fontWeight: 'bold',
+        
     },
 
     textInput: {
@@ -230,8 +229,9 @@ const styles = StyleSheet.create({
         width: '100%',
         maxWidth: 300, 
         height: 50,
-        padding: 3,
+        padding: 10,
         marginVertical: 10,
+        marginLeft: 30,
     },
 
     textInputText: {
@@ -245,10 +245,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center', 
         marginLeft: 10,
+        marginLeft: 35,
     },
 
     lightDarkText: {
-        marginLeft: 10,
+        marginLeft: 40,
         fontSize: 16, 
     },
 

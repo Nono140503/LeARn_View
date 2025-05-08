@@ -51,20 +51,20 @@ function HomeScreen({navigation}){
 
 
      // Play Notification Sound
-    const playSound = async () => {
-        if(notificationSound)
-        {
+    // const playSound = async () => {
+    //     if(notificationSound)
+    //     {
 
-            if (sound) {
-                await sound.stopAsync();
-                await sound.unloadAsync();
-            }
+    //         if (sound) {
+    //             await sound.stopAsync();
+    //             await sound.unloadAsync();
+    //         }
 
-            const { sound } = await Audio.Sound.createAsync({uri: notificationSound})
-            setSound(sound)
-            await sound.playAsync()
-        }
-    }
+    //         const { sound } = await Audio.Sound.createAsync({uri: notificationSound})
+    //         setSound(sound)
+    //         await sound.playAsync()
+    //     }
+    // }
 
     // Fetch notification sounds on initial load
     useEffect(() => {
@@ -92,32 +92,32 @@ function HomeScreen({navigation}){
     const unsubscribe = onSnapshot(collection(db, 'announcements'), (snapshot) => {
         const newAnnouncements = snapshot.docChanges().filter(change => change.type === 'added');
 
-            if (newAnnouncements.length > 0) {
-                // Check if notificationSound is set
-                if (notificationSound) {
-                    playSound();
-                } else {
-                    console.log("No notification sound URL available.");
-                }
-            }
+            // if (newAnnouncements.length > 0) {
+            //     // Check if notificationSound is set
+            //     if (notificationSound) {
+            //         playSound();
+            //     } else {
+            //         console.log("No notification sound URL available.");
+            //     }
+            // }
         });
 
         return () => unsubscribe();
     }, [notificationSound]);
 
     // Reload new notification sound after updating in Notification Settings
-    useEffect(() => {
+    // useEffect(() => {
 
-        const notificationSoundListener = EventRegister.addEventListener('NotificationSoundChanged',  () => {
+    //     const notificationSoundListener = EventRegister.addEventListener('NotificationSoundChanged',  () => {
            
-            fetchAndSetNotificationSound();
-            playSound();
-        })
+    //         fetchAndSetNotificationSound();
+    //         playSound();
+    //     })
   
-        return () => {
-            EventRegister.removeEventListener(notificationSoundListener)
-      }
-    }, [])
+    //     return () => {
+    //         EventRegister.removeEventListener(notificationSoundListener)
+    //   }
+    // }, [])
 
     // Prevent user from navigating to Login with device back button
     // useEffect(() => {
@@ -143,7 +143,7 @@ function HomeScreen({navigation}){
         <>
         <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
             <HomeHeader/>
-            <Text style={styles.heading}>Systems Software</Text>
+            <Text style={styles.heading}>Home Dashboard</Text>
             <HomeBody navigation={navigation}/>
             <BottomTabBar 
              navigation={navigation} 

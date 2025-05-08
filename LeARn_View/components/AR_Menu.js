@@ -12,24 +12,24 @@ function ARMenu() {
     const [list, setList] = useState([
         {
             title: 'Module 1',
-            description: 'Taking A Computer Apart and Putting It Back Together',
-            image: require('../assets/Computer.jpeg'),
+            description: 'Collect the tools with Onri_IX',
+            image: require('../assets/ro.jpg'),
             progress: 'Progress: 0%',
             icon: '', 
-            nav: 'https://player.onirix.com/exp/3OkgJ8', 
+            nav: 'https://player.onirix.com/projects/456616c417e44104b16a1aa4eac6e0f2/webar?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUzMjcwLCJwcm9qZWN0SWQiOjEwOTQxMiwicm9sZSI6MywiaWF0IjoxNzQ2NjU0NzM2fQ.wenOAVD7BkEE39zOkKVulcrBD97knTQDnqdFi9s5DqQ&background=%23E3E1E5&preview=false&hide_controls=false&ar_button=false', 
             
         },
         {
             title: 'Module 2',
-            description: 'All About Motherboards\n',
-            image: require('../assets/Motherboard.jpeg'),
+            description: 'Explore a Vehicle Engine\n',
+            image: require('../assets/conventional_fuels.jpg'),
             progress: 'Locked',
             icon: 'lock-closed-outline',
-            nav: 'https://player.onirix.com/exp/LJDkp2',  
+            nav: 'https://player.onirix.com/projects/4e19bda09d554c369674b8647fec2da1/webar?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUzMjcwLCJwcm9qZWN0SWQiOjEwOTQwOSwicm9sZSI6MywiaWF0IjoxNzQ2NjU0NzI4fQ.PKslvufX6moQsJSw-2gGu-SKZxIZ0ui1MykavhYZVZQ&background=%23dbd5fb&preview=false&hide_controls=false&ar_button=false',  
         },
         {
             title: 'Module 3',
-            description: 'Supporting Processors and Upgrading Memory',
+            description: 'Computers and Processors',
             image: require('../assets/CPU.jpeg'),
             progress: 'Locked',
             icon: 'lock-closed-outline',

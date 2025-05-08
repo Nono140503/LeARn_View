@@ -84,7 +84,7 @@ const QuizList = ({ navigation }) => {
     return (
       <View style={styles.testContainer}>
         <ImageBackground
-          source={item.image}
+          source={require('../../../assets/Everything-You-Can-Do-to-Keep-an-Old-Computer-Running-Gear-GettyImages-1395337680.jpg')}
           style={styles.imageBackground}
           imageStyle={styles.imageBorderRadius}
         >
@@ -93,7 +93,7 @@ const QuizList = ({ navigation }) => {
             <Text style={[styles.textShadow, styles.testTitle]}>{item.title}</Text>
             <Text style={[styles.textShadow, styles.infoText]}>Duration: {item.duration} minutes</Text>
             <Text style={[styles.textShadow, styles.infoText]}>Due Date: {item.dueDate.toLocaleString()}</Text>
-            <Text style={[styles.textShadow, styles.attemptsText, attemptsLeft === 0 && styles.attemptsExhausted]}>
+            <Text style={[styles.textShadow,styles.attemptsText, attemptsLeft === 0 && styles.attemptsExhausted]}>
               Attempts left: {attemptsLeft}
             </Text>
           </View>
@@ -135,6 +135,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#4CAF50',
     marginBottom: 20,
+    marginTop: 20,
   },
   testContainer: {
     backgroundColor: '#fff',
@@ -149,8 +150,9 @@ const styles = StyleSheet.create({
   },
   imageBackground: {
     width: '100%',
-    height: 180,
+    height: 190,
     justifyContent: 'flex-end',
+    objectFit: 'fill',
   },
   imageBorderRadius: {
     borderRadius: 10,
