@@ -16,7 +16,7 @@ function ARMenu() {
             image: require('../assets/ro.jpg'),
             progress: 'Progress: 0%',
             icon: '', 
-            nav: 'https://player.onirix.com/projects/456616c417e44104b16a1aa4eac6e0f2/webar?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUzMjcwLCJwcm9qZWN0SWQiOjEwOTQxMiwicm9sZSI6MywiaWF0IjoxNzQ2NjU0NzM2fQ.wenOAVD7BkEE39zOkKVulcrBD97knTQDnqdFi9s5DqQ&background=%23E3E1E5&preview=false&hide_controls=false&ar_button=false', 
+            nav: 'https://webar.onirix.com/projects/7dede19bbabf4af599383965281cb0f7/webar?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjU0MzMxLCJwcm9qZWN0SWQiOjExMjQ2Miwicm9sZSI6MywiaWF0IjoxNzQ3OTUyODM2fQ.j0-xOPV_ajXVf7dT_lTtjjba47wysy0Us0n0RrcfBQI&background=%23E3E1E5&preview=false&hide_controls=false&ar_button=false', 
             
         },
         {
@@ -25,7 +25,7 @@ function ARMenu() {
             image: require('../assets/conventional_fuels.jpg'),
             progress: 'Locked',
             icon: 'lock-closed-outline',
-            nav: 'https://player.onirix.com/projects/4e19bda09d554c369674b8647fec2da1/webar?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUzMjcwLCJwcm9qZWN0SWQiOjEwOTQwOSwicm9sZSI6MywiaWF0IjoxNzQ2NjU0NzI4fQ.PKslvufX6moQsJSw-2gGu-SKZxIZ0ui1MykavhYZVZQ&background=%23dbd5fb&preview=false&hide_controls=false&ar_button=false',  
+            nav: 'https://webar.onirix.com/projects/638838423f374f36946b8a87e897e0c3/webar?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjU0MzMxLCJwcm9qZWN0SWQiOjExMjQ3MSwicm9sZSI6MywiaWF0IjoxNzQ3OTUzMzAwfQ.8g5kVFKGhPz5diwFxHXAtdlDCE4Ylz15_kDjZYJ5YC0&background=%23E3E1E5&preview=false&hide_controls=false&ar_button=false',  
         },
         {
             title: 'Module 3',
